@@ -27,5 +27,4 @@ export const studentsRoutes = [
   { path: "/student/JoiningAGroup", element: <JoingingAGroupRequest /> },
   { path: "/student/TaskList", element: <TaskList /> },
   { path: "/search", element: <Search /> },
-  { path: "/search", element: <Search /> },
 ];

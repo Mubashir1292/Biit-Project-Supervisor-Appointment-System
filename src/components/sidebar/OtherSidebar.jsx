@@ -67,11 +67,6 @@ function OtherSidebar({ expanded, setExpanded }) {
       icon: <Group size={20} />,
     },
     {
-      label: "Progress",
-      path: "/student/progress",
-      icon: <CircleDotDashed size={20} />,
-    },
-    {
       label: "Project Request",
       path: "/student/ProjectRequesting",
       icon: <GoProject size={20} />,
@@ -90,6 +85,11 @@ function OtherSidebar({ expanded, setExpanded }) {
       label: "Task",
       path: "/student/TaskList",
       icon: <GoTasklist size={20} />,
+    },
+    {
+      label: "Progress",
+      path: "/student/progress",
+      icon: <CircleDotDashed size={20} />,
     },
   ];
 
@@ -121,7 +121,7 @@ function OtherSidebar({ expanded, setExpanded }) {
   });
   return (
     <div
-      className={`sticky h-screen overflow-y-none items-center bg-[#37373d]  border border-[#37373d] shadow-sm rounded-l-lg my-1 ml-1 ${
+      className={`sticky h-screen overflow-y-none items-center bg-[#37373d]  border border-[#37373d] shadow-sm ${
         expanded ? "w-52" : "w-20"
       }`}
     >

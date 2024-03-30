@@ -8,31 +8,31 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const handleLogin = async () => {
-    try {
-      const response = await fetch(
-        `OfficialPSAS/api/psas/Login?username=${username}&password=${password}`
-      );
-      const res = await response.json();
-      if (res != null) {
-        localStorage.getItem("isUser", res);
-        if (res === "student") {
-          navigate("/student/dashboard");
-        } else if (res === "teacher") {
-          navigate("/teacher/dashboard");
-        } else if (res === "TechnicalExpert") {
-          navigate("/technicalExpert/dashboard");
-        } else if (res === "projectCommetiee") {
-          navigate("/projectCommetiee/dashboard");
-        } else {
-          navigate("/");
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    // if (username && password) {
-    //   navigate("/student/creatingGroup");
+    // try {
+    //   const response = await fetch(
+    //     `OfficialPSAS/api/psas/Login?username=${username}&password=${password}`
+    //   );
+    //   const res = await response.json();
+    //   if (res != null) {
+    //     localStorage.getItem("isUser", res);
+    //     if (res === "student") {
+    //       navigate("/student/dashboard");
+    //     } else if (res === "teacher") {
+    //       navigate("/teacher/dashboard");
+    //     } else if (res === "TechnicalExpert") {
+    //       navigate("/technicalExpert/dashboard");
+    //     } else if (res === "projectCommetiee") {
+    //       navigate("/projectCommetiee/dashboard");
+    //     } else {
+    //       navigate("/");
+    //     }
+    //   }
+    // } catch (error) {
+    //   console.log(error);
     // }
+    if (username === "Mubashir" && password === "password") {
+      navigate("/student/creatingGroup");
+    }
   };
 
   return (

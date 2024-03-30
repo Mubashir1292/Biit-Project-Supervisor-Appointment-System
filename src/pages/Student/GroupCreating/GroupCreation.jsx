@@ -6,10 +6,10 @@ import Dropdown from "../../../components/dropdown/Dropdown";
 function GroupCreation() {
   const options = [
     { label: "React Native", value: "React-Native" },
-    { label: "React Native", value: "React-Native" },
+    { label: "Android", value: "Android" },
   ];
-  const [selection, setSelection] = useState(null);
   const [isGroupCreated, setIsGroupCreated] = useState(true);
+  const [selection, setSelection] = useState(null);
 
   const handleSelect = (option) => {
     setSelection(option);
@@ -52,10 +52,11 @@ function GroupCreation() {
                   My Technology:
                 </label>
                 <Dropdown
-                  label="My Technology"
+                  label="Project Domain"
                   options={options}
                   value={selection}
-                  onSelect={handleSelect}
+                  OnSelect={handleSelect}
+                  className="relative w-2/12"
                 />
               </div>
             </div>
@@ -119,8 +120,8 @@ function GroupCreation() {
                   label="Technology"
                   options={options}
                   value={selection}
-                  onSelect={handleSelect}
-                  className="w-2/6 self-center mt-2 "
+                  OnSelect={handleSelect}
+                  className="relative w-3/12"
                 />
               </div>
               <div className="flex flex-row justify-center space-x-3 items-center mt-3">

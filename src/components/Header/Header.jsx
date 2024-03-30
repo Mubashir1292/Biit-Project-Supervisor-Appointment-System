@@ -45,6 +45,7 @@ function Header({ expanded, setExpanded }) {
             navigate("/search");
             // console.log(search);
             updateSearch(search);
+            setSearch("");
           }}
           className="flex justify-between items-center w-1/2 md:w-3/5 lg:w-2/5 xl:w-1/3"
         >

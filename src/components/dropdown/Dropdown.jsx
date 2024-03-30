@@ -46,9 +46,9 @@ function Dropdown({ label, options, value, OnSelect, className, rest }) {
     <div {...rest} ref={divEl} className={className}>
       <Panel
         onClick={HandleClick}
-        className="flex justify-between px-2 text-xl mt-2 border-black border py-1 items-center  hover:bg-gray-50"
+        className="flex justify-between px-2 text-md mt-2 border-black border py-1 items-center  hover:bg-gray-50"
       >
-        {value?.label || label}
+        {value?.label || options[0].label}
         {isOpen ? (
           <GoChevronUp className="text-xl" />
         ) : (
@@ -57,7 +57,7 @@ function Dropdown({ label, options, value, OnSelect, className, rest }) {
       </Panel>
       {/* we are  */}
       {isOpen && (
-        <Panel className="absolute w-full z-20 shadow-2xl py-1 px-0">
+        <Panel className="absolute w-full z-20 shadow-2xl py-1 px-2 ">
           {RenderedElements}
         </Panel>
       )}
