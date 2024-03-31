@@ -12,8 +12,8 @@ function Card(props) {
             {props.icon}
           </div>
           <div className="flex flex-col">
-            <h1 className="text-md font-semibold">{props.title}</h1>
-            <h1 className="text-sm font-semibold">{props.desc}</h1>
+            <h1 className="text-md font-medium">{props.title}</h1>
+            <h1 className="text-sm font-medium">{props.desc}</h1>
           </div>
         </div>
         <h1 className="text-md text-black ml-2 mb-1">{props.footer}</h1>

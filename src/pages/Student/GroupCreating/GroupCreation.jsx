@@ -2,17 +2,30 @@ import React, { useState } from "react";
 import biitSAS from "../../../assets/extra/biitSAS.png";
 import Button from "../../../components/button/Button";
 import Dropdown from "../../../components/dropdown/Dropdown";
+import { Alert } from "bootstrap";
 
 function GroupCreation() {
   const options = [
     { label: "React Native", value: "React-Native" },
     { label: "Android", value: "Android" },
+    { label: "Flutter", value: "Flutter" },
+    { label: "Web", value: "Web" },
   ];
-  const [isGroupCreated, setIsGroupCreated] = useState(true);
+  const [isGroupCreated, setIsGroupCreated] = useState(false);
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
   const [selection, setSelection] = useState(null);
 
   const handleSelect = (option) => {
     setSelection(option);
+  };
+  const handleClick = () => {
+    console.log(title, desc, selection);
+    if (title && desc && selection) {
+      setIsGroupCreated(true);
+    } else {
+      alert("fields not be empty");
+    }
   };
 
   return (
@@ -34,6 +47,8 @@ function GroupCreation() {
                 <input
                   type="text"
                   id="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                   className="border border-gray-400 rounded-md py-1 px-3"
                 />
               </div>
@@ -44,6 +59,8 @@ function GroupCreation() {
                 <input
                   type="text"
                   id="desc"
+                  value={desc}
+                  onChange={(e) => setDesc(e.target.value)}
                   className="border border-gray-400 rounded-md py-1 px-3"
                 />
               </div>
@@ -56,7 +73,7 @@ function GroupCreation() {
                   options={options}
                   value={selection}
                   OnSelect={handleSelect}
-                  className="relative w-2/12"
+                  className="relative w-6/12 text-md"
                 />
               </div>
             </div>
@@ -64,6 +81,7 @@ function GroupCreation() {
               primary
               roundedMedium
               className="text-white p-3 mt-4 hover:bg-green-600 hover:text-white transition-all"
+              onClick={handleClick}
             >
               Create Group
             </Button>
@@ -77,27 +95,27 @@ function GroupCreation() {
             </div>
             <div className="flex flex-col mb-4">
               <form action="#" onSubmit={(e) => e.preventDefault()}>
-                <label htmlFor="desc" className="text-gray-700 mb-1">
-                  Enter the Arid-Number:
-                </label>
-                <div className="flex flex-row  items-center space-x-3  p-3">
+                <div className="flex flex-row justify-center items-center space-x-3  p-3">
+                  <label htmlFor="desc" className="text-gray-700 mb-1">
+                    Enter the Arid-Number:
+                  </label>
                   <input
                     type="number"
                     name="Year"
                     id="Year"
-                    className="border border-gray-400 rounded-md py-1 px-3 w-6/12 h-4/6"
+                    className="border border-gray-400 rounded-md py-1 px-3 w-[80px] h-4/6"
                   />
                   <input
                     type="text"
                     value="-Arid-"
                     readOnly
-                    className="border-none w-1/12 bg-transparent "
+                    className="border-none w-1/12 bg-transparent font-bold"
                   />
                   <input
                     type="number"
                     name="RollNumber"
                     id="RollNumber"
-                    className="border border-gray-400 rounded-md py-1 px-3 w-6/12 h-4/6"
+                    className="border border-gray-400 rounded-md py-1 px-1 w-[80px] h-4/6"
                   />
                 </div>
               </form>
@@ -146,33 +164,73 @@ function GroupCreation() {
                   Request
                 </button>
               </div>
-              <div className="flex flex-row justify-evenly  text-white mt-4 rounded bg-green-600">
+              {/* <div className="flex flex-row justify-between text-white mt-4 rounded bg-green-600">
                 <b>Full Name</b>
                 <b>Arid-Number</b>
                 <b>Technology</b>
-                <b>Status</b>
                 <b>Date</b>
+                <b>Status</b>
               </div>
               <div className="flex flex-row justify-between  text-black mt-0 rounded bg-gray-300 hover:bg-gray-400 cursor-default hover:border-b hover:border-b-black font-normal px-3 py-1">
                 <p>Mubashir Liaqat</p>
                 <p>2020-Arid-3675</p>
                 <p>React-Native</p>
-                <p className="text-red-600 font-bold">Me</p>
                 <p>20-03-2024</p>
+                <p className="text-red-600 font-bold">Me</p>
               </div>
               <div className="flex flex-row justify-between  text-black mt-0 rounded bg-gray-300 font-normal px-3 py-1 hover:bg-gray-400 cursor-default hover:border-b hover:border-b-black">
                 <p>Faheem Abbas</p>
                 <p>2020-Arid-4225</p>
                 <p>React-Js</p>
-                <p className="text-red-600 font-bold">Rejected</p>
                 <p>20-03-2024</p>
+                <p className="text-red-600 font-bold">Rejected</p>
               </div>
               <div className="flex flex-row justify-between  text-black mt-0 rounded bg-gray-300 font-normal px-3 py-1 hover:bg-gray-400 cursor-default hover:border-b hover:border-b-black">
                 <p>Touseef Sajjad</p>
                 <p>2020-Arid-4224</p>
                 <p>Flutter</p>
-                <p className="text-red-600 font-bold">Approved</p>
                 <p>30-03-2024</p>
+                <p className="text-red-600 font-bold">Approved</p>
+              </div> */}
+              <div className="overflow-x-auto mt-2">
+                <table className="w-full whitespace-nowrap">
+                  <thead>
+                    <tr className="bg-green-600 text-white">
+                      <th className="px-6 py-3 text-left">Full Name</th>
+                      <th className="px-6 py-3 text-left">Arid-Number</th>
+                      <th className="px-6 py-3 text-left">Technology</th>
+                      <th className="px-6 py-3 text-left">Date</th>
+                      <th className="px-6 py-3 text-left">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="bg-gray-300 hover:bg-gray-400">
+                      <td className="px-6 py-4">Mubashir Liaqat</td>
+                      <td className="px-6 py-4">2020-Arid-3675</td>
+                      <td className="px-6 py-4">React-Native</td>
+                      <td className="px-6 py-4">20-03-2024</td>
+                      <td className="px-6 py-4 text-red-600 font-bold">Me</td>
+                    </tr>
+                    <tr className="bg-gray-300 hover:bg-gray-400">
+                      <td className="px-6 py-4">Faheem Abbas</td>
+                      <td className="px-6 py-4">2020-Arid-4225</td>
+                      <td className="px-6 py-4">React-Js</td>
+                      <td className="px-6 py-4">20-03-2024</td>
+                      <td className="px-6 py-4 text-red-600 font-bold">
+                        Rejected
+                      </td>
+                    </tr>
+                    <tr className="bg-gray-300 hover:bg-gray-400">
+                      <td className="px-6 py-4">Touseef Sajjad</td>
+                      <td className="px-6 py-4">2020-Arid-4224</td>
+                      <td className="px-6 py-4">Flutter</td>
+                      <td className="px-6 py-4">30-03-2024</td>
+                      <td className="px-6 py-4 text-green-600 font-bold">
+                        Approved
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

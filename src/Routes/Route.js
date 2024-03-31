@@ -7,8 +7,8 @@ import MyGroup from "../pages/Student/MyGroup/MyGroup";
 import MultipleNotification from "../pages/Student/Notification/MultipleNotification";
 import Notification from "../pages/Student/Notification/Notification";
 import Progress from "../pages/Student/Progress/Progress";
+import ConfirmRequest from "../pages/Student/ProjectSelectionAndRequesting/ConfirmRequest";
 import ProjectRequesting from "../pages/Student/ProjectSelectionAndRequesting/ProjectRequesting";
-import ProjectSelection from "../pages/Student/ProjectSelectionAndRequesting/ProjectSelection";
 import HelpRequest from "../pages/Student/Requests/HelpRequest/HelpRequest";
 import JoingingAGroupRequest from "../pages/Student/Requests/JoiningGroupRequest.jsx/JoingingAGroupRequest";
 import TaskList from "../pages/Student/Tasks/TaskList";
@@ -22,7 +22,7 @@ export const studentsRoutes = [
   { path: "/student/Notification", element: <Notification /> },
   { path: "/student/progress", element: <Progress /> },
   { path: "/student/ProjectRequesting", element: <ProjectRequesting /> },
-  { path: "/student/ProjectSelection", element: <ProjectSelection /> },
+  { path: "/student/ConfirmRequest", element: <ConfirmRequest /> },
   { path: "/student/HelpRequest", element: <HelpRequest /> },
   { path: "/student/JoiningAGroup", element: <JoingingAGroupRequest /> },
   { path: "/student/TaskList", element: <TaskList /> },
