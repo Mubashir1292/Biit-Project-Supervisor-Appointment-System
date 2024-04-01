@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import biitSAS from "../../../assets/extra/biitSAS.png";
+//import biitSAS from "../../../assets/extra/biitSAS.png";
+import BiitSAS from "../../../assets/extra/biitSAS.png";
 import Button from "../../../components/button/Button";
 import Dropdown from "../../../components/dropdown/Dropdown";
-import { Alert } from "bootstrap";
 
 function GroupCreation() {
   const options = [
@@ -34,7 +34,7 @@ function GroupCreation() {
         <>
           <div className=" flex flex-col space-x-0 justify-start items-center h-full p-0">
             <div className="w-full flex justify-center">
-              <img src={biitSAS} alt="biitSAS" className="w-3/12 h-auto mt-0" />
+              <img src={BiitSAS} alt="BiitSAS" className="w-3/12 h-auto mt-0" />
             </div>
             <h1 className="text-gray-600 font-bold mt-2 text-center">
               You haven't created any group
@@ -91,7 +91,7 @@ function GroupCreation() {
         <>
           <div className="w-full h-full flex flex-col items-center">
             <div className="w-full flex justify-center">
-              <img src={biitSAS} alt="biitSAS" className="w-4/12 h-auto mt-0" />
+              <img src={BiitSAS} alt="BiitSAS" className="w-4/12 h-auto mt-0" />
             </div>
             <div className="flex flex-col mb-4">
               <form action="#" onSubmit={(e) => e.preventDefault()}>
