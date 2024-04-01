@@ -19,9 +19,10 @@ const Table = ({ data, handleSelect }) => {
               <tr
                 key={index}
                 className={
+                  ("hover:bg-gray-200",
                   isActive
-                    ? "bg-gray-100 cursor-pointer hover:shadow-xl hover:underline"
-                    : "bg-white cursor-pointer hover:shadow-xl hover:underline"
+                    ? "bg-gray-100 cursor-pointer hover:shadow-xl"
+                    : "bg-white cursor-pointer hover:shadow-xl hover:bg-gray-300")
                 }
                 onClick={() => {
                   setActiveIndex(index);

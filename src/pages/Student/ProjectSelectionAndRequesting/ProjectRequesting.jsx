@@ -8,13 +8,13 @@ function ProjectRequesting() {
   const [showProjectPage, setShowProjectPage] = useState(false);
   const [choosedProject, setChoosedProject] = useState("");
   const [selectedProjects, setSelectedProjects] = useState([]);
+  const [selection, setSelection] = useState(null);
   const options = [
     { label: "Artificial Intelligence", value: "Artificial Intelligence" },
     { label: "Software Engineering", value: "Software Engineering" },
     { label: "Networking Management", value: "Networking Management" },
     { label: "Database Management", value: "Database Management" },
   ];
-  const [selection, setSelection] = useState(null);
   const data = [
     {
       domain: 1,
@@ -136,27 +136,39 @@ function ProjectRequesting() {
               <div className="overflow-x-auto mt-2">
                 <table className="w-full whitespace-nowrap">
                   <thead>
-                    <tr className="bg-green-600 text-white rounded">
-                      <th className="px-6 py-3 text-left">Arid-Number</th>
+                    <tr className="bg-green-600 text-white">
                       <th className="px-6 py-3 text-left">Full Name</th>
+                      <th className="px-6 py-3 text-left">Arid-Number</th>
                       <th className="px-6 py-3 text-left">Technology</th>
+                      <th className="px-6 py-3 text-left">Date</th>
+                      <th className="px-6 py-3 text-left">Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr className="bg-gray-300 hover:bg-gray-400">
-                      <td className="px-6 py-4">2020-Arid-3675</td>
                       <td className="px-6 py-4">Mubashir Liaqat</td>
+                      <td className="px-6 py-4">2020-Arid-3675</td>
                       <td className="px-6 py-4">React-Native</td>
+                      <td className="px-6 py-4">20-03-2024</td>
+                      <td className="px-6 py-4 text-red-600 font-bold">Me</td>
                     </tr>
                     <tr className="bg-gray-300 hover:bg-gray-400">
-                      <td className="px-6 py-4">2020-Arid-4225</td>
                       <td className="px-6 py-4">Faheem Abbas</td>
+                      <td className="px-6 py-4">2020-Arid-4225</td>
                       <td className="px-6 py-4">React-Js</td>
+                      <td className="px-6 py-4">20-03-2024</td>
+                      <td className="px-6 py-4 text-red-600 font-bold">
+                        Rejected
+                      </td>
                     </tr>
                     <tr className="bg-gray-300 hover:bg-gray-400">
-                      <td className="px-6 py-4">2020-Arid-4224</td>
                       <td className="px-6 py-4">Touseef Sajjad</td>
+                      <td className="px-6 py-4">2020-Arid-4224</td>
                       <td className="px-6 py-4">Flutter</td>
+                      <td className="px-6 py-4">30-03-2024</td>
+                      <td className="px-6 py-4 text-green-600 font-bold">
+                        Approved
+                      </td>
                     </tr>
                   </tbody>
                 </table>
