@@ -62,7 +62,7 @@ function OtherSidebar({ expanded, setExpanded }) {
       icon: <LayoutDashboard size={20} />,
     },
     {
-      label: "group",
+      label: "My Group",
       path: "/student/creatingGroup",
       icon: <Group size={20} />,
     },
@@ -86,11 +86,11 @@ function OtherSidebar({ expanded, setExpanded }) {
       path: "/student/TaskList",
       icon: <GoTasklist size={20} />,
     },
-    {
-      label: "Progress",
-      path: "/student/progress",
-      icon: <CircleDotDashed size={20} />,
-    },
+    // {
+    //   label: "Progress",
+    //   path: "/student/progress",
+    //   icon: <CircleDotDashed size={20} />,
+    // },
   ];
 
   const RenderedLinks = links.map((link, index) => {
@@ -103,7 +103,7 @@ function OtherSidebar({ expanded, setExpanded }) {
             !expanded ? "w-full transition-all" : "transition-all"
           } ${
             isActive
-              ? "font-bold border-l-4 bg-green-800 border-green-500 pl-2 shadow-lg"
+              ? "font-bold border-l-4 bg-green-800 border-green-500 pl-2 shadow-lg text-md"
               : ""
           }`
         }
