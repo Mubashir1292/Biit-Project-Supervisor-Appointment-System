@@ -22,13 +22,15 @@ function GroupCreation() {
   const [aridNumber, setAridNumber] = useState("");
   const [nameOfMember, setNameOfMember] = useState("");
   const [groupStatus, setGroupStatus] = useState(false);
+  const [message, setMessage] = useState("");
+  const [completeAridNumber, setCompleteAridNumber] = useState("");
+  const [currentGroupCgpa, setCurrentGroupCgpa] = useState(0);
   const handleGetOptions = async () => {
     try {
       const response = await fetch(
         `http://192.168.100.4/OfficialPSAS/api/psas/GettingTechnolgiesOtherThenCreatorTechnology?regNo=${user.uid}`
       );
       const data = await response.json();
-      console.log(data);
       if (data) {
         setOptions(data);
       } else {
@@ -53,10 +55,23 @@ function GroupCreation() {
       console.log("Error:", error);
     }
   };
-
+  //!Get the group cgpa on the base of the regNo
+  const GetGroupCgpa = async () => {
+    try {
+      const response = await fetch(
+        `http://192.168.100.4/OfficialPSAS/api/psas/GroupCgpaByRegNo?regNo=${user.uid}`
+      );
+      const data = await response.json();
+      let parsedNumber = parseFloat(data?.toFixed(2));
+      setCurrentGroupCgpa(parsedNumber);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     handleGetOptions();
     checkingGroupExistance();
+    GetGroupCgpa();
   }, []);
 
   //* Checking Student's group
@@ -91,6 +106,7 @@ function GroupCreation() {
 
   const handleSelect = (option) => {
     setSelection(option);
+    console.log(option);
   };
   const handleClick = () => {
     console.log(title, desc, selection);
@@ -118,9 +134,10 @@ function GroupCreation() {
   };
   //* Searching for a student
   const handleSearch = async () => {
-    let completeAridNumber;
     if (aridNumber.length === 4 && aridYear.length === 4) {
-      completeAridNumber = aridYear + "-Arid-" + aridNumber;
+      let completeArid = aridYear + "-Arid-" + aridNumber;
+      setCompleteAridNumber(completeArid);
+      console.log(completeAridNumber);
     }
     try {
       const response = await fetch(
@@ -146,6 +163,17 @@ function GroupCreation() {
   //* Requesting to new Member
   const handleRequest = async () => {
     try {
+      const response = await fetch(
+        `http://192.168.100.4/OfficialPSAS/api/psas/SendingRequestToMember?senderId=${user.uid}&receiverId=${completeAridNumber}&technology=${selection.label}&Message=${message}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -221,9 +249,20 @@ function GroupCreation() {
         <>
           <div className="w-full h-full flex flex-col items-center">
             <div className="w-full flex justify-center">
-              <img src={BiitSAS} alt="BiitSAS" className="w-4/12 h-auto mt-0" />
+              <img src={BiitSAS} alt="BiitSAS" className="w-5/12 h-auto mt-0" />
             </div>
             <div className="flex flex-col mb-4">
+              <div className="flex flex-row items-center justify-evenly">
+                <label className="text-xl">My Group's Cgpa :</label>
+                <input
+                  type="text"
+                  name="groupCgpa"
+                  id="groupCgpa"
+                  readOnly
+                  className="text-xl"
+                  value={currentGroupCgpa || 0}
+                />
+              </div>
               <form
                 action="#"
                 onSubmit={(e) => {
@@ -296,6 +335,8 @@ function GroupCreation() {
                   name="Message"
                   id="Message"
                   className="border border-gray-500 rounded w-2/6 h-20 resize-none"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
                 ></textarea>
               </div>
               <div className="flex flex-row justify-center items-center space-x-4 mt-3">
