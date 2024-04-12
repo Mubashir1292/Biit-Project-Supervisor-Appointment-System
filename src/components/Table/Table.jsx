@@ -4,7 +4,7 @@ const Table = ({ data, handleSelect }) => {
   const [activeIndex, setActiveIndex] = useState(null);
 
   return (
-    <div className="overflow-x-auto w-3/12 ">
+    <div className="overflow-x-auto w-5/12 ">
       <table className="table-auto w-full border border-gray-300">
         <thead>
           <tr>
@@ -33,7 +33,7 @@ const Table = ({ data, handleSelect }) => {
                   {item.title}
                 </td>
                 <td className={`px-4 py-2 ${isActive ? "font-bold" : ""}`}>
-                  {item.supervisor}
+                  {item.username}
                 </td>
               </tr>
             );

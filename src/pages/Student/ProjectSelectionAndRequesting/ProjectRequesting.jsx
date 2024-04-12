@@ -7,15 +7,27 @@ import Table from "../../../components/Table/Table";
 function ProjectRequesting() {
   const [showProjectPage, setShowProjectPage] = useState(false);
   const [choosedProject, setChoosedProject] = useState("");
+  const [choosedProjectDesc, setChoosedProjectDesc] = useState("");
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [selection, setSelection] = useState(null);
   const [options, setOptions] = useState([]);
-  // const options = [
-  //   { label: "Artificial Intelligence", value: "Artificial Intelligence" },
-  //   { label: "Software Engineering", value: "Software Engineering" },
-  //   { label: "Networking Management", value: "Networking Management" },
-  //   { label: "Database Management", value: "Database Management" },
-  // ];
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : null;
+  const [currentGroupCgpa, setCurrentGroupCgpa] = useState(0);
+  const [myGroupDetails, setMyGroupDetails] = useState([]);
+  const GetGroupCgpa = async () => {
+    try {
+      const response = await fetch(
+        `http://192.168.100.4/OfficialPSAS/api/psas/GroupCgpaByRegNo?regNo=${user.uid}`
+      );
+      const data = await response.json();
+      let parsedNumber = parseFloat(data?.toFixed(2));
+      setCurrentGroupCgpa(parsedNumber);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleGetOptions = async () => {
     try {
       const response = await fetch(
@@ -32,48 +44,62 @@ function ProjectRequesting() {
     }
   };
 
+  // getting myGroup
+  const GettingCompleteGroup = async (pid) => {
+    try {
+      const response = await fetch(
+        `http://192.168.100.4/OfficialPSAS/api/psas/DetailsProjectSupervisorGroup?projectId=${choosedProject.pid}&regNo=${user.uid}`
+      );
+      const data = await response.json();
+      console.log(data.singleGroupDetails);
+      setMyGroupDetails(data.singleGroupDetails);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     handleGetOptions();
+    GetGroupCgpa();
   }, []);
-  const data = [
-    {
-      domain: 1,
-      title: "AI Health Engine",
-      supervisor: "Dr.Hassan",
-      desc: "The AI Health Engine project likely involves the development of an artificial intelligence system designed to improve healthcare services.",
-    },
-    {
-      domain: 2,
-      title: "Instagram Spam",
-      supervisor: "Sir Zahid",
-      desc: "The Instagram Spam project could involve developing techniques to detect and mitigate spam or malicious activities on the Instagram platform.",
-    },
-    {
-      domain: 1,
-      title: "Techable Machine",
-      supervisor: "Dr.Hassan",
-      desc: "Teachable Machine is an interactive web experiment developed by Google that allows users to train a machine learning model using their webcam.",
-    },
-  ];
-  const handleSelect = (option) => {
+
+  const handleSelect = async (option) => {
     setSelection(option);
-    console.log(option);
-    if (option.value === "Artifical Intelligence") {
-      const projects = data.filter((i) => i.domain === 1);
-      setSelectedProjects(projects);
-    } else {
-      setSelectedProjects([]);
-    }
+
+    // fetching the Projects on the base on domain and cgpa
+    const response = await fetch(
+      `http://192.168.100.4/OfficialPSAS/api/psas/ProjectsByDomain?Domain=${option.value}&regNo=${user.uid}`
+    );
+    const data = await response.json();
+    setSelectedProjects(data);
   };
   const handleProjectTitle = (option) => {
     setChoosedProject(option);
-    console.log(option);
+    setChoosedProjectDesc(option.description);
   };
   const handleNavigation = () => {
     if (choosedProject) {
       setShowProjectPage((curr) => !curr);
+      GettingCompleteGroup(choosedProject.pid);
     } else {
       alert("Select any project");
+    }
+  };
+  const handlePostedRequest = async () => {
+    try {
+      const response = await fetch(
+        `http://192.168.100.4/OfficialPSAS/api/psas/PostingRequesttoSupervisor?projectId=${choosedProject.pid}&regNo=${user.uid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "Application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      alert(data);
+      setShowProjectPage((curr) => !curr);
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -92,7 +118,7 @@ function ProjectRequesting() {
               <p className="font-normal text-lg ">
                 Your Group CGPA :
                 <span className="font-bold ml-3 border-b border-b-black">
-                  2.74
+                  {currentGroupCgpa || 0}
                 </span>
               </p>
               <div className="flex flex-row w-full h-full justify-center  space-x-10 items-center">
@@ -117,8 +143,8 @@ function ProjectRequesting() {
                   name="projectDetails"
                   id="projectDetails"
                   readOnly
-                  className="border border-gray-500 rounded xl:w-3/12 xl:min-h-28 lg:w-3/12 lg:h-max p-2"
-                  value={choosedProject.desc}
+                  className="border border-gray-500 rounded xl:w-2/12 xl:h-20 lg:w-5/12 lg:h-32 p-3"
+                  value={choosedProjectDesc}
                 ></textarea>
               </div>
               <div className="flex flex-row justify-center items-center w-full relative">
@@ -153,7 +179,7 @@ function ProjectRequesting() {
               </div>
               <div className="flex flex-row space-x-4 justify-center">
                 <label>Supervisor:</label>
-                <b className="text-center">{choosedProject.supervisor}</b>
+                <b className="text-center">{choosedProject.username}</b>
               </div>
               <div className="overflow-x-auto mt-2">
                 <table className="w-full whitespace-nowrap">
@@ -162,45 +188,33 @@ function ProjectRequesting() {
                       <th className="px-6 py-3 text-left">Full Name</th>
                       <th className="px-6 py-3 text-left">Arid-Number</th>
                       <th className="px-6 py-3 text-left">Technology</th>
-                      <th className="px-6 py-3 text-left">Date</th>
-                      <th className="px-6 py-3 text-left">Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="bg-gray-300 hover:bg-gray-400">
-                      <td className="px-6 py-4">Mubashir Liaqat</td>
-                      <td className="px-6 py-4">2020-Arid-3675</td>
-                      <td className="px-6 py-4">React-Native</td>
-                      <td className="px-6 py-4">20-03-2024</td>
-                      <td className="px-6 py-4 text-red-600 font-bold">Me</td>
-                    </tr>
-                    <tr className="bg-gray-300 hover:bg-gray-400">
-                      <td className="px-6 py-4">Faheem Abbas</td>
-                      <td className="px-6 py-4">2020-Arid-4225</td>
-                      <td className="px-6 py-4">React-Js</td>
-                      <td className="px-6 py-4">20-03-2024</td>
-                      <td className="px-6 py-4 text-red-600 font-bold">
-                        Rejected
-                      </td>
-                    </tr>
-                    <tr className="bg-gray-300 hover:bg-gray-400">
-                      <td className="px-6 py-4">Touseef Sajjad</td>
-                      <td className="px-6 py-4">2020-Arid-4224</td>
-                      <td className="px-6 py-4">Flutter</td>
-                      <td className="px-6 py-4">30-03-2024</td>
-                      <td className="px-6 py-4 text-green-600 font-bold">
-                        Approved
-                      </td>
-                    </tr>
+                    {myGroupDetails?.map((item, index) => (
+                      <tr className="bg-gray-300 hover:bg-gray-400" key={index}>
+                        <td className="px-6 py-4">{item.name}</td>
+                        <td className="px-6 py-4">{item.regNo}</td>
+                        <td className="px-6 py-4">{item.technology}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
             </div>
             <div className="flex flex-row justify-between space-x-3 items-center">
-              <button className="bg-black text-white  text-center p-2 rounded hover:bg-transparent hover:text-black transition-all border border-black ">
+              <button
+                className="bg-black text-white  text-center p-2 rounded hover:bg-transparent hover:text-black transition-all border border-black "
+                onClick={() => {
+                  setShowProjectPage((curr) => !curr);
+                }}
+              >
                 Discard
               </button>
-              <button className="bg-green-600 text-white text-center p-2 rounded cursor-pointer hover:bg-white hover:text-green-600 border border-green-600 ">
+              <button
+                className="bg-green-600 text-white text-center p-2 rounded cursor-pointer hover:bg-white hover:text-green-600 border border-green-600 "
+                onClick={handlePostedRequest}
+              >
                 Request
               </button>
             </div>
