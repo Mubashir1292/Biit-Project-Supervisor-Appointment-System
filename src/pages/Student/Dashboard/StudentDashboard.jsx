@@ -1,19 +1,65 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../../../components/Cards/Card";
 import biitlogo from "../../../assets/extra/biitSAS.png";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import AppointmentCard from "../../../components/Cards/AppointmentCard";
 import MessageCard from "../../../components/Cards/MessageCard";
 import TaskList from "../../../components/Cards/TaskList";
-import { GitPullRequest } from "lucide-react";
+import { CircleDotDashed, GitPullRequest } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function StudentDashboard() {
-  const options = [
-    { label: "Today", value: "Today" },
-    { label: "last Week", value: "Last Week" },
-    { label: "Last Month", value: "Last Month" },
-    { label: "Last Six Month", value: "Last Six Month" },
-  ];
+  const [options, setOptions] = useState([]);
+  const [sentRequest, setSentRequest] = useState([]);
+  const [isUser, setIsUser] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleGetOptions = async () => {
+    try {
+      const response = await fetch(
+        "http://192.168.100.4/OfficialPSAS/api/psas/GetAllDuration"
+      );
+      const data = await response.json();
+      if (data) {
+        setOptions(data);
+      } else {
+        console.log(response.status);
+      }
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+  const handleGetRequests = async (user) => {
+    try {
+      setIsUser(user);
+      const response = await fetch(
+        `http://192.168.100.4/officialPSAS/api/psas/getAllRequests?Id=${user.uid}`
+      );
+      const data = await response.json();
+      if (data.length) {
+        console.log(data);
+        setSentRequest(data);
+      } else {
+        console.log(response.status);
+      }
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    const userString = localStorage.getItem("user");
+    const user = userString ? JSON.parse(userString) : null;
+    if (user) {
+      console.log(user);
+    } else {
+      navigate("/");
+    }
+    handleGetOptions();
+    handleGetRequests(user);
+  }, []);
+
   const [selection, setSelection] = useState(null);
   const handleSelect = (option) => {
     setSelection(option);
@@ -35,18 +81,12 @@ function StudentDashboard() {
         <div className="w-full h-auto flex flex-row justify-around pt-10">
           <Card
             icon={<GitPullRequest />}
-            title="Group Requests"
-            desc="02"
-            footer="55%"
-          />
-          <Card
-            icon={<GitPullRequest />}
             title="Sent Requests"
-            desc="03"
-            footer="65%"
+            desc={sentRequest.length}
           />
+          <Card icon={<GitPullRequest />} title="Project Requests" desc="03" />
           <Card
-            icon={<GitPullRequest />}
+            icon={<CircleDotDashed />}
             title="Current Progress"
             desc="..."
             footer="0%"

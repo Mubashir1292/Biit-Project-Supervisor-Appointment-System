@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import biitSAS from "../../../assets/extra/biitSAS.png";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import Table from "../../../components/Table/Table";
@@ -9,12 +9,32 @@ function ProjectRequesting() {
   const [choosedProject, setChoosedProject] = useState("");
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [selection, setSelection] = useState(null);
-  const options = [
-    { label: "Artificial Intelligence", value: "Artificial Intelligence" },
-    { label: "Software Engineering", value: "Software Engineering" },
-    { label: "Networking Management", value: "Networking Management" },
-    { label: "Database Management", value: "Database Management" },
-  ];
+  const [options, setOptions] = useState([]);
+  // const options = [
+  //   { label: "Artificial Intelligence", value: "Artificial Intelligence" },
+  //   { label: "Software Engineering", value: "Software Engineering" },
+  //   { label: "Networking Management", value: "Networking Management" },
+  //   { label: "Database Management", value: "Database Management" },
+  // ];
+  const handleGetOptions = async () => {
+    try {
+      const response = await fetch(
+        "http://192.168.100.4/OfficialPSAS/api/psas/AllDomains"
+      );
+      const data = await response.json();
+      if (data) {
+        setOptions(data);
+      } else {
+        console.log(response.status);
+      }
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetOptions();
+  }, []);
   const data = [
     {
       domain: 1,
@@ -37,7 +57,8 @@ function ProjectRequesting() {
   ];
   const handleSelect = (option) => {
     setSelection(option);
-    if (option.value === "Artificial Intelligence") {
+    console.log(option);
+    if (option.value === "Artifical Intelligence") {
       const projects = data.filter((i) => i.domain === 1);
       setSelectedProjects(projects);
     } else {
@@ -46,6 +67,7 @@ function ProjectRequesting() {
   };
   const handleProjectTitle = (option) => {
     setChoosedProject(option);
+    console.log(option);
   };
   const handleNavigation = () => {
     if (choosedProject) {

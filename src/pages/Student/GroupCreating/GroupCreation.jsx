@@ -1,20 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 //import biitSAS from "../../../assets/extra/biitSAS.png";
 import BiitSAS from "../../../assets/extra/biitSAS.png";
 import Button from "../../../components/button/Button";
 import Dropdown from "../../../components/dropdown/Dropdown";
 
 function GroupCreation() {
-  const options = [
-    { label: "React Native", value: "React-Native" },
-    { label: "Android", value: "Android" },
-    { label: "Flutter", value: "Flutter" },
-    { label: "Web", value: "Web" },
-  ];
   const [isGroupCreated, setIsGroupCreated] = useState(false);
+
+  //! checking if the group is created or Not
+  //* this condition is checked when the student login successfull
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [selection, setSelection] = useState(null);
+  const [options, setOptions] = useState([]);
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : null;
+  const handleGetOptions = async () => {
+    try {
+      const response = await fetch(
+        "http://192.168.100.4/OfficialPSAS/api/psas/fillingDropDown"
+      );
+      const data = await response.json();
+      if (data) {
+        setOptions(data);
+      } else {
+        console.log(response.status);
+      }
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetOptions();
+  }, []);
 
   const handleSelect = (option) => {
     setSelection(option);
@@ -27,7 +46,22 @@ function GroupCreation() {
       alert("fields not be empty");
     }
   };
-
+  const handleSubmit = async () => {
+    const response = await fetch(
+      `http://192.168.100.4/OfficialPSAS/api/psas/CreateNewGroup?id=${user.uid}&title=${title}&desc=${desc}&creatorTechnology=${selection.value}`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    if (data.includes("Created")) {
+      setIsGroupCreated(true);
+    }
+    console.log(data);
+  };
   return (
     <>
       {!isGroupCreated ? (
@@ -39,7 +73,7 @@ function GroupCreation() {
             <h1 className="text-gray-600 font-bold mt-2 text-center">
               You haven't created any group
             </h1>
-            <div className="mt-6 w-80">
+            <form className="mt-6 w-80" onSubmit={handleSubmit}>
               <div className="flex flex-col mb-4">
                 <label htmlFor="title" className="text-gray-700 mb-1">
                   Title:
@@ -76,15 +110,17 @@ function GroupCreation() {
                   className="relative w-6/12 text-md"
                 />
               </div>
+            </form>
+            <div className="flex flex-row">
+              <Button
+                primary
+                roundedMedium
+                className="text-white p-3 mt-4 hover:bg-green-600 hover:text-white transition-all"
+                onClick={handleSubmit}
+              >
+                Create Group
+              </Button>
             </div>
-            <Button
-              primary
-              roundedMedium
-              className="text-white p-3 mt-4 hover:bg-green-600 hover:text-white transition-all"
-              onClick={handleClick}
-            >
-              Create Group
-            </Button>
           </div>
         </>
       ) : (

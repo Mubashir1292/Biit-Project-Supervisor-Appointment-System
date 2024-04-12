@@ -4,34 +4,31 @@ import Login from "../../assets/login/login.png";
 import { useNavigate } from "react-router-dom";
 const LoginPage = () => {
   document.title = "BIIT Supervisor Appointment System";
-  const [username, setUsername] = useState("");
+  const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const handleLogin = async () => {
-    // try {
-    //   const response = await fetch(
-    //     `OfficialPSAS/api/psas/Login?username=${username}&password=${password}`
-    //   );
-    //   const res = await response.json();
-    //   if (res != null) {
-    //     localStorage.getItem("isUser", res);
-    //     if (res === "student") {
-    //       navigate("/student/dashboard");
-    //     } else if (res === "teacher") {
-    //       navigate("/teacher/dashboard");
-    //     } else if (res === "TechnicalExpert") {
-    //       navigate("/technicalExpert/dashboard");
-    //     } else if (res === "projectCommetiee") {
-    //       navigate("/projectCommetiee/dashboard");
-    //     } else {
-    //       navigate("/");
-    //     }
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    if (username === "Mubashir" && password === "password") {
-      navigate("/student/creatingGroup");
+    try {
+      const response = await fetch(
+        `http://192.168.100.4/OfficialPSAS/api/psas/Login?id=${id}&password=${password}`
+      );
+      const res = await response.json();
+      if (res != null) {
+        if (res.role === "student") {
+          localStorage.setItem("user", JSON.stringify(res));
+          navigate("/student/dashboard", { state: res });
+        } else if (res.role === "teacher") {
+          navigate("/teacher/dashboard");
+        } else if (res.role === "TechnicalExpert") {
+          navigate("/technicalExpert/dashboard");
+        } else if (res.role === "projectCommetiee") {
+          navigate("/projectCommetiee/dashboard");
+        } else {
+          navigate("/");
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -56,8 +53,8 @@ const LoginPage = () => {
               id="username"
               type="text"
               placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={id}
+              onChange={(e) => setId(e.target.value)}
             />
           </div>
           <div className="mb-6">

@@ -2,7 +2,6 @@
   "name": "official-sas",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://192.168.100.4/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -13,12 +12,12 @@
     "lucide-react": "^0.359.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
-    "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.1",
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
+    "reactstrap": "^9.2.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
