@@ -15,6 +15,7 @@ const LoginPage = () => {
       const res = await response.json();
       if (res != null) {
         if (res.role === "student") {
+          console.log(res);
           localStorage.setItem("user", JSON.stringify(res));
           navigate("/student/dashboard", { state: res });
         } else if (res.role === "teacher") {
