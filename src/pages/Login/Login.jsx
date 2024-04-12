@@ -10,7 +10,7 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/Login?id=${id}&password=${password}`
+        `http://192.168.1.11/OfficialPSAS/api/psas/Login?id=${id}&password=${password}`
       );
       const res = await response.json();
       if (res != null) {

@@ -18,7 +18,7 @@ function GroupCreation() {
   const handleGetOptions = async () => {
     try {
       const response = await fetch(
-        "http://192.168.100.4/OfficialPSAS/api/psas/fillingDropDown"
+        "http://192.168.1.11/OfficialPSAS/api/psas/fillingDropDown"
       );
       const data = await response.json();
       if (data) {
@@ -48,7 +48,7 @@ function GroupCreation() {
   };
   const handleSubmit = async () => {
     const response = await fetch(
-      `http://192.168.100.4/OfficialPSAS/api/psas/CreateNewGroup?id=${user.uid}&title=${title}&desc=${desc}&creatorTechnology=${selection.value}`,
+      `http://192.168.1.11/OfficialPSAS/api/psas/CreateNewGroup?id=${user.uid}&title=${title}&desc=${desc}&creatorTechnology=${selection.value}`,
       {
         method: "POST",
         headers: {
