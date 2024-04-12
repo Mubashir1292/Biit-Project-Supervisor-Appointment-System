@@ -10,13 +10,14 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.11/OfficialPSAS/api/psas/Login?id=${id}&password=${password}`
+        `http://192.168.100.4/OfficialPSAS/api/psas/Login?id=${id}&password=${password}`
       );
       const res = await response.json();
+      console.log(res);
       if (res != null) {
         if (res.role === "student") {
-          console.log(res);
           localStorage.setItem("user", JSON.stringify(res));
+          console.log(res);
           navigate("/student/dashboard", { state: res });
         } else if (res.role === "teacher") {
           navigate("/teacher/dashboard");
@@ -46,7 +47,11 @@ const LoginPage = () => {
         </div>
         <form
           className=" h-[100%] rounded px-8 pt-6 pb-8 mb-4"
-          onSubmit={handleLogin}
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleLogin();
+            console.log("Pressed");
+          }}
         >
           <div className="mb-4 mt-3">
             <input
@@ -70,9 +75,11 @@ const LoginPage = () => {
           </div>
           <div className="flex items-center justify-center ">
             <button
-              className="bg-[#05B058] hover:bg-[#fff] text-[#fff] hover:text-[#05B058] hover:shadow-2xl border font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-[60%]"
+              className="bg-[#05B058] hover:bg-[#fff] text-[#fff] hover:text-[#05B058] hover:shadow-2xl border font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-[60%] transition-all ease-in-out"
               type="button"
-              onClick={handleLogin}
+              onClick={() => {
+                handleLogin();
+              }}
             >
               Sign In
             </button>

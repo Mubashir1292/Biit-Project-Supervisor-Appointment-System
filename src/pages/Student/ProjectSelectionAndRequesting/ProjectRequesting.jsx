@@ -19,7 +19,7 @@ function ProjectRequesting() {
   const handleGetOptions = async () => {
     try {
       const response = await fetch(
-        "http://192.168.1.11/OfficialPSAS/api/psas/AllDomains"
+        "http://192.168.100.4/OfficialPSAS/api/psas/AllDomains"
       );
       const data = await response.json();
       if (data) {

@@ -7,23 +7,45 @@ import Dropdown from "../../../components/dropdown/Dropdown";
 function GroupCreation() {
   const [isGroupCreated, setIsGroupCreated] = useState(false);
   const [group, setGroup] = useState([]);
+  const [isDisabled, setIsDisabled] = useState(false);
   //! checking if the group is created or Not
   //* this condition is checked when the student login successfull
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [selection, setSelection] = useState(null);
   const [options, setOptions] = useState([]);
+  const [res, setRes] = useState([]);
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
-
+  //* setting the variables for the requesting for a new member
+  const [aridYear, setAridYear] = useState("");
+  const [aridNumber, setAridNumber] = useState("");
+  const [nameOfMember, setNameOfMember] = useState("");
+  const [groupStatus, setGroupStatus] = useState(false);
   const handleGetOptions = async () => {
     try {
       const response = await fetch(
-        "http://192.168.1.11/OfficialPSAS/api/psas/fillingDropDown"
+        `http://192.168.100.4/OfficialPSAS/api/psas/GettingTechnolgiesOtherThenCreatorTechnology?regNo=${user.uid}`
+      );
+      const data = await response.json();
+      console.log(data);
+      if (data) {
+        setOptions(data);
+      } else {
+        console.log(response.status);
+      }
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+  const checkingGroupExistance = async () => {
+    try {
+      const response = await fetch(
+        `http://192.168.100.4/OfficialPSAS/api/psas/MyGroup?regNo=${user.uid}`
       );
       const data = await response.json();
       if (data) {
-        setOptions(data);
+        setIsGroupCreated(true);
       } else {
         console.log(response.status);
       }
@@ -34,22 +56,33 @@ function GroupCreation() {
 
   useEffect(() => {
     handleGetOptions();
-    console.log(user);
+    checkingGroupExistance();
   }, []);
 
   //* Checking Student's group
+  let currenteDate = new Date();
+  let formattedDateTime = currenteDate.toISOString().slice(0, 19);
   const GetGroupStatus = async () => {
+    const MySelf = {
+      dateTime: formattedDateTime,
+      name: user.name,
+      receiver: {
+        uid: user.uid,
+        username: user.username,
+      },
+      status: "Me",
+    };
     const response = await fetch(
-      `http://192.168.1.11/OfficialPSAS/api/psas/GettingAllGroupRequests?regNo=${user.uid}`
+      `http://192.168.100.4/OfficialPSAS/api/psas/getAllRequests?Id=${user.uid}`
     );
-    const result = await response.json();
+    let result = await response.json();
+    setRes(result);
+    setRes([...result, MySelf]);
     if (typeof result === "object") {
-      setIsGroupCreated(true);
-      const MySelf = {};
       setGroup(result);
-      console.log(result);
-    } else {
-      setIsGroupCreated(false);
+      if (result.length === 5) {
+        setIsDisabled(true);
+      }
     }
   };
   useEffect(() => {
@@ -69,7 +102,7 @@ function GroupCreation() {
   };
   const handleSubmit = async () => {
     const response = await fetch(
-      `http://192.168.1.11/OfficialPSAS/api/psas/CreateNewGroup?regNo=${user.uid}&title=${title}&desc=${desc}&creatorTechnology=${selection.value}`,
+      `http://192.168.100.4/OfficialPSAS/api/psas/CreateNewGroup?regNo=${user.uid}&title=${title}&desc=${desc}&creatorTechnology=${selection.value}`,
       {
         method: "POST",
         headers: {
@@ -82,6 +115,40 @@ function GroupCreation() {
       setIsGroupCreated(true);
     }
     console.log(data);
+  };
+  //* Searching for a student
+  const handleSearch = async () => {
+    let completeAridNumber;
+    if (aridNumber.length === 4 && aridYear.length === 4) {
+      completeAridNumber = aridYear + "-Arid-" + aridNumber;
+    }
+    try {
+      const response = await fetch(
+        `http://192.168.100.4/OfficialPSAS/api/psas/CheckingStudentGroupStatus?regNo=${completeAridNumber}`
+      );
+      const data = await response.json();
+      console.log(data);
+      if (data.includes("0")) {
+        let name = data.split(":")[1];
+        setNameOfMember(name);
+        setGroupStatus(true);
+      } else if (data.includes("1")) {
+        setGroupStatus(false);
+        let name = data.split(":")[1];
+        setNameOfMember(name);
+      } else {
+        alert(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //* Requesting to new Member
+  const handleRequest = async () => {
+    try {
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <>
@@ -157,7 +224,12 @@ function GroupCreation() {
               <img src={BiitSAS} alt="BiitSAS" className="w-4/12 h-auto mt-0" />
             </div>
             <div className="flex flex-col mb-4">
-              <form action="#" onSubmit={(e) => e.preventDefault()}>
+              <form
+                action="#"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
                 <div className="flex flex-row justify-center items-center space-x-3  p-3">
                   <label htmlFor="desc" className="text-gray-700 mb-1">
                     Enter the Arid-Number:
@@ -167,6 +239,8 @@ function GroupCreation() {
                     name="Year"
                     id="Year"
                     className="border border-gray-400 rounded-md py-1 px-3 w-[80px] h-4/6"
+                    value={aridYear}
+                    onChange={(e) => setAridYear(e.target.value)}
                   />
                   <input
                     type="text"
@@ -179,6 +253,14 @@ function GroupCreation() {
                     name="RollNumber"
                     id="RollNumber"
                     className="border border-gray-400 rounded-md py-1 px-1 w-[80px] h-4/6"
+                    value={aridNumber}
+                    onChange={(e) => setAridNumber(e.target.value)}
+                  />
+                  <input
+                    type="submit"
+                    value="Search"
+                    className="bg-green-600 text-white px-2 rounded-md hover:bg-white hover:text-green-700 transition-all ease-in-out cursor-pointer border hover:border-green-700"
+                    onClick={handleSearch}
                   />
                 </div>
               </form>
@@ -188,11 +270,14 @@ function GroupCreation() {
                   type="text"
                   name="nameFetched"
                   id="nameFetched"
-                  className="border-b border-b-gray-700"
+                  className="border-b border-b-gray-700 text-center"
                   readOnly
+                  value={nameOfMember || ""}
                 />
                 <label className="text-green-600">
-                  This Person can join group
+                  {groupStatus
+                    ? "This Student is Available"
+                    : "This Student is not Available"}
                 </label>
               </div>
               <div className="flex flex-row justify-center items-center  space-x-3">
@@ -222,7 +307,13 @@ function GroupCreation() {
                 </button>
                 <button
                   type="button"
-                  className="bg-green-600 text-white px-6 py-2 rounded hover:bg-gray-50 hover:text-green-600 transition-all border border-green-600 hover:font-bold"
+                  className={`bg-green-600 text-white px-6 py-2 rounded border border-green-600 ${
+                    groupStatus
+                      ? "hover:bg-gray-50 hover:text-green-600 transition-all  hover:font-bold"
+                      : ""
+                  }`}
+                  disabled={!groupStatus}
+                  onClick={handleRequest}
                 >
                   Request
                 </button>
@@ -239,20 +330,26 @@ function GroupCreation() {
                     </tr>
                   </thead>
                   <tbody>
-                    {group?.map((item, index) => (
+                    {res?.map((item, index) => (
                       <tr className="bg-gray-300 hover:bg-gray-400" key={index}>
                         <td className="px-6 py-4">{item.receiver.username}</td>
                         <td className="px-6 py-4">{item.receiver.uid}</td>
-                        <td className="px-6 py-4">{item.TechnologyName}</td>
+                        <td className="px-6 py-4">{item.name}</td>
                         <td className="px-6 py-4">
-                          {item.datetime.split("T")[0]}
+                          {item.datetime ? (
+                            <span>{item.datetime.slice(0, 10)}</span>
+                          ) : (
+                            <span className="text-center font-bold">
+                              ------------
+                            </span>
+                          )}
                         </td>
                         <td className="px-6 py-4 text-red-600 font-bold">
                           {item.status === 0
                             ? "pending"
                             : item.status === 1
                             ? "Approved"
-                            : "Rejected"}
+                            : "Me"}
                         </td>
                       </tr>
                     ))}
@@ -264,8 +361,8 @@ function GroupCreation() {
                       <td className="px-6 py-4 text-red-600 font-bold">
                         Rejected
                       </td>
-                    </tr> */}
-                    {/* <tr className="bg-gray-300 hover:bg-gray-400">
+                    </tr>
+                    <tr className="bg-gray-300 hover:bg-gray-400">
                       <td className="px-6 py-4">Touseef Sajjad</td>
                       <td className="px-6 py-4">2020-Arid-4224</td>
                       <td className="px-6 py-4">Flutter</td>
