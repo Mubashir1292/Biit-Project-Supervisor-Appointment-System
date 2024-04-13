@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import BiitSAS from "../../../../assets/extra/biitSAS.png";
 import Dropdown from "../../../../components/dropdown/Dropdown";
+import { object } from "prop-types";
 function HelpRequest() {
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
@@ -9,7 +10,7 @@ function HelpRequest() {
   //   { label: "Sir Zahid", value: "Sir Zahid" },
   //   { label: "Sir Umar", value: "Sir Umar" },
   // ];
-  const [Dayselection, setDaySelection] = useState(null);
+  const [Dayselection, setDaySelection] = useState("Monday");
   const [selectionExpert, setSelectionExpert] = useState(null);
   const [Timeselection, setTimeSelection] = useState(null);
   const [myTechnology, setMyTechnology] = useState("");
@@ -80,21 +81,23 @@ function HelpRequest() {
   const getTimeSlots = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/GetTheTimeSlots?day=${Dayselection.value}&teacher_id=${selectionExpert?.label}`
+        `http://192.168.100.4/OfficialPSAS/api/psas/GetTheTimeSlots?day=${
+          Dayselection || weekDays[0].value
+        }&teacher_id=${selectionExpert.label || expertList[0].label}`
       );
       const data = await response.json();
-      if (data !== "") {
+      if (data.length > 0) {
         const TimeSlots = data.map((item) => ({
           label: item.Sch_id,
           value: item.start_time.slice(0, 5) + "-" + item.end_time.slice(0, 5),
         }));
         if (TimeSlots.length !== 0) {
-          console.log(TimeSlots);
           setFreeTimeSlots(TimeSlots);
         } else {
-          console.log(freeTimeSlots);
-          setFreeTimeSlots([]);
+          setFreeTimeSlots(data);
         }
+      } else {
+        setFreeTimeSlots([]);
       }
     } catch (error) {
       console.log(error);
@@ -103,9 +106,25 @@ function HelpRequest() {
   //! posting the final help Request
   const postingHelpRequest = async () => {
     try {
-      const respone = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/PostingHelpRequest?teacher_id=${selectionExpert.label}&regno=${user.uid}&sch_id=${selectionExpert.label}&message=${message}`
-      );
+      if (selectionExpert.label && user.uid && Timeselection.label && message) {
+        const response = await fetch(
+          `http://192.168.100.4/OfficialPSAS/api/psas/PostingHelpRequest?teacher_id=${
+            selectionExpert.label || expertList[0].label
+          }&regno=${user.uid}&sch_id=${
+            Timeselection.label || freeTimeSlots[0].label
+          }&message=${message}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "Application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        console.log(data);
+      } else {
+        console.log("fields cannot be empty");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -118,15 +137,24 @@ function HelpRequest() {
   }, []);
 
   const handleSelect = (option) => {
-    setSelectionExpert(option);
-    console.log(option);
+    setSelectionExpert((prev) => {
+      return option;
+    });
+    console.log(expertList[0].label);
   };
 
   const handleDaySelect = (option) => {
-    setDaySelection(option);
-    getTimeSlots();
-    console.log(option);
+    setDaySelection((prev) => {
+      return option.value;
+    });
   };
+
+  useEffect(() => {
+    if (Dayselection !== null && Dayselection !== undefined) {
+      getTimeSlots();
+    }
+  }, [Dayselection]);
+
   const handleTimeSelect = (option) => {
     setTimeSelection(option);
     console.log(Timeselection);
@@ -183,7 +211,7 @@ function HelpRequest() {
             <textarea
               name="Message"
               id="Message"
-              className="border border-gray-500 rounded w-1/6 h-20 resize-none"
+              className="border border-gray-500 rounded w-2/6 h-24 resize-none p-3"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             ></textarea>
@@ -198,6 +226,7 @@ function HelpRequest() {
             <button
               type="button"
               className="bg-green-600 text-white px-6 py-2 rounded hover:bg-gray-50 hover:text-green-600 transition-all border border-green-600 hover:font-bold"
+              onClick={postingHelpRequest}
             >
               Send
             </button>
