@@ -37,7 +37,7 @@ function Dropdown({ label, options, value, OnSelect, className, ...rest }) {
             onClick={() => handleOptionClick(option)}
             className="hover:bg-gray-300 flex justify-content rounded cursor-pointer border-b border-gray-400 mt-2"
           >
-            {option.label}
+            {option.value}
           </div>
         </div>
       ))
@@ -49,7 +49,7 @@ function Dropdown({ label, options, value, OnSelect, className, ...rest }) {
         onClick={handleClick}
         className="flex justify-between px-2 text-md mt-2 border-black border py-1 items-center  hover:bg-gray-50"
       >
-        {value?.label || options[0]?.label}
+        {value?.value || options[0]?.value}
         {isOpen ? (
           <GoChevronUp className="text-xl" />
         ) : (
