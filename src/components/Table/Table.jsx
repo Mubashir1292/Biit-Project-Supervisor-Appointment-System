@@ -13,31 +13,37 @@ const Table = ({ data, handleSelect }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) => {
-            const isActive = activeIndex === index;
-            return (
-              <tr
-                key={index}
-                className={
-                  ("hover:bg-gray-200",
-                  isActive
-                    ? "bg-gray-100 cursor-pointer hover:shadow-xl"
-                    : "bg-white cursor-pointer hover:shadow-xl hover:bg-gray-300")
-                }
-                onClick={() => {
-                  setActiveIndex(index);
-                  handleSelect(item);
-                }}
-              >
-                <td className={`px-4 py-2 ${isActive ? "font-bold" : ""}`}>
-                  {item.title}
-                </td>
-                <td className={`px-4 py-2 ${isActive ? "font-bold" : ""}`}>
-                  {item.username}
-                </td>
-              </tr>
-            );
-          })}
+          {data ? (
+            <>
+              {data.map((item, index) => {
+                const isActive = activeIndex === index;
+                return (
+                  <tr
+                    key={index}
+                    className={
+                      ("hover:bg-gray-200",
+                      isActive
+                        ? "bg-gray-100 cursor-pointer hover:shadow-xl"
+                        : "bg-white cursor-pointer hover:shadow-xl hover:bg-gray-300")
+                    }
+                    onClick={() => {
+                      setActiveIndex(index);
+                      handleSelect(item);
+                    }}
+                  >
+                    <td className={`px-4 py-2 ${isActive ? "font-bold" : ""}`}>
+                      {item?.title}
+                    </td>
+                    <td className={`px-4 py-2 ${isActive ? "font-bold" : ""}`}>
+                      {item?.username}
+                    </td>
+                  </tr>
+                );
+              })}
+            </>
+          ) : (
+            <></>
+          )}
         </tbody>
       </table>
     </div>

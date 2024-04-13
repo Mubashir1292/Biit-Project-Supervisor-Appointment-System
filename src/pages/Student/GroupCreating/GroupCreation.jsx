@@ -13,6 +13,7 @@ function GroupCreation() {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [selection, setSelection] = useState(null);
+  const [selectedTechnology, setSelectedTechnology] = useState(null);
   const [options, setOptions] = useState([]);
   const [res, setRes] = useState([]);
   const userString = localStorage.getItem("user");
@@ -25,6 +26,25 @@ function GroupCreation() {
   const [message, setMessage] = useState("");
   const [completeAridNumber, setCompleteAridNumber] = useState("");
   const [currentGroupCgpa, setCurrentGroupCgpa] = useState(0);
+  const [listOfTechnologies, setListOfTechnologies] = useState([]);
+  //* Getting all Technologies for group creation
+  const handleGetAllTechnologies = async () => {
+    try {
+      const response = await fetch(
+        `http://192.168.100.4/OfficialPSAS/api/psas/FillingDropDown`
+      );
+      const data = await response.json();
+      console.log(data);
+      setListOfTechnologies(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleTechnologySelect = (option) => {
+    setSelectedTechnology(option);
+    console.log(option);
+  };
   const handleGetOptions = async () => {
     try {
       const response = await fetch(
@@ -43,13 +63,13 @@ function GroupCreation() {
   const checkingGroupExistance = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/MyGroup?regNo=${user.uid}`
+        `http://192.168.100.4/OfficialPSAS/api/psas/ChekingGroupExistence?id=${user.uid}`
       );
       const data = await response.json();
-      if (data) {
+      if (data === 0) {
         setIsGroupCreated(true);
       } else {
-        console.log(response.status);
+        setIsGroupCreated(false);
       }
     } catch (error) {
       console.log("Error:", error);
@@ -72,6 +92,7 @@ function GroupCreation() {
     handleGetOptions();
     checkingGroupExistance();
     GetGroupCgpa();
+    handleGetAllTechnologies();
   }, []);
 
   //* Checking Student's group
@@ -107,14 +128,6 @@ function GroupCreation() {
   const handleSelect = (option) => {
     setSelection(option);
     console.log(option);
-  };
-  const handleClick = () => {
-    console.log(title, desc, selection);
-    if (title && desc && selection) {
-      setIsGroupCreated(true);
-    } else {
-      alert("fields not be empty");
-    }
   };
   const handleSubmit = async () => {
     const response = await fetch(
@@ -180,7 +193,7 @@ function GroupCreation() {
   };
   return (
     <>
-      {!isGroupCreated ? (
+      {isGroupCreated ? (
         <>
           <div className=" flex flex-col space-x-0 justify-start items-center h-full p-0">
             <div className="w-full flex justify-center">
@@ -226,9 +239,9 @@ function GroupCreation() {
                 </label>
                 <Dropdown
                   label="Project Domain"
-                  options={options}
-                  value={selection}
-                  OnSelect={handleSelect}
+                  options={listOfTechnologies}
+                  value={selectedTechnology}
+                  OnSelect={handleTechnologySelect}
                   className="relative w-6/12 text-md"
                 />
               </div>

@@ -13,7 +13,6 @@ const LoginPage = () => {
         `http://192.168.100.4/OfficialPSAS/api/psas/Login?id=${id}&password=${password}`
       );
       const res = await response.json();
-      console.log(res);
       if (res != null) {
         if (res.role === "student") {
           localStorage.setItem("user", JSON.stringify(res));

@@ -1,49 +1,66 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BiitSAS from "../../../../assets/extra/biitSAS.png";
 import Dropdown from "../../../../components/dropdown/Dropdown";
 import Table from "../../../../components/Table/Table";
 function JoingingAGroupRequest() {
-  const [selection, setSelection] = useState(null);
   const [isGroupDetailsShown, setIsGroupDetailsShown] = useState(false);
   const [choosedProject, setChoosedProject] = useState("");
+  const [description, setDescription] = useState("");
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [message, setMessage] = useState("");
-  const options = [
-    { label: "React Native", value: "React-Native" },
-    { label: "Android", value: "Android" },
-    { label: "Flutter", value: "Flutter" },
-    { label: "Web", value: "Web" },
-  ];
-  const data = [
-    {
-      domain: 1,
-      title: "AI Health Engine",
-      supervisor: "Dr.Hassan",
-      desc: "The AI Health Engine project likely involves the development of an artificial intelligence system designed to improve healthcare services.",
-    },
-    {
-      domain: 2,
-      title: "Instagram Spam",
-      supervisor: "Sir Zahid",
-      desc: "The Instagram Spam project could involve developing techniques to detect and mitigate spam or malicious activities on the Instagram platform.",
-    },
-    {
-      domain: 1,
-      title: "Techable Machine",
-      supervisor: "Dr.Hassan",
-      desc: "Teachable Machine is an interactive web experiment developed by Google that allows users to train a machine learning model using their webcam.",
-    },
-  ];
-  const handleSelect = () => {
-    if (data.length) {
-      const projects = data.filter((i) => i.domain === 1);
-      setSelectedProjects(projects);
-    } else {
-      console.log("not Groups founded");
+  const [domains, setDomains] = useState([]);
+  const [selectedDomain, setSelectedDomain] = useState("");
+  const userString = localStorage.getItem("user");
+  const [projectDetails, setProjectDetails] = useState(null);
+  const [groupDetails, setGroupDetails] = useState([]);
+  const user = userString ? JSON.parse(userString) : null;
+  const handleSelect = (option) => {
+    setSelectedDomain(option);
+  };
+
+  //*getting all domains
+  const gettingAllProjectDomains = async () => {
+    try {
+      const response = await fetch(
+        `http://192.168.100.4/OfficialPSAS/api/psas/FillingDropDown`
+      );
+      const data = await response.json();
+      console.log(data);
+      if (data !== null) {
+        setDomains(data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
+  useEffect(() => {
+    gettingAllProjectDomains();
+  }, []);
+  //*finding the project which not have the This technology Member
+  const getGroupsOnTechnologyBase = async () => {
+    try {
+      const response = await fetch(
+        `http://192.168.100.4/OfficialPSAS/api/psas/GroupsFetching?techName=${selectedDomain.value}&regNo=${user.uid}`
+      );
+      const data = await response.json();
+      if (data !== "not Founded") {
+        setSelectedProjects(data);
+      } else {
+        setSelectedProjects([]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //! calling the function when the domains changed
+  useEffect(() => {
+    getGroupsOnTechnologyBase();
+  }, [selectedDomain]);
+
   const handleProjectTitle = (option) => {
     setChoosedProject(option);
+    setDescription(option.description);
+    console.log(option);
   };
   const ToggleGroupDetails = () => {
     if (choosedProject) {
@@ -52,6 +69,40 @@ function JoingingAGroupRequest() {
       alert("Atleast one project must be selected");
     }
   };
+
+  //* getting the group and project details
+  const getDetailsAboutProjectAndGroup = async () => {
+    try {
+      const response = await fetch(
+        `http://192.168.100.4/OfficialPSAS/api/psas/GetTheDetails?group_id=${choosedProject.gid}&project_id=${choosedProject.pid}`
+      );
+      const data = await response.json();
+      console.log(data);
+      if (data !== null) {
+        setProjectDetails(data);
+        setGroupDetails(data.groupDetails);
+        // console.log(data.groupDetails);
+        console.log(projectDetails.findingProject.project.title);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handlePostingRequesting = async () => {
+    const response = await fetch(
+      `http://192.168.100.4/OfficialPSAS/api/psas/PostingRequestForGroupJoining?regNo=${user.uid}&gid=${choosedProject.gid}&tecid=${selectedDomain.label}&message=${message}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "Application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    // alert(data);
+  };
+
   return (
     <>
       {!isGroupDetailsShown ? (
@@ -63,11 +114,15 @@ function JoingingAGroupRequest() {
             <div className="flex justify-center">
               <h1 className="text-4xl font-bold">Joining a Group</h1>
             </div>
+            <div className="flex flex-row justify-center space-x-4 mt-2">
+              <label className="text-xl">My Cgpa :</label>
+              <b className="text-xl">{user.cgpa}</b>
+            </div>
             <div className="flex flex-row justify-center items-center space-x-3 mt-3">
               <label>Select Your Technology :</label>
               <Dropdown
-                options={options}
-                value={selection}
+                options={domains}
+                value={selectedDomain}
                 OnSelect={handleSelect}
                 className="relative w-2/12"
               />
@@ -85,14 +140,17 @@ function JoingingAGroupRequest() {
                 name="projectDetails"
                 id="projectDetails"
                 readOnly
-                className="border border-gray-500 rounded xl:w-3/12 xl:min-h-32 h-2/6 lg:w-3/12 lg:h-max p-2"
-                value={choosedProject.desc}
+                className="border border-gray-500 rounded w-4/12 h-32 p-2"
+                value={description || ""}
               ></textarea>
             </div>
             <div className="flex flex-row justify-center items-center mt-3">
               <button
                 className="bg-green-600 p-3 text-white rounded-md hover:bg-white border border-green-600 hover:text-green-600"
-                onClick={ToggleGroupDetails}
+                onClick={() => {
+                  ToggleGroupDetails();
+                  getDetailsAboutProjectAndGroup();
+                }}
               >
                 More Info
               </button>
@@ -109,6 +167,10 @@ function JoingingAGroupRequest() {
               <label>Project-Title :</label>
               <b>{choosedProject.title}</b>
             </div>
+            <div className="flex flex-row justify-center items-center space-x-4 mt-3">
+              <label>Supervisor :</label>
+              <b>{choosedProject.username}</b>
+            </div>
             <div className="overflow-x-auto mt-2 w-8/12">
               <table className="w-full whitespace-nowrap">
                 <thead>
@@ -116,36 +178,16 @@ function JoingingAGroupRequest() {
                     <th className="px-6 py-3 text-left">Full Name</th>
                     <th className="px-6 py-3 text-left">Arid-Number</th>
                     <th className="px-6 py-3 text-left">Technology</th>
-                    <th className="px-6 py-3 text-left">Date</th>
-                    <th className="px-6 py-3 text-left">Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="bg-gray-300 hover:bg-gray-400">
-                    <td className="px-6 py-4">Mubashir Liaqat</td>
-                    <td className="px-6 py-4">2020-Arid-3675</td>
-                    <td className="px-6 py-4">React-Native</td>
-                    <td className="px-6 py-4">20-03-2024</td>
-                    <td className="px-6 py-4 text-red-600 font-bold">Me</td>
-                  </tr>
-                  <tr className="bg-gray-300 hover:bg-gray-400">
-                    <td className="px-6 py-4">Faheem Abbas</td>
-                    <td className="px-6 py-4">2020-Arid-4225</td>
-                    <td className="px-6 py-4">React-Js</td>
-                    <td className="px-6 py-4">20-03-2024</td>
-                    <td className="px-6 py-4 text-red-600 font-bold">
-                      Rejected
-                    </td>
-                  </tr>
-                  <tr className="bg-gray-300 hover:bg-gray-400">
-                    <td className="px-6 py-4">Touseef Sajjad</td>
-                    <td className="px-6 py-4">2020-Arid-4224</td>
-                    <td className="px-6 py-4">Flutter</td>
-                    <td className="px-6 py-4">30-03-2024</td>
-                    <td className="px-6 py-4 text-green-600 font-bold">
-                      Approved
-                    </td>
-                  </tr>
+                  {groupDetails.map((item, index) => (
+                    <tr className="bg-gray-300 hover:bg-gray-400" key={index}>
+                      <td className="px-6 py-4">{item.name}</td>
+                      <td className="px-6 py-4">{item.regNo}</td>
+                      <td className="px-6 py-4">{item.technology}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -154,19 +196,24 @@ function JoingingAGroupRequest() {
               <textarea
                 name="projectDetails"
                 id="projectDetails"
-                className="border border-gray-500 rounded xl:w-7/12 xl:min-h-20 h-2/6 lg:w-3/12 lg:h-max p-2"
+                className="border border-gray-500 rounded w-8/12 h-20 p-2"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               ></textarea>
             </div>
             <div className="flex flex-row mt-3 space-x-4">
               <button
-                onClick={handleProjectTitle}
+                onClick={() => {
+                  ToggleGroupDetails();
+                }}
                 className="bg-black text-white hover:bg-transparent hover:text-black border border-black transition-all ease-in-out p-3 rounded-md"
               >
                 Discard
               </button>
-              <button className="bg-green-600 text-white hover:bg-transparent hover:text-green-600 border border-green-600 transition-all ease-in-out p-3 rounded-md">
+              <button
+                className="bg-green-600 text-white hover:bg-transparent hover:text-green-600 border border-green-600 transition-all ease-in-out p-3 rounded-md"
+                onClick={handlePostingRequesting}
+              >
                 Request
               </button>
             </div>
