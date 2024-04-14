@@ -34,7 +34,6 @@ function GroupCreation() {
         `http://192.168.100.4/OfficialPSAS/api/psas/FillingDropDown`
       );
       const data = await response.json();
-      console.log(data);
       setListOfTechnologies(data);
     } catch (error) {
       console.log(error);
