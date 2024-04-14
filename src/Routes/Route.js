@@ -1,3 +1,4 @@
+import { element } from "prop-types";
 import Search from "../pages/Search/Search";
 import StudentDashboard from "../pages/Student/Dashboard/StudentDashboard";
 import GroupCreation from "../pages/Student/GroupCreating/GroupCreation";
@@ -12,6 +13,11 @@ import ProjectRequesting from "../pages/Student/ProjectSelectionAndRequesting/Pr
 import HelpRequest from "../pages/Student/Requests/HelpRequest/HelpRequest";
 import JoingingAGroupRequest from "../pages/Student/Requests/JoiningGroupRequest.jsx/JoingingAGroupRequest";
 import TaskList from "../pages/Student/Tasks/TaskList";
+import ExpertDashboard from "../pages/TechnicalExpert/Dashboard/ExpertDashboard";
+import Meetings from "../pages/TechnicalExpert/Meetings/Meetings";
+import HelpRequests from "../pages/TechnicalExpert/Requests/HelpRequests";
+import ScheduleManagement from "../pages/TechnicalExpert/Schedule/ScheduleManagement";
+import AllNotifications from "../pages/TechnicalExpert/Notifications/AllNotifications";
 //? === inserting all Routes for all users
 export const studentsRoutes = [
   { path: "/student/dashboard", element: <StudentDashboard /> },
@@ -27,4 +33,11 @@ export const studentsRoutes = [
   { path: "/student/JoiningAGroup", element: <JoingingAGroupRequest /> },
   { path: "/student/TaskList", element: <TaskList /> },
   { path: "/search", element: <Search /> },
+];
+export const technicalExpertRoutes = [
+  { path: "/TechnicalExpert/dashboard", element: <ExpertDashboard /> },
+  { path: "/TechnicalExpert/Meetings", element: <Meetings /> },
+  { path: "/TechnicalExpert/HelpRequests", element: <HelpRequests /> },
+  { path: "/TechnicalExpert/Schedule", element: <ScheduleManagement /> },
+  { path: "/TechnicalExpert/Norification", element: <AllNotifications /> },
 ];

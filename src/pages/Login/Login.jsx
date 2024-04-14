@@ -14,16 +14,15 @@ const LoginPage = () => {
       );
       const res = await response.json();
       if (res != null) {
+        localStorage.setItem("user", JSON.stringify(res));
         if (res.role === "student") {
-          localStorage.setItem("user", JSON.stringify(res));
-          console.log(res);
           navigate("/student/dashboard", { state: res });
         } else if (res.role === "teacher") {
-          navigate("/teacher/dashboard");
-        } else if (res.role === "TechnicalExpert") {
-          navigate("/technicalExpert/dashboard");
+          navigate("/teacher/dashboard", { state: res });
+        } else if (res.role === "Technical Expert") {
+          navigate("/TechnicalExpert/dashboard", { state: res });
         } else if (res.role === "projectCommetiee") {
-          navigate("/projectCommetiee/dashboard");
+          navigate("/projectCommetiee/dashboard", { state: res });
         } else {
           navigate("/");
         }

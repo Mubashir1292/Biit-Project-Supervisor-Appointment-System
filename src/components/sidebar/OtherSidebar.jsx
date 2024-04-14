@@ -9,10 +9,85 @@ import {
 import sas from "../../assets/extra/sas.png";
 import { NavLink } from "react-router-dom";
 import { GoProject, GoTasklist } from "react-icons/go";
+import { GiExplosiveMeeting } from "react-icons/gi";
+import { VscRequestChanges } from "react-icons/vsc";
+import { AiFillSchedule } from "react-icons/ai";
 
 function OtherSidebar({ expanded, setExpanded }) {
-  const [user, setUser] = useState("student");
-  const [allLinks, setAllLinks] = useState([
+  const [user, setUser] = useState({});
+  const [allLinks, setAllLinks] = useState([]);
+  const userString = localStorage.getItem("user");
+  const isUser = userString ? JSON.parse(userString) : null;
+  useEffect(() => {
+    console.log("otherSideBar");
+    console.log(isUser);
+    if (isUser !== null) {
+      setUser(isUser);
+      if (isUser.role === "Technical Expert") {
+        setAllLinks(TechnicalExpertlinks);
+      } else if (isUser.role === "student") {
+        setAllLinks(studentLinks);
+      } else if (isUser.role === "teacher") {
+        //* set the links of teachers
+      } else if (isUser.role === "Project Commetiee") {
+        //* set the links of project commetiee
+      }
+    }
+  }, []);
+  const TechnicalExpertlinks = [
+    {
+      label: "Dashboard",
+      path: "/TechnicalExpert/dashboard",
+      icon: <LayoutDashboard size={20} />,
+    },
+    {
+      label: "Meetings",
+      path: "/TechnicalExpert/Meetings",
+      icon: <GiExplosiveMeeting size={20} />,
+    },
+    {
+      label: "Requests",
+      path: "/TechnicalExpert/HelpRequests",
+      icon: <VscRequestChanges size={20} />,
+    },
+    {
+      label: "Schedule",
+      path: "/TechnicalExpert/Schedule",
+      icon: <AiFillSchedule size={20} />,
+    },
+
+    // {
+    //   label: "My Group",
+    //   path: "/student/creatingGroup",
+    //   icon: <Group size={20} />,
+    // },
+    // {
+    //   label: "Project Request",
+    //   path: "/student/ProjectRequesting",
+    //   icon: <GoProject size={20} />,
+    // },
+    // {
+    //   label: "Help Request",
+    //   path: "/student/HelpRequest",
+    //   icon: <HelpCircle size={20} />,
+    // },
+    // {
+    //   label: "Join Group",
+    //   path: "/student/JoiningAGroup",
+    //   icon: <UsersRound size={20} />,
+    // },
+    // {
+    //   label: "Task",
+    //   path: "/student/TaskList",
+    //   icon: <GoTasklist size={20} />,
+    // },
+    // {
+    //   label: "Progress",
+    //   path: "/student/progress",
+    //   icon: <CircleDotDashed size={20} />,
+    // },
+  ];
+  const studentLinks = [
     {
       label: "Dashboard",
       path: "/student/dashboard",
@@ -23,77 +98,42 @@ function OtherSidebar({ expanded, setExpanded }) {
       path: "/student/creatingGroup",
       icon: <Group size={20} />,
     },
-    {
-      label: "Progress",
-      path: "/student/progress",
-      icon: <CircleDotDashed size={20} />,
-    },
-    {
-      label: "Project Request",
-      path: "/student/ProjectRequesting",
-      icon: <GoProject size={20} />,
-    },
-    {
-      label: "Help Request",
-      path: "/student/HelpRequest",
-      icon: <HelpCircle size={20} />,
-    },
-    {
-      label: "Join Group",
-      path: "/student/JoiningAGroup",
-      icon: <UsersRound size={20} />,
-    },
-    {
-      label: "Task",
-      path: "/student/TaskList",
-      icon: <GoTasklist size={20} />,
-    },
-  ]);
-  useEffect(() => {
-    const isUser = localStorage.getItem("isUser");
-    if (isUser !== null) {
-      setUser(isUser);
-    }
-  }, []);
-  const links = [
-    {
-      label: "Dashboard",
-      path: "/student/dashboard",
-      icon: <LayoutDashboard size={20} />,
-    },
-    {
-      label: "My Group",
-      path: "/student/creatingGroup",
-      icon: <Group size={20} />,
-    },
-    {
-      label: "Project Request",
-      path: "/student/ProjectRequesting",
-      icon: <GoProject size={20} />,
-    },
-    {
-      label: "Help Request",
-      path: "/student/HelpRequest",
-      icon: <HelpCircle size={20} />,
-    },
-    {
-      label: "Join Group",
-      path: "/student/JoiningAGroup",
-      icon: <UsersRound size={20} />,
-    },
-    {
-      label: "Task",
-      path: "/student/TaskList",
-      icon: <GoTasklist size={20} />,
-    },
     // {
     //   label: "Progress",
     //   path: "/student/progress",
     //   icon: <CircleDotDashed size={20} />,
     // },
+    {
+      label: "Project Request",
+      path: "/student/ProjectRequesting",
+      icon: <GoProject size={20} />,
+    },
+    {
+      label: "Help Request",
+      path: "/student/HelpRequest",
+      icon: <HelpCircle size={20} />,
+    },
+    {
+      label: "Join Group",
+      path: "/student/JoiningAGroup",
+      icon: <UsersRound size={20} />,
+    },
+    // {
+    //   label: "Task",
+    //   path: "/student/TaskList",
+    //   icon: <GoTasklist size={20} />,
+    // },
   ];
+  const teacherLinks = [
+    {
+      label: "Dashboard",
+      path: "/TechnicalExpert/dashboard",
+      icon: <LayoutDashboard size={20} />,
+    },
+  ];
+  const projectCommetieeLink = [];
 
-  const RenderedLinks = links.map((link, index) => {
+  const RenderedLinks = allLinks.map((link, index) => {
     return (
       <NavLink
         key={index}
