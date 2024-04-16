@@ -17,7 +17,7 @@ const CustomCalendar = ({ onChange, value }) => {
   );
 
   return (
-    <div className="container py-8 flex  justify-center">
+    <div className="container py-8 flex justify-center">
       <Calendar
         onChange={onChange}
         value={value}
