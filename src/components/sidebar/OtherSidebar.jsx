@@ -12,6 +12,7 @@ import { GoProject, GoTasklist } from "react-icons/go";
 import { GiExplosiveMeeting } from "react-icons/gi";
 import { VscRequestChanges } from "react-icons/vsc";
 import { AiFillSchedule } from "react-icons/ai";
+import { SiGotomeeting } from "react-icons/si";
 
 function OtherSidebar({ expanded, setExpanded }) {
   const [user, setUser] = useState({});
@@ -43,7 +44,7 @@ function OtherSidebar({ expanded, setExpanded }) {
     {
       label: "Meetings",
       path: "/TechnicalExpert/Meetings",
-      icon: <GiExplosiveMeeting size={20} />,
+      icon: <SiGotomeeting size={20} />,
     },
     {
       label: "Requests",
