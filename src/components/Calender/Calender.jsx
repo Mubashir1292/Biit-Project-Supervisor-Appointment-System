@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
@@ -17,7 +17,7 @@ const CustomCalendar = ({ onChange, value }) => {
   );
 
   return (
-    <div className="container py-8 flex justify-center">
+    <div className="container py-2 flex justify-center">
       <Calendar
         onChange={onChange}
         value={value}

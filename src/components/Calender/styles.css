@@ -1,0 +1,12 @@
+/* styles.css */
+.dot {
+    height: 4px;
+    width: 4px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 2px;
+}
+
+.date:hover {
+    background-color: #f0f0f0;
+}
