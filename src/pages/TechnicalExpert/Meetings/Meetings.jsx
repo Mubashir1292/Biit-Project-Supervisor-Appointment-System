@@ -24,7 +24,7 @@ function Meetings() {
       </div>
       <h1 className="text-2xl">Meeting Management</h1>
       <Calendar onChange={handleDateChange} value={selectedDate} />
-      <div className="flex flex-row">
+      <div className="flex flex-row ">
         <h1 className="text-2xl">Date: {selectedDate || null}</h1>
       </div>
     </div>
