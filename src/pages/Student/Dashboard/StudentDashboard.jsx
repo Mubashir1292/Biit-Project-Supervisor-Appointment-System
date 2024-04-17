@@ -18,7 +18,7 @@ function StudentDashboard() {
   const handleGetOptions = async () => {
     try {
       const response = await fetch(
-        "http://192.168.100.4/OfficialPSAS/api/psas/GetAllDuration"
+        "http://192.168.137.18/OfficialPSAS/api/psas/GetAllDuration"
       );
       const data = await response.json();
       if (data) {
@@ -34,7 +34,7 @@ function StudentDashboard() {
     try {
       setIsUser(user);
       const response = await fetch(
-        `http://192.168.100.4/officialPSAS/api/psas/getAllRequests?Id=${user.uid}`
+        `http://192.168.137.18/officialPSAS/api/psas/getAllRequests?Id=${user.uid}`
       );
       const data = await response.json();
       if (data.length) {

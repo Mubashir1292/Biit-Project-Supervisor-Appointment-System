@@ -42,12 +42,7 @@ function OtherSidebar({ expanded, setExpanded }) {
       icon: <LayoutDashboard size={20} />,
     },
     {
-      label: "Meetings",
-      path: "/TechnicalExpert/Meetings",
-      icon: <SiGotomeeting size={20} />,
-    },
-    {
-      label: "Requests",
+      label: "Help Request",
       path: "/TechnicalExpert/HelpRequests",
       icon: <VscRequestChanges size={20} />,
     },
@@ -55,6 +50,11 @@ function OtherSidebar({ expanded, setExpanded }) {
       label: "Schedule",
       path: "/TechnicalExpert/Schedule",
       icon: <AiFillSchedule size={20} />,
+    },
+    {
+      label: "Meetings",
+      path: "/TechnicalExpert/Meetings",
+      icon: <SiGotomeeting size={20} />,
     },
 
     // {

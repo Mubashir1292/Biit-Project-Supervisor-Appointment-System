@@ -15,6 +15,8 @@ function Meetings() {
   const [meetingDay, setMeetingDay] = useState(null);
   const [TimeSlotsOptions, setTimeSlotsOptions] = useState([]);
   const [SelectedTimeSlot, setSelectedTimeSlot] = useState(null);
+  const [meetingtitle, setMeetingTitle] = useState("");
+  const [meetingDesc, setMeetingDesc] = useState("");
   //*help Requested...
   const [selectedParticipants, setSelectedParticipants] = useState([]);
   const AllMeetings = [
@@ -89,7 +91,6 @@ function Meetings() {
     },
   ];
   //* fetching all the help Requests
-  const handleAllHelpRequests = () => {};
 
   useEffect(() => {
     const filteredMeetings = AllMeetings.filter(
@@ -222,11 +223,33 @@ function Meetings() {
                   className="relative w-3/12"
                 />
               </div>
-              <div className="flex flex-row w-8/12">
+              <div className="flex flex-row  justify-center w-6/12 space-x-2 mt-2">
                 <label>Select Participants:</label>
                 <RequestedStudentsDropdown
                   students={allRequests}
                   onSelect={setSelectedParticipants}
+                />
+              </div>
+              <div className="flex flex-row justify-center space-x-6 mt-2">
+                <label>Enter Title :</label>
+                <input
+                  type="text"
+                  name="title"
+                  id="title"
+                  value={meetingtitle}
+                  onChange={(e) => setMeetingTitle(e.target.value)}
+                  className="border border-gray-400 py-1 rounded-sm px-2 w-7/12"
+                />
+              </div>
+              <div className="flex flex-row  space-x-2 mt-2">
+                <label>Enter Description :</label>
+                <input
+                  type="text"
+                  name="title"
+                  id="title"
+                  value={meetingDesc}
+                  onChange={(e) => setMeetingDesc(e.target.value)}
+                  className="border border-gray-400 py-1 rounded-sm px-2"
                 />
               </div>
             </div>
