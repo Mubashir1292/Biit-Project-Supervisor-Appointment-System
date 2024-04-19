@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import biitSas from "../../../assets/extra/biitSAS.png";
 import Dropdown from "../../../components/dropdown/Dropdown";
 function AnotherHelpRequest() {
   const [toggle, setToggle] = useState(false);
   const [scheduleText, setScheduleText] = useState("Reschedule Meeting");
-  const [currentDate, setCurrentDate] = useState("04/05/2024");
+  const [currentDate, setCurrentDate] = useState("");
   const [day, setDay] = useState("");
   const [TimeSlotsOptions, setTimeSlotsOptions] = useState([
     {
@@ -20,6 +20,16 @@ function AnotherHelpRequest() {
       value: "08:30-09:30",
     },
   ]);
+  const [request, setRequest] = useState({
+    name: "Mubashir Liaqat",
+    AridNo: "2020-Arid-3675",
+    technology: "Web",
+    message: "A0A Sir,I have an issue about the Api Integration",
+    date: "04/04/2024",
+    day: "Monday",
+    TimeSlot: "08:30--09:30",
+  });
+
   const [SelectedTimeSlot, setSelectedTimeSlot] = useState(null);
 
   const handleToggleDateTime = () => {
@@ -54,21 +64,21 @@ function AnotherHelpRequest() {
         <div className="bg-gray-100 w-3/4 justify-center flex flex-col space-y-3 mt-3">
           <div className="flex justify-center space-x-2">
             <label>Arid Number:</label>
-            <h1>2020-Arid-3675</h1>
+            <h1>{request.AridNo || "Arid Number"}</h1>
           </div>
           <div className="flex justify-center space-x-2">
             <label>Name:</label>
-            <h1>Mubashir Liaqat</h1>
+            <h1>{request.name || "name"}</h1>
           </div>
           <div className="flex justify-center space-x-2">
             <label>Technology:</label>
-            <h1>Web</h1>
+            <h1>{request.technology || "technology"}</h1>
           </div>
           <div className="flex justify-center space-x-2">
             <label>Date:</label>
             {!toggle ? (
               <>
-                <h1 className="font-bold">{currentDate}</h1>
+                <h1 className="font-bold">{currentDate || request.date}</h1>
               </>
             ) : (
               <>
@@ -86,7 +96,7 @@ function AnotherHelpRequest() {
             <label>Day:</label>
             {!toggle ? (
               <>
-                <h1 className="font-normal">{day}</h1>
+                <h1 className="font-normal">{day || request.day}</h1>
               </>
             ) : (
               <>
@@ -97,12 +107,16 @@ function AnotherHelpRequest() {
           <div className="flex justify-center space-x-2">
             {!toggle ? (
               <>
-                <label>Time:</label>
-                <h1>{SelectedTimeSlot && SelectedTimeSlot.value}</h1>
+                <label className="font-bold">Time:</label>
+                <h1>
+                  {request.TimeSlot || [
+                    SelectedTimeSlot && SelectedTimeSlot.value,
+                  ]}
+                </h1>
               </>
             ) : (
               <>
-                <label>Select Time Slot:</label>
+                <label className="font-bold">Select Time Slot:</label>
                 <Dropdown
                   options={TimeSlotsOptions}
                   value={SelectedTimeSlot}
@@ -111,6 +125,10 @@ function AnotherHelpRequest() {
                 />
               </>
             )}
+          </div>
+          <div className="flex justify-center space-x-0">
+            <label className="font-bold">Message:</label>
+            <h1>{request.message || "message"}</h1>
           </div>
         </div>
 
