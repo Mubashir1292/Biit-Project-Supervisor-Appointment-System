@@ -15,9 +15,9 @@ import JoingingAGroupRequest from "../pages/Student/Requests/JoiningGroupRequest
 import TaskList from "../pages/Student/Tasks/TaskList";
 import ExpertDashboard from "../pages/TechnicalExpert/Dashboard/ExpertDashboard";
 import Meetings from "../pages/TechnicalExpert/Meetings/Meetings";
-import HelpRequests from "../pages/TechnicalExpert/Requests/HelpRequests";
 import ScheduleManagement from "../pages/TechnicalExpert/Schedule/ScheduleManagement";
 import AllNotifications from "../pages/TechnicalExpert/Notifications/AllNotifications";
+import AnotherHelpRequest from "../pages/TechnicalExpert/Requests/AnotherHelpRequest";
 //? === inserting all Routes for all users
 export const studentsRoutes = [
   { path: "/student/dashboard", element: <StudentDashboard /> },
@@ -37,7 +37,10 @@ export const studentsRoutes = [
 export const technicalExpertRoutes = [
   { path: "/TechnicalExpert/dashboard", element: <ExpertDashboard /> },
   { path: "/TechnicalExpert/Meetings", element: <Meetings /> },
-  { path: "/TechnicalExpert/HelpRequests", element: <HelpRequests /> },
+  {
+    path: "/TechnicalExpert/AnotherHelpRequest",
+    element: <AnotherHelpRequest />,
+  },
   { path: "/TechnicalExpert/Schedule", element: <ScheduleManagement /> },
   { path: "/TechnicalExpert/Norification", element: <AllNotifications /> },
 ];

@@ -14,7 +14,7 @@ function ExpertDashboard() {
   const handleGetOptions = async () => {
     try {
       const response = await fetch(
-        "http://192.168.137.18/OfficialPSAS/api/psas/GetAllDuration"
+        "http://192.168.100.4/OfficialPSAS/api/psas/GetAllDuration"
       );
       const data = await response.json();
       if (data) {

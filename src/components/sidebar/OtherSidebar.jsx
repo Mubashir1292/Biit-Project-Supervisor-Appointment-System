@@ -43,7 +43,7 @@ function OtherSidebar({ expanded, setExpanded }) {
     },
     {
       label: "Help Request",
-      path: "/TechnicalExpert/HelpRequests",
+      path: "/TechnicalExpert/AnotherHelpRequest",
       icon: <VscRequestChanges size={20} />,
     },
     {
