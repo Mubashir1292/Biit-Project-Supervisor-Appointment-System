@@ -57,7 +57,7 @@ function Dropdown({ label, options, value, OnSelect, className, ...rest }) {
         )}
       </Panel>
       {isOpen && (
-        <Panel className="absolute w-full z-20 shadow-2xl py-1 px-2 ">
+        <Panel className="absolute w-1/6 z-20 shadow-2xl py-1 px-2 ">
           {renderedElements}
         </Panel>
       )}

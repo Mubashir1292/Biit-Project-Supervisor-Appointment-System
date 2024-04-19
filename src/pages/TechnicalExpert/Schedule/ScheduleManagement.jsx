@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Dropdown from "../../../components/dropdown/Dropdown";
+import biitlogo from "../../../assets/extra/biitSAS.png";
 
 // Sample schedule data for 5 days (Monday to Friday)
 const initialSchedule = [
@@ -36,17 +37,18 @@ function WeeklyScheduleUpdater() {
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedSlot, setSelectedSlot] = useState("");
   const [eventName, setEventName] = useState("");
+  const [groupId, setGroupId] = useState("");
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
 
   // Function to handle adding an event
   const handleAddEvent = () => {
-    if (selectedDay && selectedSlot && eventName) {
+    if (selectedDay && selectedSlot && eventName && groupId) {
       setSchedule((prevSchedule) => {
         return prevSchedule.map((day) => {
           if (day.day === selectedDay) {
             const updatedEvents = [
               ...day.events,
-              { time: selectedSlot, name: eventName },
+              { time: selectedSlot, name: eventName, groupId: groupId },
             ];
             const updatedSlots = day.slots.map((slot) => {
               if (slot.start === selectedSlot) {
@@ -63,14 +65,18 @@ function WeeklyScheduleUpdater() {
       setSelectedDay("");
       setSelectedSlot("");
       setEventName("");
+      setGroupId("");
     } else {
-      alert("Please select a day, time slot, and enter event name.");
+      alert(
+        "Please select a day, time slot, enter event name, and enter group ID."
+      );
     }
   };
 
   // Function to handle selecting a time slot
   const handleSelectSlot = (slot) => {
-    setSelectedSlot(slot.start);
+    setSelectedSlot(slot.label); // Store only the start time string
+    console.log(slot.label);
   };
 
   // Function to generate dropdown options
@@ -85,8 +91,11 @@ function WeeklyScheduleUpdater() {
 
   return (
     <div className="container mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Weekly Schedule Updater</h1>
-      <div className="flex flex-row space-x-4">
+      <div className="w-full flex justify-center items-center">
+        <img src={biitlogo} alt="biit Logo" className="w-2/6" />
+      </div>
+      <h1 className="text-2xl font-bold mb-4 text-center">Weekly Schedule</h1>
+      <div className="flex flex-row space-x-4 justify-center">
         {/* Day selection */}
         {schedule.map((day, index) => (
           <div key={index}>
@@ -105,28 +114,34 @@ function WeeklyScheduleUpdater() {
       </div>
       {/* Slot selection */}
       {selectedDay && (
-        <div className="mt-4 w-10/12">
-          <h2 className="text-lg font-semibold">
+        <div className="flex justify-center items-center space-x-3">
+          <h2 className="text-lg font-semibold mt-2">
             Available Slots for {selectedDay}:
           </h2>
           <Dropdown
             options={generateDropdownOptions()}
             value={selectedSlot}
             OnSelect={handleSelectSlot}
-            placeholder="Select Time Slot"
-            className="mt-2 w-2/12"
+            className="mt-2 w-3/12"
           />
         </div>
       )}
       {/* Event input */}
       {selectedSlot && (
-        <div className="mt-4">
+        <div className="mt-4 flex  flex-col space-y-3 justify-center items-center">
           <input
             type="text"
-            placeholder="Enter event name"
+            placeholder="Enter event title"
             value={eventName}
             onChange={(e) => setEventName(e.target.value)}
             className="w-1/2 p-2 rounded-md border"
+          />
+          <input
+            type="number"
+            placeholder="Enter group ID"
+            value={groupId}
+            onChange={(e) => setGroupId(e.target.value)}
+            className="w-1/2 p-2 rounded-md border "
           />
           <button
             className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md"
@@ -137,25 +152,75 @@ function WeeklyScheduleUpdater() {
         </div>
       )}
       {/* Event list */}
-      <div className="mt-4">
-        <h2 className="text-lg font-semibold">Scheduled Events:</h2>
-        {schedule.map((day, index) => (
-          <div key={index}>
-            <h3 className="mt-2 font-semibold">{day.day}</h3>
-            {day.events.length > 0 ? (
-              <ul>
-                {day.events.map((event, idx) => (
-                  <li key={idx}>
-                    {event.time} - {event.name}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No events scheduled.</p>
-            )}
+      <h2 className="text-2xl font-semibold text-center my-4">
+        Scheduled Events
+      </h2>
+      {/* <div className="mt-4">
+        <div className="mt-4 flex flex-col justify-around items-center">
+          <div className="w-full flex  items-center">
+            <div className="w-1/5 font-semibold">Day</div>
+            <div className="w-1/5 font-semibold">Time</div>
+            <div className="w-1/5 font-semibold">Name</div>
+            <div className="w-1/5 font-semibold">Group ID</div>
+            <div className="w-1/5 font-semibold">Action</div>
           </div>
-        ))}
-      </div>
+          {schedule.map((day, index) =>
+            day.events.map((event, idx) => (
+              <div
+                key={`${index}-${idx}`}
+                className="w-full flex justify-around items-center"
+              >
+                <div>{day.day}</div>
+                <div>{event.time}</div>
+                <div>{event.name}</div>
+                <div>{event.groupId}</div>
+                <div>
+                  <button className="px-2 py-1 bg-green-500 text-white rounded-md">
+                    Edit
+                  </button>
+                  <button className="px-2 py-1 bg-red-500 text-white rounded-md ml-2">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div> */}
+      <table className="mt-2 border w-full">
+        <thead>
+          <tr className="flex justify-around items-center ">
+            <th>Day</th>
+            <th>Time</th>
+            <th>Name</th>
+            <th>Group ID</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {schedule.map((day, index) =>
+            day.events.map((event, idx) => (
+              <tr
+                key={`${index}-${idx}`}
+                className="flex justify-around items-center "
+              >
+                <td className="text-left">{day.day}</td>
+                <td className="text-left -ml-12">{event.time}</td>
+                <td className="text-left -ml-12">{event.name}</td>
+                <td className="text-left ml-6">{event.groupId}</td>
+                <td>
+                  <button className="px-2 py-1 bg-green-500 text-white rounded-md">
+                    Edit
+                  </button>
+                  <button className="px-2 py-1 bg-red-500 text-white rounded-md ml-2">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }
