@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Dropdown from "../../../components/dropdown/Dropdown";
 
 // Sample schedule data for 5 days (Monday to Friday)
 const initialSchedule = [
@@ -13,7 +14,7 @@ const initialSchedule = [
 function generateSlots() {
   const slots = [];
   let time = { hour: 8, minute: 30 };
-  while (time.hour < 18) {
+  while (time.hour < 13) {
     const startTime = `${time.hour.toString().padStart(2, "0")}:${time.minute
       .toString()
       .padStart(2, "0")}`;
@@ -35,6 +36,7 @@ function WeeklyScheduleUpdater() {
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedSlot, setSelectedSlot] = useState("");
   const [eventName, setEventName] = useState("");
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
 
   // Function to handle adding an event
   const handleAddEvent = () => {
@@ -66,10 +68,25 @@ function WeeklyScheduleUpdater() {
     }
   };
 
+  // Function to handle selecting a time slot
+  const handleSelectSlot = (slot) => {
+    setSelectedSlot(slot.start);
+  };
+
+  // Function to generate dropdown options
+  const generateDropdownOptions = () => {
+    const day = schedule.find((day) => day.day === selectedDay);
+    const availableSlots = day.slots.filter((slot) => slot.available);
+    return availableSlots.map((slot) => ({
+      label: `${slot.start} - ${slot.end}`,
+      value: slot.start,
+    }));
+  };
+
   return (
     <div className="container mx-auto">
       <h1 className="text-2xl font-bold mb-4">Weekly Schedule Updater</h1>
-      <div className="grid grid-cols-4 gap-4">
+      <div className="flex flex-row space-x-4">
         {/* Day selection */}
         {schedule.map((day, index) => (
           <div key={index}>
@@ -88,29 +105,17 @@ function WeeklyScheduleUpdater() {
       </div>
       {/* Slot selection */}
       {selectedDay && (
-        <div className="mt-4">
+        <div className="mt-4 w-10/12">
           <h2 className="text-lg font-semibold">
             Available Slots for {selectedDay}:
           </h2>
-          <div className="grid grid-cols-3 gap-4">
-            {schedule
-              .find((day) => day.day === selectedDay)
-              .slots.map((slot, index) => (
-                <div key={index}>
-                  <button
-                    className={`p-2 rounded-md border ${
-                      slot.available
-                        ? "bg-green-500 text-white"
-                        : "bg-red-500 text-white cursor-not-allowed"
-                    }`}
-                    disabled={!slot.available}
-                    onClick={() => setSelectedSlot(slot.start)}
-                  >
-                    {slot.start} - {slot.end}
-                  </button>
-                </div>
-              ))}
-          </div>
+          <Dropdown
+            options={generateDropdownOptions()}
+            value={selectedSlot}
+            OnSelect={handleSelectSlot}
+            placeholder="Select Time Slot"
+            className="mt-2 w-2/12"
+          />
         </div>
       )}
       {/* Event input */}
