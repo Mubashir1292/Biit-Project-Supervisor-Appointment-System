@@ -18,6 +18,7 @@ import Meetings from "../pages/TechnicalExpert/Meetings/Meetings";
 import ScheduleManagement from "../pages/TechnicalExpert/Schedule/ScheduleManagement";
 import AllNotifications from "../pages/TechnicalExpert/Notifications/AllNotifications";
 import AnotherHelpRequest from "../pages/TechnicalExpert/Requests/AnotherHelpRequest";
+import WeeklyScheduleUpdater from "../pages/TechnicalExpert/Schedule/ScheduleManagement";
 //? === inserting all Routes for all users
 export const studentsRoutes = [
   { path: "/student/dashboard", element: <StudentDashboard /> },
@@ -41,6 +42,6 @@ export const technicalExpertRoutes = [
     path: "/TechnicalExpert/AnotherHelpRequest",
     element: <AnotherHelpRequest />,
   },
-  { path: "/TechnicalExpert/Schedule", element: <ScheduleManagement /> },
+  { path: "/TechnicalExpert/Schedule", element: <WeeklyScheduleUpdater /> },
   { path: "/TechnicalExpert/Norification", element: <AllNotifications /> },
 ];

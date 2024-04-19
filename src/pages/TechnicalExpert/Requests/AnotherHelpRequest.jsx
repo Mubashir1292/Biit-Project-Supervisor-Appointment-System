@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import biitSas from "../../../assets/extra/biitSAS.png";
 import Dropdown from "../../../components/dropdown/Dropdown";
+
 function AnotherHelpRequest() {
   const [toggle, setToggle] = useState(false);
   const [scheduleText, setScheduleText] = useState("Reschedule Meeting");
@@ -52,6 +53,7 @@ function AnotherHelpRequest() {
     setSelectedTimeSlot(option);
     console.log(option);
   };
+
   return (
     <>
       <div className="w-full flex flex-col justify-around items-center">
@@ -61,77 +63,74 @@ function AnotherHelpRequest() {
         <h1 className="text-xl text-center font-bold font-serif">
           Help Request
         </h1>
-        <div className="bg-gray-100 w-3/4 justify-center flex flex-col space-y-3 mt-3">
-          <div className="flex justify-center space-x-2">
-            <label>Arid Number:</label>
-            <h1>{request.AridNo || "Arid Number"}</h1>
-          </div>
-          <div className="flex justify-center space-x-2">
-            <label>Name:</label>
-            <h1>{request.name || "name"}</h1>
-          </div>
-          <div className="flex justify-center space-x-2">
-            <label>Technology:</label>
-            <h1>{request.technology || "technology"}</h1>
-          </div>
-          <div className="flex justify-center space-x-2">
-            <label>Date:</label>
-            {!toggle ? (
-              <>
-                <h1 className="font-bold">{currentDate || request.date}</h1>
-              </>
-            ) : (
-              <>
-                <input
-                  type="date"
-                  name="schedule"
-                  id="schedule"
-                  value={currentDate}
-                  onChange={handleSelectDate}
-                />
-              </>
-            )}
-          </div>
-          <div className="flex justify-center space-x-2">
-            <label>Day:</label>
-            {!toggle ? (
-              <>
-                <h1 className="font-normal">{day || request.day}</h1>
-              </>
-            ) : (
-              <>
-                <h1 className="font-bold">{day || "----"}</h1>
-              </>
-            )}
-          </div>
-          <div className="flex justify-center space-x-2">
-            {!toggle ? (
-              <>
-                <label className="font-bold">Time:</label>
-                <h1>
-                  {request.TimeSlot || [
-                    SelectedTimeSlot && SelectedTimeSlot.value,
-                  ]}
-                </h1>
-              </>
-            ) : (
-              <>
-                <label className="font-bold">Select Time Slot:</label>
-                <Dropdown
-                  options={TimeSlotsOptions}
-                  value={SelectedTimeSlot}
-                  OnSelect={handleTimeSlotSelection}
-                  className="relative w-3/12 -mt-2"
-                />
-              </>
-            )}
-          </div>
-          <div className="flex justify-center space-x-0">
-            <label className="font-bold">Message:</label>
-            <h1>{request.message || "message"}</h1>
-          </div>
+        <div className="bg-gray-100 w-3/4 mt-3 p-4">
+          <table className="table-auto w-full">
+            <tbody>
+              <tr>
+                <td className="font-bold">Arid Number:</td>
+                <td>{request.AridNo || "Arid Number"}</td>
+              </tr>
+              <tr>
+                <td className="font-bold">Name:</td>
+                <td>{request.name || "name"}</td>
+              </tr>
+              <tr>
+                <td className="font-bold">Technology:</td>
+                <td>{request.technology || "technology"}</td>
+              </tr>
+              <tr>
+                <td className="font-bold">Date:</td>
+                <td>
+                  {!toggle ? (
+                    <span className="font-bold">
+                      {currentDate || request.date}
+                    </span>
+                  ) : (
+                    <input
+                      type="date"
+                      name="schedule"
+                      id="schedule"
+                      value={currentDate}
+                      onChange={handleSelectDate}
+                    />
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td className="font-bold">Day:</td>
+                <td>
+                  {!toggle ? (
+                    <span className="font-normal">{day || request.day}</span>
+                  ) : (
+                    <span className="font-bold">{day || "----"}</span>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td className="font-bold">Time:</td>
+                <td>
+                  {!toggle ? (
+                    <span>
+                      {request.TimeSlot ||
+                        (SelectedTimeSlot && SelectedTimeSlot.value)}
+                    </span>
+                  ) : (
+                    <Dropdown
+                      options={TimeSlotsOptions}
+                      value={SelectedTimeSlot}
+                      OnSelect={handleTimeSlotSelection}
+                      className="relative w-3/12 -mt-2"
+                    />
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td className="font-bold">Message:</td>
+                <td>{request.message || "message"}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-
         <div className="flex justify-center space-x-3 mt-3">
           <button className="bg-green-600 p-3 rounded text-white">
             Confirm
