@@ -4,7 +4,13 @@ import biitlogo from "../../../assets/extra/biitSAS.png";
 
 // Sample schedule data for 5 days (Monday to Friday)
 const initialSchedule = [
-  { day: "Monday", events: [], slots: generateSlots() },
+  {
+    day: "Monday",
+    events: [
+      { time: "08:30", name: "ERD Info", groupName: "BIIT Career Counsling" },
+    ],
+    slots: generateSlots(),
+  },
   { day: "Tuesday", events: [], slots: generateSlots() },
   { day: "Wednesday", events: [], slots: generateSlots() },
   { day: "Thursday", events: [], slots: generateSlots() },
@@ -14,12 +20,12 @@ const initialSchedule = [
 // Function to generate time slots from 08:30 to 17:30 (last slot: 17:00-18:00)
 function generateSlots() {
   const slots = [];
-  let time = { hour: 8, minute: 30 };
+  let time = { hour: 8, minute: 15 };
   while (time.hour < 13) {
     const startTime = `${time.hour.toString().padStart(2, "0")}:${time.minute
       .toString()
       .padStart(2, "0")}`;
-    time.minute += 30;
+    time.minute += 15;
     if (time.minute === 60) {
       time.minute = 0;
       time.hour++;
@@ -37,18 +43,18 @@ function WeeklyScheduleUpdater() {
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedSlot, setSelectedSlot] = useState("");
   const [eventName, setEventName] = useState("");
-  const [groupId, setGroupId] = useState("");
+  const [groupName, setGroupName] = useState("");
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
 
   // Function to handle adding an event
   const handleAddEvent = () => {
-    if (selectedDay && selectedSlot && eventName && groupId) {
+    if (selectedDay && selectedSlot && eventName && groupName) {
       setSchedule((prevSchedule) => {
         return prevSchedule.map((day) => {
           if (day.day === selectedDay) {
             const updatedEvents = [
               ...day.events,
-              { time: selectedSlot, name: eventName, groupId: groupId },
+              { time: selectedSlot, name: eventName, groupName: groupName },
             ];
             const updatedSlots = day.slots.map((slot) => {
               if (slot.start === selectedSlot) {
@@ -65,11 +71,9 @@ function WeeklyScheduleUpdater() {
       setSelectedDay("");
       setSelectedSlot("");
       setEventName("");
-      setGroupId("");
+      setGroupName("");
     } else {
-      alert(
-        "Please select a day, time slot, enter event name, and enter group ID."
-      );
+      alert("Please select enter event name, and enter group ID.");
     }
   };
 
@@ -138,9 +142,9 @@ function WeeklyScheduleUpdater() {
           />
           <input
             type="number"
-            placeholder="Enter group ID"
-            value={groupId}
-            onChange={(e) => setGroupId(e.target.value)}
+            placeholder="Enter group Name"
+            value={groupName}
+            onChange={(e) => setGroupName(e.target.value)}
             className="w-1/2 p-2 rounded-md border "
           />
           <button
@@ -189,11 +193,11 @@ function WeeklyScheduleUpdater() {
       </div> */}
       <table className="mt-2 border w-full">
         <thead>
-          <tr className="flex justify-around items-center ">
+          <tr className="flex justify-between items-center ">
             <th>Day</th>
             <th>Time</th>
-            <th>Name</th>
-            <th>Group ID</th>
+            <th>Title</th>
+            <th>Group Name</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -202,17 +206,17 @@ function WeeklyScheduleUpdater() {
             day.events.map((event, idx) => (
               <tr
                 key={`${index}-${idx}`}
-                className="flex justify-around items-center "
+                className="flex justify-between items-center "
               >
-                <td className="text-left">{day.day}</td>
-                <td className="text-left -ml-12">{event.time}</td>
-                <td className="text-left -ml-12">{event.name}</td>
-                <td className="text-left ml-6">{event.groupId}</td>
+                <td className="text-right">{day.day}</td>
+                <td className="text-right">{event.time}</td>
+                <td className="text-right">{event.name}</td>
+                <td className="text-right">{event.groupName}</td>
                 <td>
-                  <button className="px-2 py-1 bg-green-500 text-white rounded-md">
+                  <button className="px-1 py-1 bg-green-500 text-white rounded-md">
                     Edit
                   </button>
-                  <button className="px-2 py-1 bg-red-500 text-white rounded-md ml-2">
+                  <button className="px-1 py-1 bg-red-500 text-white rounded-md ml-2">
                     Delete
                   </button>
                 </td>
