@@ -21,7 +21,7 @@ const LoginPage = () => {
           navigate("/teacher/dashboard", { state: res });
         } else if (res.role === "Technical Expert") {
           navigate("/TechnicalExpert/dashboard", { state: res });
-        } else if (res.role === "projectCommetiee") {
+        } else if (res.role === "Project Commetiee") {
           navigate("/projectCommetiee/dashboard", { state: res });
         } else {
           navigate("/");

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import biitlogo from "../../../assets/extra/biitSAS.png";
+import { Card, CardBody, CardText, CardTitle } from "reactstrap";
+import { RiDeleteBin6Line, RiEditLine, RiTimeLine } from "react-icons/ri";
 
 // Sample schedule data for 5 days (Monday to Friday)
 const initialSchedule = [
@@ -8,6 +10,11 @@ const initialSchedule = [
     day: "Monday",
     events: [
       { time: "08:30", name: "ERD Info", groupName: "BIIT Career Counsling" },
+      {
+        time: "09:30",
+        name: "Conceptual Diagram",
+        groupName: "BIIT Career Counsling",
+      },
     ],
     slots: generateSlots(),
   },
@@ -190,8 +197,8 @@ function WeeklyScheduleUpdater() {
             ))
           )}
         </div>
-      </div> */}
-      <table className="mt-2 border w-full">
+      </div> 
+       <table className="mt-2 border w-full">
         <thead>
           <tr className="flex justify-between items-center ">
             <th>Day</th>
@@ -202,7 +209,7 @@ function WeeklyScheduleUpdater() {
           </tr>
         </thead>
         <tbody>
-          {schedule.map((day, index) =>
+           {schedule.map((day, index) =>
             day.events.map((event, idx) => (
               <tr
                 key={`${index}-${idx}`}
@@ -222,9 +229,38 @@ function WeeklyScheduleUpdater() {
                 </td>
               </tr>
             ))
-          )}
+          )} 
+          
         </tbody>
-      </table>
+      </table> */}
+      {schedule.map((day, index) =>
+        day.events.map((event, idx) => (
+          <Card
+            key={`${index}-${idx}`}
+            className="w-[14rem] bg-white py-4 px-4 rounded border border-gray-300 shadow-lg mb-4"
+          >
+            <CardBody>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-gray-500 flex items-center">
+                  <RiTimeLine className="mr-1" />
+                  {event.time}
+                </span>
+                <div className="flex">
+                  <RiEditLine className="h-5 w-5 mr-2 text-green-500 cursor-pointer" />
+                  <RiDeleteBin6Line className="h-5 w-5 text-red-500 cursor-pointer" />
+                </div>
+              </div>
+              <CardTitle tag="h5" className="font-bold text-center mb-2">
+                {event.name}
+              </CardTitle>
+              <CardText className="font-bold">
+                Group:
+                <span className="text-sm font-normal">{event.groupName}</span>
+              </CardText>
+            </CardBody>
+          </Card>
+        ))
+      )}
     </div>
   );
 }

@@ -31,7 +31,7 @@ function OtherSidebar({ expanded, setExpanded }) {
       } else if (isUser.role === "teacher") {
         //* set the links of teachers
       } else if (isUser.role === "Project Commetiee") {
-        //* set the links of project commetiee
+        setAllLinks(projectCommetieeLinks);
       }
     }
   }, []);
@@ -125,14 +125,13 @@ function OtherSidebar({ expanded, setExpanded }) {
     //   icon: <GoTasklist size={20} />,
     // },
   ];
-  const teacherLinks = [
+  const projectCommetieeLinks = [
     {
       label: "Dashboard",
-      path: "/TechnicalExpert/dashboard",
+      path: "/projectCommetiee/dashboard",
       icon: <LayoutDashboard size={20} />,
     },
   ];
-  const projectCommetieeLink = [];
 
   const RenderedLinks = allLinks.map((link, index) => {
     return (

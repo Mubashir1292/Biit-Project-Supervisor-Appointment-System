@@ -3,7 +3,11 @@ import { Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/Login/Login";
 import Layout from "./Layout";
 import { SearchContextProvider } from "./pages/Search/SearchContext/SearchContext";
-import { studentsRoutes, technicalExpertRoutes } from "./Routes/Route";
+import {
+  projectCommetiee,
+  studentsRoutes,
+  technicalExpertRoutes,
+} from "./Routes/Route";
 function App() {
   return (
     <SearchContextProvider>
@@ -16,6 +20,11 @@ function App() {
             );
           })}
           {technicalExpertRoutes.map((item, index) => {
+            return (
+              <Route key={index} path={item.path} element={item.element} />
+            );
+          })}
+          {projectCommetiee.map((item, index) => {
             return (
               <Route key={index} path={item.path} element={item.element} />
             );
