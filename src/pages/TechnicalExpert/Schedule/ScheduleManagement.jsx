@@ -4,27 +4,58 @@ import biitlogo from "../../../assets/extra/biitSAS.png";
 import { Card, CardBody, CardText, CardTitle } from "reactstrap";
 import { RiDeleteBin6Line, RiEditLine, RiTimeLine } from "react-icons/ri";
 
-// Sample schedule data for 5 days (Monday to Friday)
 const initialSchedule = [
   {
     day: "Monday",
     events: [
-      { time: "08:30", name: "ERD Info", groupName: "BIIT Career Counsling" },
+      { time: "08:15", name: "ERD Info", groupName: "BIIT Career Counsling" },
       {
-        time: "09:30",
+        time: "08:30",
         name: "Conceptual Diagram",
+        groupName: "BIIT Career Counsling",
+      },
+      { time: "08:45", name: "Mockups", groupName: "BIIT Career Counsling" },
+      {
+        time: "09:00",
+        name: "Real Screens",
+        groupName: "BIIT Career Counsling",
+      },
+      {
+        time: "09:00",
+        name: "Real Screens",
         groupName: "BIIT Career Counsling",
       },
     ],
     slots: generateSlots(),
   },
-  { day: "Tuesday", events: [], slots: generateSlots() },
+  {
+    day: "Tuesday",
+    events: [
+      { time: "08:45", name: "Mockups", groupName: "BIIT Career Counsling" },
+      {
+        time: "09:00",
+        name: "Real Screens",
+        groupName: "BIIT Career Counsling",
+      },
+      { time: "08:45", name: "Mockups", groupName: "BIIT Career Counsling" },
+      {
+        time: "09:00",
+        name: "Real Screens",
+        groupName: "BIIT Career Counsling",
+      },
+      {
+        time: "09:00",
+        name: "Real Screens",
+        groupName: "BIIT Career Counsling",
+      },
+    ],
+    slots: generateSlots(),
+  },
   { day: "Wednesday", events: [], slots: generateSlots() },
   { day: "Thursday", events: [], slots: generateSlots() },
   { day: "Friday", events: [], slots: generateSlots() },
 ];
 
-// Function to generate time slots from 08:30 to 17:30 (last slot: 17:00-18:00)
 function generateSlots() {
   const slots = [];
   let time = { hour: 8, minute: 15 };
@@ -51,9 +82,7 @@ function WeeklyScheduleUpdater() {
   const [selectedSlot, setSelectedSlot] = useState("");
   const [eventName, setEventName] = useState("");
   const [groupName, setGroupName] = useState("");
-  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
 
-  // Function to handle adding an event
   const handleAddEvent = () => {
     if (selectedDay && selectedSlot && eventName && groupName) {
       setSchedule((prevSchedule) => {
@@ -74,7 +103,6 @@ function WeeklyScheduleUpdater() {
           return day;
         });
       });
-      // Clear selected values
       setSelectedDay("");
       setSelectedSlot("");
       setEventName("");
@@ -84,13 +112,10 @@ function WeeklyScheduleUpdater() {
     }
   };
 
-  // Function to handle selecting a time slot
   const handleSelectSlot = (slot) => {
-    setSelectedSlot(slot.label); // Store only the start time string
-    console.log(slot.label);
+    setSelectedSlot(slot.label);
   };
 
-  // Function to generate dropdown options
   const generateDropdownOptions = () => {
     const day = schedule.find((day) => day.day === selectedDay);
     const availableSlots = day.slots.filter((slot) => slot.available);
@@ -107,7 +132,6 @@ function WeeklyScheduleUpdater() {
       </div>
       <h1 className="text-2xl font-bold mb-4 text-center">Weekly Schedule</h1>
       <div className="flex flex-row space-x-4 justify-center">
-        {/* Day selection */}
         {schedule.map((day, index) => (
           <div key={index}>
             <button
@@ -123,7 +147,6 @@ function WeeklyScheduleUpdater() {
           </div>
         ))}
       </div>
-      {/* Slot selection */}
       {selectedDay && (
         <div className="flex justify-center items-center space-x-3">
           <h2 className="text-lg font-semibold mt-2">
@@ -137,7 +160,6 @@ function WeeklyScheduleUpdater() {
           />
         </div>
       )}
-      {/* Event input */}
       {selectedSlot && (
         <div className="mt-4 flex  flex-col space-y-3 justify-center items-center">
           <input
@@ -162,105 +184,44 @@ function WeeklyScheduleUpdater() {
           </button>
         </div>
       )}
-      {/* Event list */}
       <h2 className="text-2xl font-semibold text-center my-4">
         Scheduled Events
       </h2>
-      {/* <div className="mt-4">
-        <div className="mt-4 flex flex-col justify-around items-center">
-          <div className="w-full flex  items-center">
-            <div className="w-1/5 font-semibold">Day</div>
-            <div className="w-1/5 font-semibold">Time</div>
-            <div className="w-1/5 font-semibold">Name</div>
-            <div className="w-1/5 font-semibold">Group ID</div>
-            <div className="w-1/5 font-semibold">Action</div>
+      {schedule.map((day, index) => (
+        <div key={index}>
+          <h3 className="text-xl font-semibold mb-2">{day.day}</h3>
+          <div className="flex flex-wrap justify-around">
+            {day.events.map((event, idx) => (
+              <Card
+                key={`${index}-${idx}`}
+                className="w-[12rem] bg-white py-4 px-4 rounded border border-gray-300 shadow-lg mb-2 mr-2"
+              >
+                <CardBody>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-gray-500 flex items-center">
+                      <RiTimeLine className="mr-1" />
+                      {event.time}
+                    </span>
+                    <div className="flex">
+                      <RiEditLine className="h-5 w-5 mr-2 text-green-500 cursor-pointer" />
+                      <RiDeleteBin6Line className="h-5 w-5 text-red-500 cursor-pointer" />
+                    </div>
+                  </div>
+                  <CardTitle tag="h5" className="font-bold text-center mb-2">
+                    {event.name}
+                  </CardTitle>
+                  <CardText className="font-bold">
+                    Group:
+                    <span className="text-sm font-normal">
+                      {event.groupName}
+                    </span>
+                  </CardText>
+                </CardBody>
+              </Card>
+            ))}
           </div>
-          {schedule.map((day, index) =>
-            day.events.map((event, idx) => (
-              <div
-                key={`${index}-${idx}`}
-                className="w-full flex justify-around items-center"
-              >
-                <div>{day.day}</div>
-                <div>{event.time}</div>
-                <div>{event.name}</div>
-                <div>{event.groupId}</div>
-                <div>
-                  <button className="px-2 py-1 bg-green-500 text-white rounded-md">
-                    Edit
-                  </button>
-                  <button className="px-2 py-1 bg-red-500 text-white rounded-md ml-2">
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
         </div>
-      </div> 
-       <table className="mt-2 border w-full">
-        <thead>
-          <tr className="flex justify-between items-center ">
-            <th>Day</th>
-            <th>Time</th>
-            <th>Title</th>
-            <th>Group Name</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-           {schedule.map((day, index) =>
-            day.events.map((event, idx) => (
-              <tr
-                key={`${index}-${idx}`}
-                className="flex justify-between items-center "
-              >
-                <td className="text-right">{day.day}</td>
-                <td className="text-right">{event.time}</td>
-                <td className="text-right">{event.name}</td>
-                <td className="text-right">{event.groupName}</td>
-                <td>
-                  <button className="px-1 py-1 bg-green-500 text-white rounded-md">
-                    Edit
-                  </button>
-                  <button className="px-1 py-1 bg-red-500 text-white rounded-md ml-2">
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))
-          )} 
-          
-        </tbody>
-      </table> */}
-      {schedule.map((day, index) =>
-        day.events.map((event, idx) => (
-          <Card
-            key={`${index}-${idx}`}
-            className="w-[14rem] bg-white py-4 px-4 rounded border border-gray-300 shadow-lg mb-4"
-          >
-            <CardBody>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-gray-500 flex items-center">
-                  <RiTimeLine className="mr-1" />
-                  {event.time}
-                </span>
-                <div className="flex">
-                  <RiEditLine className="h-5 w-5 mr-2 text-green-500 cursor-pointer" />
-                  <RiDeleteBin6Line className="h-5 w-5 text-red-500 cursor-pointer" />
-                </div>
-              </div>
-              <CardTitle tag="h5" className="font-bold text-center mb-2">
-                {event.name}
-              </CardTitle>
-              <CardText className="font-bold">
-                Group:
-                <span className="text-sm font-normal">{event.groupName}</span>
-              </CardText>
-            </CardBody>
-          </Card>
-        ))
-      )}
+      ))}
     </div>
   );
 }

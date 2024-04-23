@@ -1,7 +1,5 @@
-import { element } from "prop-types";
 import Search from "../pages/Search/Search";
 import StudentDashboard from "../pages/Student/Dashboard/StudentDashboard";
-import GroupCreation from "../pages/Student/GroupCreating/GroupCreation";
 import MainScreen from "../pages/Student/GroupCreating/MainScreen";
 import RequestToStudent from "../pages/Student/GroupCreating/RequestingGroupMember.jsx/RequestToStudent";
 import MyGroup from "../pages/Student/MyGroup/MyGroup";
@@ -15,11 +13,13 @@ import JoingingAGroupRequest from "../pages/Student/Requests/JoiningGroupRequest
 import TaskList from "../pages/Student/Tasks/TaskList";
 import ExpertDashboard from "../pages/TechnicalExpert/Dashboard/ExpertDashboard";
 import Meetings from "../pages/TechnicalExpert/Meetings/Meetings";
-import ScheduleManagement from "../pages/TechnicalExpert/Schedule/ScheduleManagement";
 import AllNotifications from "../pages/TechnicalExpert/Notifications/AllNotifications";
 import AnotherHelpRequest from "../pages/TechnicalExpert/Requests/AnotherHelpRequest";
 import WeeklyScheduleUpdater from "../pages/TechnicalExpert/Schedule/ScheduleManagement";
 import Dashboard from "../pages/Project_Commetiee/Dashboard/Dashboard";
+import SupervisorRequests from "../pages/Project_Commetiee/Supervisor-Requests/SupervisorRequests";
+import JoinToGroup from "../pages/Project_Commetiee/JoinToGroup/JoinToGroup";
+import GroupRequests from "../pages/Project_Commetiee/GroupRequests/GroupRequests";
 //? === inserting all Routes for all users
 export const studentsRoutes = [
   { path: "/student/dashboard", element: <StudentDashboard /> },
@@ -48,4 +48,10 @@ export const technicalExpertRoutes = [
 ];
 export const projectCommetiee = [
   { path: "/projectCommetiee/dashboard", element: <Dashboard /> },
+  { path: "/projectCommetiee/groupRequests", element: <GroupRequests /> },
+  { path: "/projectCommetiee/JoinGroup", element: <JoinToGroup /> },
+  {
+    path: "/projectCommetiee/supervisorRequest",
+    element: <SupervisorRequests />,
+  },
 ];

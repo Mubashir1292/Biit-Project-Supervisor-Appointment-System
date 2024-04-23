@@ -2,17 +2,21 @@ import React, { useEffect, useState } from "react";
 import {
   CircleDotDashed,
   Group,
+  GroupIcon,
   HelpCircle,
   LayoutDashboard,
   UsersRound,
 } from "lucide-react";
 import sas from "../../assets/extra/sas.png";
 import { NavLink } from "react-router-dom";
-import { GoProject, GoTasklist } from "react-icons/go";
-import { GiExplosiveMeeting } from "react-icons/gi";
+import { GoProject, GoProjectTemplate, GoTasklist } from "react-icons/go";
+import { GiExplosiveMeeting, GiGroupedDrops, GiTeacher } from "react-icons/gi";
 import { VscRequestChanges } from "react-icons/vsc";
 import { AiFillSchedule } from "react-icons/ai";
 import { SiGotomeeting } from "react-icons/si";
+import { FaUserGraduate, FaUserTie } from "react-icons/fa";
+import { GrProjects } from "react-icons/gr";
+import { FaDiagramProject } from "react-icons/fa6";
 
 function OtherSidebar({ expanded, setExpanded }) {
   const [user, setUser] = useState({});
@@ -130,6 +134,21 @@ function OtherSidebar({ expanded, setExpanded }) {
       label: "Dashboard",
       path: "/projectCommetiee/dashboard",
       icon: <LayoutDashboard size={20} />,
+    },
+    {
+      label: "Supervising Requests",
+      path: "/projectCommetiee/supervisorRequest",
+      icon: <FaUserTie size={20} />,
+    },
+    {
+      label: "Students Requests",
+      path: "/projectCommetiee/JoinGroup",
+      icon: <FaUserGraduate size={20} />,
+    },
+    {
+      label: "Project Requests",
+      path: "/projectCommetiee/groupRequests",
+      icon: <FaDiagramProject size={20} />,
     },
   ];
 
