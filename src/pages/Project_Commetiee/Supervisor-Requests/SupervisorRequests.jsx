@@ -8,7 +8,7 @@ function SupervisorRequests() {
           <img src={biitSAS} alt="Biit Sas Logo" />
         </div>
         <h1 className="text-2xl text-center font-bold text-green-600">
-          Supervising Requests
+          Supervising Request
         </h1>
       </div>
     </>
