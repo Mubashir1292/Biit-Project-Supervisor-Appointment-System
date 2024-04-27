@@ -6,7 +6,7 @@ function MessageCard(props) {
     <>
       <div
         {...props.rest}
-        className="flex flex-col w-3/12  pl-2 rounded-xl drop-shadow-2xl h-5/6  bg-white"
+        className="flex flex-col w-3/12  pl-2 rounded-xl drop-shadow h-5/6  bg-white"
       >
         <div className=" flex flex-col  justify-around text-black">
           <h1 className="text-4xl font-bold text-center">02</h1>

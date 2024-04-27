@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import biitlogo from "../../../assets/extra/biitSAS.png";
 import { useNavigate } from "react-router-dom";
-import Card from "../../../components/Cards/Card";
 import { CircleDotDashed, GitPullRequest } from "lucide-react";
 import AppointmentCard from "../../../components/Cards/AppointmentCard";
 import MessageCard from "../../../components/Cards/MessageCard";
+import { Card, CardBody, CardText } from "reactstrap";
 function ExpertDashboard() {
   const navigate = useNavigate();
   const [handleDuration, setHandleDuration] = useState("");
@@ -54,12 +54,33 @@ function ExpertDashboard() {
         className="relative w-2/12"
       />
       <div className="w-full h-auto flex flex-row justify-around pt-10">
-        <Card icon={<GitPullRequest />} title="Help Requests" desc={3} />
-        <Card icon={<GitPullRequest />} title="Approved Requests" desc="03" />
+        <Card>
+          <CardBody>
+            <CardText>Testing Card</CardText>
+          </CardBody>
+        </Card>
+        <Card>
+          <CardBody>
+            <CardText>Testing Card</CardText>
+          </CardBody>
+        </Card>
+        <Card>
+          <CardBody>
+            <CardText>Testing Card</CardText>
+          </CardBody>
+        </Card>
       </div>
       <div className="mt-10 h-3/6 flex flex-row justify-around pt-3">
-        <AppointmentCard />
-        <MessageCard />
+        <Card>
+          <CardBody>
+            <CardText>Testing Card</CardText>
+          </CardBody>
+        </Card>
+        <Card>
+          <CardBody>
+            <CardText>Testing Card</CardText>
+          </CardBody>
+        </Card>
       </div>
     </div>
   );

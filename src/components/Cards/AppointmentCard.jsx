@@ -5,7 +5,7 @@ function AppointmentCard(props) {
     <>
       <div
         {...props.rest}
-        className="flex flex-col w-3/12  pl-2 rounded-xl shadow-2xl h-5/6   bg-white"
+        className="flex flex-col w-3/12  pl-2 rounded-xl shadow h-5/6   bg-white"
       >
         <div className=" flex flex-row  justify-around text-black border-b border-green-500 pt-3">
           <h1 className="text-xl font-bold mb-3">Upcoming Meetings</h1>

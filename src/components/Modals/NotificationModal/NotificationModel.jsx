@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function NotificationModel({ open, handleOpen, ...rest }) {
+function NotificationModel({ open, handleOpen, className, ...rest }) {
   const [notifications, setNotifications] = useState([]);
   useEffect(() => {
     const notification = {
@@ -19,10 +19,10 @@ function NotificationModel({ open, handleOpen, ...rest }) {
             console.log("onClick");
             handleOpen(false);
           }}
-          className="w-full drop-shadow-2xl h-96 top-0 flex items-start justify-end bg-gray-500 bg-opacity-0 absolute z-40    "
+          className={`w-full drop-shadow-2xl h-96 top-0 flex items-start justify-end bg-gray-500 bg-opacity-0 absolute`}
         >
           <div
-            className="bg-white w-2/12 h-3/5 rounded-lg absolute z-50 top-16 right-100 shadow-lg border border-gray-300 overflow-auto "
+            className="bg-white w-2/12 h-3/5 rounded-lg absolute z-1000 top-16 right-100 shadow-lg border border-gray-300 overflow-auto "
             onClick={() => {
               handleOpen(true);
             }}

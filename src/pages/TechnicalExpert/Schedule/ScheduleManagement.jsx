@@ -3,11 +3,12 @@ import Dropdown from "../../../components/dropdown/Dropdown";
 import biitlogo from "../../../assets/extra/biitSAS.png";
 import { Card, CardBody, CardText, CardTitle } from "reactstrap";
 import { RiDeleteBin6Line, RiEditLine, RiTimeLine } from "react-icons/ri";
-
+import './style.css'
 const initialSchedule = [
   {
     day: "Monday",
     events: [
+      { time: "08:15", name: "ERD Info", groupName: "BIIT Career Counsling" },
       { time: "08:15", name: "ERD Info", groupName: "BIIT Career Counsling" },
       {
         time: "08:30",
@@ -51,9 +52,56 @@ const initialSchedule = [
     ],
     slots: generateSlots(),
   },
-  { day: "Wednesday", events: [], slots: generateSlots() },
-  { day: "Thursday", events: [], slots: generateSlots() },
-  { day: "Friday", events: [], slots: generateSlots() },
+  {
+    day: "Wednesday",
+    events: [
+      { time: "08:45", name: "Mockups", groupName: "BIIT Career Counsling" },
+      {
+        time: "09:00",
+        name: "Real Screens",
+        groupName: "BIIT Career Counsling",
+      },
+      { time: "08:45", name: "Mockups", groupName: "BIIT Career Counsling" },
+      {
+        time: "09:00",
+        name: "Real Screens",
+        groupName: "BIIT Career Counsling",
+      },
+      {
+        time: "09:00",
+        name: "Real Screens",
+        groupName: "BIIT Career Counsling",
+      },
+    ],
+    slots: generateSlots(),
+  },
+  {
+    day: "Thursday",
+    events: [
+      {
+        time: "08:30",
+        name: "Real Screens",
+        groupName: "BIIT Career Counsling",
+      },
+    ],
+    slots: generateSlots(),
+  },
+  {
+    day: "Friday",
+    events: [
+      {
+        time: "09:00",
+        name: "Real Screens",
+        groupName: "BIIT Career Counsling",
+      },
+      {
+        time: "09:00",
+        name: "Real Screens",
+        groupName: "BIIT Career Counsling",
+      },
+    ],
+    slots: generateSlots(),
+  },
 ];
 
 function generateSlots() {
@@ -130,7 +178,8 @@ function WeeklyScheduleUpdater() {
       <div className="w-full flex justify-center items-center">
         <img src={biitlogo} alt="biit Logo" className="w-2/6" />
       </div>
-      <h1 className="text-2xl font-bold mb-4 text-center">Weekly Schedule</h1>
+      <h1 className="text-2xl font-bold my-4 text-center">Weekly Schedule</h1>
+      {/* days Monday,Tuesday,Wednesday */}
       <div className="flex flex-row space-x-4 justify-center">
         {schedule.map((day, index) => (
           <div key={index}>
@@ -161,7 +210,7 @@ function WeeklyScheduleUpdater() {
         </div>
       )}
       {selectedSlot && (
-        <div className="mt-4 flex  flex-col space-y-3 justify-center items-center">
+        <div className="mt-4 flex flex-col space-y-3 justify-center items-center">
           <input
             type="text"
             placeholder="Enter event title"
@@ -187,41 +236,45 @@ function WeeklyScheduleUpdater() {
       <h2 className="text-2xl font-semibold text-center my-4">
         Scheduled Events
       </h2>
-      {schedule.map((day, index) => (
-        <div key={index}>
-          <h3 className="text-xl font-semibold mb-2">{day.day}</h3>
-          <div className="flex flex-wrap justify-around">
-            {day.events.map((event, idx) => (
-              <Card
-                key={`${index}-${idx}`}
-                className="w-[12rem] bg-white py-4 px-4 rounded border border-gray-300 shadow-lg mb-2 mr-2"
-              >
-                <CardBody>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-gray-500 flex items-center">
-                      <RiTimeLine className="mr-1" />
-                      {event.time}
-                    </span>
-                    <div className="flex">
-                      <RiEditLine className="h-5 w-5 mr-2 text-green-500 cursor-pointer" />
-                      <RiDeleteBin6Line className="h-5 w-5 text-red-500 cursor-pointer" />
+      {/* Separate section for each day's events */}
+      <div className="flex  justify-center">
+        {schedule.map((day, index) => (
+          <div key={index} className="p-4 mb-4">
+            <h3 className="text-xl font-semibold mb-2 ml-3 text-center">{day.day}</h3>
+            <div className={`flex flex-col h-96 overflow-hidden ${day.events.length > 1 ? "overflow-y-scroll":""}`}>
+              {/* Map through events for the selected day */}
+              {day.events.map((event, idx) => (
+                <Card
+                  key={`${index}-${idx}`}
+                  className="w-[11rem] bg-white py-4 px-4 rounded border border-gray-300 shadow-lg mb-2"
+                >
+                  <CardBody>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-gray-500 flex items-center">
+                        <RiTimeLine className="mr-1" />
+                        {event.time}
+                      </span>
+                      <div className="flex">
+                        <RiEditLine className="h-5 w-5 mr-2 text-green-500 cursor-pointer" />
+                        <RiDeleteBin6Line className="h-5 w-5 text-red-500 cursor-pointer" />
+                      </div>
                     </div>
-                  </div>
-                  <CardTitle tag="h5" className="font-bold text-center mb-2">
-                    {event.name}
-                  </CardTitle>
-                  <CardText className="font-bold">
-                    Group:
-                    <span className="text-sm font-normal">
-                      {event.groupName}
-                    </span>
-                  </CardText>
-                </CardBody>
-              </Card>
-            ))}
+                    <CardTitle tag="h5" className="font-bold text-center mb-2">
+                      {event.name}
+                    </CardTitle>
+                    <CardText className="font-bold">
+                      Group:
+                      <span className="text-sm font-normal">
+                        {event.groupName}
+                      </span>
+                    </CardText>
+                  </CardBody>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
