@@ -15,8 +15,7 @@ function Dashboard() {
     const userString = localStorage.getItem("user");
     const user = userString ? JSON.parse(userString) : null;
     if (user) {
-      setUser(user);
-      console.log(user);
+      setUser(user);      
     } else navigate("/");
     handleGetOptions();
   }, []);
