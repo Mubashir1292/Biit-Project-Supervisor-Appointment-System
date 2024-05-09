@@ -15,7 +15,7 @@ function Dashboard() {
     const userString = localStorage.getItem("user");
     const user = userString ? JSON.parse(userString) : null;
     if (user) {
-      setUser(user);      
+      setUser(user);
     } else navigate("/");
     handleGetOptions();
   }, []);
@@ -96,41 +96,7 @@ function Dashboard() {
               </CardText>
             </CardBody>
           </Card>
-        </div>
-        <div className="flex justify-around mt-5">
-          <Card className="w-[14rem] h-40 bg-white py-4 px-4 rounded border border-gray-300 shadow-lg">
-            <CardBody>
-              <CardTitle tag="h5" className="font-bold">
-                Project Allocation
-              </CardTitle>
-              <CardSubtitle
-                tag="h3"
-                className="mb-3 text-muted text-xl text-center"
-              >
-                5
-              </CardSubtitle>
-              <CardText className="mb-3 text-mg">
-                Requests for a project
-              </CardText>
-            </CardBody>
-          </Card>
-          <Card className="w-[14rem] h-40 bg-white py-4 px-4 rounded border border-gray-300 shadow-lg">
-            <CardBody>
-              <CardTitle tag="h5" className="font-bold">
-                Project Allocation
-              </CardTitle>
-              <CardSubtitle
-                tag="h3"
-                className="mb-3 text-muted text-xl text-center"
-              >
-                5
-              </CardSubtitle>
-              <CardText className="mb-3 text-mg">
-                Requests for a project
-              </CardText>
-            </CardBody>
-          </Card>
-        </div>
+        </div>        
       </div>
     </>
   );
