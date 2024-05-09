@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import biitlogo from "../../../assets/extra/biitSAS.png";
 import { useNavigate } from "react-router-dom";
-import { Card, CardBody, CardText } from "reactstrap";
+// import { Card, CardBody, CardText } from "reactstrap";
+import { Card, Button } from "react-bootstrap";
 function ExpertDashboard() {
   const navigate = useNavigate();
   const [handleDuration, setHandleDuration] = useState("");
@@ -51,20 +52,26 @@ function ExpertDashboard() {
         className="relative w-2/12"
       />
       <div className="w-full h-auto flex flex-row justify-around pt-10">
-        <Card className="bg-[#e3e3e3] w-2/12 h-40">
-          <CardBody className="text-center font-bold">
-            <CardText>Help Request</CardText>
-          </CardBody>
+        <Card>
+          <Card.Body>
+            <Card.Title>Card Title</Card.Title>
+            <Card.Text>Some quick example text to</Card.Text>
+            <Button variant="primary">Go somewhere</Button>
+          </Card.Body>
         </Card>
-        <Card className="bg-[#e3e3e3] w-2/12 h-40">
-          <CardBody className="text-center font-bold">
-            <CardText>Upcomming Meetings</CardText>
-          </CardBody>
+        <Card>
+          <Card.Body>
+            <Card.Title>Card Title</Card.Title>
+            <Card.Text>Some quick example text to</Card.Text>
+            <Button variant="primary">Go somewhere</Button>
+          </Card.Body>
         </Card>
-        <Card className="bg-[#e3e3e3] w-2/12 h-40">
-          <CardBody className="text-center font-bold">
-            <CardText>Weekly Meetings</CardText>
-          </CardBody>
+        <Card>
+          <Card.Body>
+            <Card.Title>Card Title</Card.Title>
+            <Card.Text>Some quick example text to</Card.Text>
+            <Button variant="primary">Go somewhere</Button>
+          </Card.Body>
         </Card>
       </div>
     </div>

@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { FaBell } from "react-icons/fa";
-import man from "../../assets/extra/man.png";
 import { CiMenuBurger, CiSearch } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import {
@@ -22,11 +20,9 @@ function Header({ expanded, setExpanded }) {
   const handleOpen = () => {
     setShowNotificationModal((curr) => !curr);
     setNotificationIcon((curr) => !curr);
-    // console.log(showNotificationModal);
   };
   const handleProfileOpen = () => {
     setShowProfileModal((curr) => !curr);
-    // console.log(showNotificationModal);
   };
 
   return (
@@ -61,33 +57,10 @@ function Header({ expanded, setExpanded }) {
           <CiSearch className="absolute text-2xl text-gray-700 mx-2  self-center" />
         </form>
         <div className="w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 flex justify-end items-center space-x-4">
-          {notificationIcon ? (
-            <Bell className="text-white cursor-pointer" />
-          ) : (
-            <BellDot
-              className="text-white cursor-pointer"
-              onClick={handleOpen}
-            />
-          )}
-          {/* <FaBell
-            className="text-gray-100 hover:text-white cursor-pointer"
-            size={24}
-            onClick={handleOpen}
-          /> */}
-          <NotificationModel
-            open={showNotificationModal}
-            handleOpen={handleOpen}
-          />
           <CircleUserRound
             className="text-white cursor-pointer"
             onClick={handleProfileOpen}
           />
-          {/* <img
-            src={man}
-            alt="Profile"
-            className="w-8 h-8 rounded-full hover:shadow-xl cursor-pointer"
-            onClick={handleProfileOpen}
-          /> */}
           <ProfileModel
             open={showProfileModal}
             handleOpen={handleProfileOpen}

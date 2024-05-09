@@ -31,7 +31,7 @@ function Layout() {
       <div
         className={
           expanded
-            ? "flex flex-col w-11/12 max-[420px]:w-full"
+            ? "flex flex-col w-11/12 max-[420px]:w-full z-0"
             : "flex flex-col w-full"
         }
       >
