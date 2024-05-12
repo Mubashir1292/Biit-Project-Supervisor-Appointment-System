@@ -158,11 +158,11 @@ function OtherSidebar({ expanded, setExpanded }) {
         key={index}
         to={link.path}
         className={({ isActive }) =>
-          `bg-[#37373d] hover:bg-gray-300 w-full p-2 mt-2 rounded-md border text-white hover:text-green-600 hover:shadow-md ${
+          `bg-[#37373d] text-sm  hover:bg-green-400 w-full p-2 mt-2 hover:font-bold rounded-md border text-white hover:text-green-600 hover:shadow-md no-underline ${
             !expanded ? "w-full transition-all" : "transition-all"
           } ${
             isActive
-              ? "font-bold border-l-4 bg-green-800 border-green-500 pl-2 shadow-lg text-md"
+              ? "font-bold border-l-4 bg-green-800 border-green-500 transition-all hover:bg-green-900 pl-2 shadow-lg text-md no-underline"
               : ""
           }`
         }
@@ -171,16 +171,16 @@ function OtherSidebar({ expanded, setExpanded }) {
           {expanded ? (
             <span className="mt-1">{link.icon}</span>
           ) : (
-            <span className=" mt-1">{link.icon}</span>
+            <span className="mt-1">{link.icon}</span>
           )}
-          {expanded ? <span>{link.label}</span> : ""}
+          {expanded ? <span className="no-underline">{link.label}</span> : ""}
         </div>
       </NavLink>
     );
   });
   return (
     <div
-      className={`sticky h-screen overflow-y-none items-center bg-[#37373d]  border border-[#37373d] shadow-sm ${
+      className={`sticky h-screen overflow-y-none items-center bg-[#37373d]  shadow-sm ${
         expanded ? "w-52" : "w-20"
       }`}
     >
@@ -194,7 +194,9 @@ function OtherSidebar({ expanded, setExpanded }) {
         />
       </div>
       <div
-        className={`w-full flex flex-col p-4 ${expanded ? "w-full" : "w-10"}`}
+        className={`w-full flex flex-col p-4 ${
+          expanded ? "w-full" : "w-[86px]"
+        }`}
       >
         {RenderedLinks}
       </div>

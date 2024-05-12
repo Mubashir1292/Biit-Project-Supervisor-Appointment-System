@@ -1,55 +1,67 @@
-import React, { useEffect, useState } from "react";
-import { Dropdown, DropdownToggle, DropdownMenu, Row, Col } from "reactstrap";
-function ProfileModel({ open, handleOpen }) {
-  const [profileDetails, setProfileDetails] = useState();
-  const [isTeacher, setIsTeacher] = useState(false);
-  const [menu, setMenu] = useState(false);
-  useEffect(() => {
-    const profileDetail = {
-      id: 1,
-      name: "Mubashir Liaqat",
-      image: "../../../assets/extra/man.png",
-    };
-    setProfileDetails(profileDetail);
-    const userFinding = localStorage.getItem("isUser");
-    if (userFinding === "teacher" || userFinding === "TechnicalExpert") {
-      setIsTeacher((curr) => !curr);
-    }
-  }, []);
+import { CircleUserIcon, Settings } from "lucide-react";
+import React, { useState } from "react";
+import { Col, Dropdown, DropdownMenu, DropdownToggle, Row } from "reactstrap";
+import man2 from "../../../assets/extra/man2.jpg";
 
+function ProfileModal() {
+  const [menu, setMenu] = useState(false);
+  const profile = {
+    id: "2020-Arid-3675",
+    name: "Mubashir Liaqat",
+    image: man2,
+  };
   return (
-    <>
+    <React.Fragment>
       <Dropdown
         isOpen={menu}
         toggle={() => setMenu(!menu)}
-        className="dropdown inline-block"
-        tag="li"
+        className="dropdown d-inline-block"
+        size="lg"
       >
         <DropdownToggle
-          className="btn header-item noti-icon position-relative p-1 p-sm-2 p-md-3"
+          className="btn header-item noti-icon position-relative  p-sm-2 p-0"
           tag="button"
           id="page-header-notifications-dropdown"
         >
-          <i className={`bx bx-bell ${1 !== 1 ? "bx-tada" : ""} `} />
-          <span className="badge bg-danger rounded-pill">3</span>
+          <CircleUserIcon className="text-white" />
         </DropdownToggle>
-
         <DropdownMenu
-          onMouseLeave={() => {
-            setMenu(!menu);
-          }}
-          className="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 w-32 h-96"
+          className="dropdown-menu dropdown-menu-lg dropdown-menu-end mt-2 px-3 overflow-hidden w-3/12"
+          onMouseLeave={() => setMenu(!menu)}
+          container={"body"}
         >
-          <div className="p-3">
-            <Row className="align-items-center">
+          <div className="">
+            <Row>
               <Col>
-                <h6 className="m-0">All Notifications</h6>
+                <h6 className="text-sm text-center">Profile Details</h6>
               </Col>
             </Row>
+            <Row className="w-32 mx-auto">
+              <img
+                src={profile.image}
+                alt={profile.name}
+                className="rounded-xl"
+              />
+            </Row>
+            <div className="mt-2 flex justify-center items-center space-x-4">
+              {profile.id.includes("Arid") ? (
+                <>
+                  <span>ID:</span>
+                  <span className="text-sm font-normal">{profile.id}</span>
+                </>
+              ) : (
+                <></>
+              )}
+            </div>
+            <div className="mt-2 flex justify-center items-center space-x-4">
+              <span>Name:</span>
+              <span className="text-sm font-normal">{profile.name}</span>
+            </div>
           </div>
         </DropdownMenu>
       </Dropdown>
-    </>
+    </React.Fragment>
   );
 }
-export default ProfileModel;
+
+export default ProfileModal;

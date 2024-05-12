@@ -4,6 +4,7 @@ import LoginPage from "./pages/Login/Login";
 import Layout from "./Layout";
 import { SearchContextProvider } from "./pages/Search/SearchContext/SearchContext";
 import {
+  Teacher,
   projectCommetiee,
   studentsRoutes,
   technicalExpertRoutes,
@@ -29,6 +30,9 @@ function App() {
               <Route key={index} path={item.path} element={item.element} />
             );
           })}
+          {Teacher.map((item, index) => (
+            <Route key={index} path={item.path} element={item.element} />
+          ))}
         </Route>
       </Routes>
     </SearchContextProvider>

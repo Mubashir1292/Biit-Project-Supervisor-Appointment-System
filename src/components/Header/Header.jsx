@@ -6,10 +6,9 @@ import {
   useSearch,
 } from "../../pages/Search/SearchContext/SearchContext";
 import NotificationModel from "../Modals/NotificationModal/NotificationModel";
-import ProfileModel from "../Modals/ProfileModal/ProfileModal";
-import { Bell, BellDot, CircleUserRound } from "lucide-react";
-
+import ProfileModal from "../Modals/ProfileModal/ProfileModal";
 function Header({ expanded, setExpanded }) {
+  const [options, setOptions] = useState([]);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showNotificationModal, setShowNotificationModal] = useState(false);
   const [search, setSearch] = useState("");
@@ -17,17 +16,18 @@ function Header({ expanded, setExpanded }) {
   const { updateSearch } = useSearch();
   const [notificationIcon, setNotificationIcon] = useState(false);
 
-  const handleOpen = () => {
-    setShowNotificationModal((curr) => !curr);
-    setNotificationIcon((curr) => !curr);
+  const [selection, setSelection] = useState(null);
+  const handleSelect = (option) => {
+    setSelection(option);
   };
+
   const handleProfileOpen = () => {
     setShowProfileModal((curr) => !curr);
   };
 
   return (
     <SearchContextProvider>
-      <div className="w-full h-16 sticky bg-[#05B058] shadow-lg flex justify-between items-center px-5">
+      <div className="w-full h-16 sticky bg-[#05B058] flex justify-between items-center px-5">
         <button
           onClick={() => setExpanded(!expanded)}
           className="p-1.5 rounded-lg bg-gray-100 hover:bg-gray-100"
@@ -51,19 +51,23 @@ function Header({ expanded, setExpanded }) {
             name="search"
             value={search}
             placeholder="Search Now"
-            className="shadow-lg appearance-none border-2 rounded w-full py-2 px-8 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow-sm appearance-none border-2 rounded w-full py-2 px-8 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             onChange={(e) => setSearch(e.target.value)}
           />
           <CiSearch className="absolute text-2xl text-gray-700 mx-2  self-center" />
         </form>
         <div className="w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 flex justify-end items-center space-x-4">
-          <CircleUserRound
-            className="text-white cursor-pointer"
-            onClick={handleProfileOpen}
+          <ProfileModal
+            options={options}
+            value={selection}
+            OnSelect={handleSelect}
+            className="relative w-2/12"
           />
-          <ProfileModel
-            open={showProfileModal}
-            handleOpen={handleProfileOpen}
+          <NotificationModel
+            options={options}
+            value={selection}
+            OnSelect={handleSelect}
+            className="relative w-2/12"
           />
         </div>
       </div>

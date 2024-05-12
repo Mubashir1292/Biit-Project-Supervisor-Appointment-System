@@ -20,6 +20,13 @@ import Dashboard from "../pages/Project_Commetiee/Dashboard/Dashboard";
 import SupervisorRequests from "../pages/Project_Commetiee/Supervisor-Requests/SupervisorRequests";
 import JoinToGroup from "../pages/Project_Commetiee/JoinToGroup/JoinToGroup";
 import GroupRequests from "../pages/Project_Commetiee/GroupRequests/GroupRequests";
+import TeacherDashboard from "../pages/Teacher/Dashboard/TeacherDashboard";
+import Groups from "../pages/Teacher/Groups/Groups";
+import TeacherMeetings from "../pages/Teacher/Meetings/TeacherMeetings";
+import teacherGroupProgress from "../pages/Teacher/Progress/teacherGroupProgress";
+import Schedule from "../pages/Teacher/Schedule/Schedule";
+import Requests from "../pages/Teacher/Requests/Requests";
+import SingleNotification from "../pages/Teacher/SingleNotifications/SingleNotification";
 //? === inserting all Routes for all users
 export const studentsRoutes = [
   { path: "/student/dashboard", element: <StudentDashboard /> },
@@ -54,4 +61,13 @@ export const projectCommetiee = [
     path: "/projectCommetiee/supervisorRequest",
     element: <SupervisorRequests />,
   },
+];
+export const Teacher = [
+  { path: "/teacher/dashboard", element: <TeacherDashboard /> },
+  { path: "/teacher/groups", element: <Groups /> },
+  { path: "/teacher/meetings", element: <TeacherMeetings /> },
+  { path: "/teacher/groupProgress", element: <teacherGroupProgress /> },
+  { path: "/teacher/requests", element: <Requests /> },
+  { path: "/teacher/schedule", element: <Schedule /> },
+  { path: "/teacher/notification", element: <SingleNotification /> },
 ];

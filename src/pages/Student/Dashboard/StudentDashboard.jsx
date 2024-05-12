@@ -1,34 +1,81 @@
 import React, { useEffect, useState } from "react";
 import biitlogo from "../../../assets/extra/biitSAS.png";
-import Dropdown from "../../../components/dropdown/Dropdown";
-import AppointmentCard from "../../../components/Cards/AppointmentCard";
-import MessageCard from "../../../components/Cards/MessageCard";
-import TaskList from "../../../components/Cards/TaskList";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Card, CardBody, CardHeader, CardTitle } from "reactstrap";
-
+import Card from "react-bootstrap/Card";
+import { ArrowDownWideNarrow, ArrowUpWideNarrow } from "lucide-react";
+import Calendar from "react-calendar";
+import "../../../assets/css/style.css";
 function StudentDashboard() {
-  const [options, setOptions] = useState([]);
   const [sentRequest, setSentRequest] = useState([]);
   const [isUser, setIsUser] = useState(null);
+  const [value, setValue] = useState(new Date());
   const navigate = useNavigate();
-  const location = useLocation();
+  const [allgroupRequests, setAllGroupRequests] = useState([
+    {
+      group_Id: "8",
+      group_Title: "Fyp-02",
+    },
+    {
+      group_Id: "9",
+      group_Title: "Fyp-2",
+    },
+  ]);
+  const [allSentRequests, setAllSentRequest] = useState([
+    {
+      group_Id: "8",
+      group_Title: "Fyp-2",
+    },
+    {
+      group_Id: "9",
+      group_Title: "Fyp-1",
+    },
+  ]);
+  const [allSupervisorMeetings, setAllSupervisorMeetings] = useState([
+    {
+      meetId: "1",
+      meetTitle: "Weekly Meeting",
+      meetDesc: "Please Come in my office",
+      meetDate: "2024-05-01",
+      meetTime: "12:30pm",
+      teacher: "Sir Zahid",
+    },
+    {
+      meetId: "2",
+      meetTitle: "Weekly Meeting",
+      meetDesc: "Please Come in my office",
+      meetDate: "2024-05-01",
+      meetTime: "12:30pm",
+      teacher: "Sir Zahid",
+    },
+    {
+      meetId: "3",
+      meetTitle: "Weekly Meeting",
+      meetDesc: "Please Come in my office",
+      meetDate: "2024-05-01",
+      meetTime: "12:30pm",
+      teacher: "Sir Zahid",
+    },
+  ]);
+  const [allTechnicalExpertMeetings, setAllTechnicalExpertMeetings] = useState([
+    {
+      meetId: "1",
+      meetTitle: "Weekly Meeting",
+      meetDesc: "Please Come in my office",
+      meetDate: "2024-05-01",
+      meetTime: "12:30pm",
+      teacher: "Sir Zahid",
+    },
+    {
+      meetId: "1",
+      meetTitle: "Weekly Meeting",
+      meetDesc: "Please Come in my office",
+      meetDate: "2024-05-02",
+      meetTime: "12:30pm",
+      teacher: "Sir Zahid",
+    },
+  ]);
+  const [allMeetings, setAllMeetings] = useState([]);
 
-  const handleGetOptions = async () => {
-    try {
-      const response = await fetch(
-        "http://192.168.100.4/OfficialPSAS/api/psas/GetAllDuration"
-      );
-      const data = await response.json();
-      if (data) {
-        setOptions(data);
-      } else {
-        console.log(response.status);
-      }
-    } catch (error) {
-      console.log("Error:", error);
-    }
-  };
   const handleGetRequests = async (user) => {
     try {
       setIsUser(user);
@@ -54,13 +101,25 @@ function StudentDashboard() {
     } else {
       navigate("/");
     }
-    handleGetOptions();
     handleGetRequests(user);
   }, []);
 
-  const [selection, setSelection] = useState(null);
-  const handleSelect = (option) => {
-    setSelection(option);
+  const handleSelectDate = (date) => {
+    const selectedDate = new Date(date);
+    const supervisorMeetingsOnDate = allSupervisorMeetings.filter(
+      (meeting) =>
+        new Date(meeting.meetDate).toDateString() ===
+        selectedDate.toDateString()
+    );
+    const ExpertMeetings = allTechnicalExpertMeetings.filter(
+      (meeting) =>
+        new Date(meeting.meetDate).toDateString() ===
+        selectedDate.toDateString()
+    );
+    setAllMeetings([...supervisorMeetingsOnDate, ...ExpertMeetings]);
+    setValue(selectedDate);
+    console.log(selectedDate);
+    console.log(allMeetings.length);
   };
 
   return (
@@ -69,52 +128,138 @@ function StudentDashboard() {
         <div className="flex justify-center">
           <img src={biitlogo} alt="biit Logo" />
         </div>
-        <Dropdown
-          label="Today"
-          options={options}
-          value={selection}
-          OnSelect={handleSelect}
-          className="relative w-2/12"
-        />
-        <div className="w-full h-auto flex flex-row justify-around pt-10">
-          <Card>
-            <CardHeader>Sent Group Requests</CardHeader>
-            <CardBody>
-              <CardTitle className="text-center">
-                {sentRequest.length}
-              </CardTitle>
-            </CardBody>
+        <div className="container w-full h-auto flex flex-row justify-evenly mt-2">
+          <Card className="w-[16rem]">
+            <Card.Header className="font-bold text-[13px] text-center">
+              Group Creation Requests
+            </Card.Header>
+            <Card.Body>
+              <Card.Title className="flex justify-center items-center">
+                <span className="text-4xl">{allgroupRequests.length}</span>
+                <span>
+                  {allSentRequests.length > 0 ? (
+                    <ArrowUpWideNarrow className="text-2xl" />
+                  ) : (
+                    <ArrowDownWideNarrow className="text-2xl" />
+                  )}
+                </span>
+              </Card.Title>
+            </Card.Body>
           </Card>
-          <Card>
-            <CardHeader>Appointment Requests</CardHeader>
-            <CardBody>
-              <CardTitle className="text-center">
-                {sentRequest.length}
-              </CardTitle>
-            </CardBody>
+          <Card className="w-[16rem]">
+            <Card.Header className="font-bold text-[13px] text-center">
+              Sent Group Requests
+            </Card.Header>
+            <Card.Body>
+              <Card.Title className="flex justify-center items-center">
+                <span className="text-4xl">{allSentRequests.length}</span>
+                <span>
+                  {allSentRequests.length > 0 ? (
+                    <ArrowUpWideNarrow className="text-2xl" />
+                  ) : (
+                    <ArrowDownWideNarrow className="text-2xl" />
+                  )}
+                </span>
+              </Card.Title>
+            </Card.Body>
           </Card>
-          <Card>
-            <CardHeader>Project Requests</CardHeader>
-            <CardBody>
-              <CardTitle className="text-center">
-                {sentRequest.length}
-              </CardTitle>
-            </CardBody>
+          <Card className="w-[16rem]">
+            <Card.Header className="font-bold text-[13px] text-center">
+              Technical Assistance Requests
+            </Card.Header>
+            <Card.Body>
+              <Card.Title className="flex justify-center items-center">
+                <span className="text-4xl">{allSentRequests.length}</span>
+                <span>
+                  {allSentRequests.length > 0 ? (
+                    <ArrowUpWideNarrow className="text-2xl" />
+                  ) : (
+                    <ArrowDownWideNarrow className="text-2xl" />
+                  )}
+                </span>
+              </Card.Title>
+            </Card.Body>
           </Card>
-          <Card>
-            <CardHeader>Joining Requests</CardHeader>
-            <CardBody>
-              <CardTitle className="text-center font-bold">
-                {sentRequest.length}
-              </CardTitle>
-            </CardBody>
+          <Card className="w-[16rem]">
+            <Card.Header className="font-bold text-[13px] text-center">
+              Group Messages
+            </Card.Header>
+            <Card.Body>
+              <Card.Title className="flex justify-center items-center">
+                <span className="text-4xl">{allSentRequests.length}</span>
+                <span>
+                  {allSentRequests.length > 0 ? (
+                    <ArrowUpWideNarrow className="text-2xl" />
+                  ) : (
+                    <ArrowDownWideNarrow className="text-2xl" />
+                  )}
+                </span>
+              </Card.Title>
+            </Card.Body>
           </Card>
         </div>
-        {/* <div className="mt-10 h-3/6 flex flex-row justify-around pt-3">
-          <AppointmentCard />
-          <MessageCard />
-          <TaskList />
-        </div> */}
+        <div className="container w-full h-auto mt-2">
+          <h3 className="text-center text-xl">Upcomming Meetings</h3>
+          <div className="grid grid-cols-2">
+            <div>
+              <Calendar
+                value={value}
+                onChange={setValue}
+                onClickDay={handleSelectDate}
+                tileContent={({ date, view }) => {
+                  const supervisorMeetingsOnDate = allSupervisorMeetings.filter(
+                    (meeting) =>
+                      new Date(meeting.meetDate).toDateString() ===
+                      date.toDateString()
+                  );
+                  const expertMeetingsOnDate =
+                    allTechnicalExpertMeetings.filter(
+                      (meeting) =>
+                        new Date(meeting.meetDate).toDateString() ===
+                        date.toDateString()
+                    );
+                  const totalMeetings = [
+                    ...supervisorMeetingsOnDate,
+                    ...expertMeetingsOnDate,
+                  ];
+                  return totalMeetings.length > 0 ? (
+                    <div className="flex justify-center items-center">
+                      {[...Array(totalMeetings.length)].map((_, index) => (
+                        <div
+                          key={index}
+                          className="dot bg-green-400 ml-[2px]"
+                        ></div>
+                      ))}
+                    </div>
+                  ) : null;
+                }}
+              />
+            </div>
+            <div className="h-full">
+              <div className="bg-gray-200 overflow-auto h-80 flex flex-col items-center justify-around">
+                {allMeetings.map((item, index) => (
+                  <Card key={index} className="w-[16rem] h-40 mt-2 border">
+                    <Card.Header className="text-center">
+                      <span>{item.meetTitle}</span>
+                    </Card.Header>
+                    <Card.Body>
+                      <Card.Title className="text-center">
+                        <span>{item.teacher}</span>
+                      </Card.Title>
+                      <Card.Subtitle className="flex justify-evenly items-center space-x-2 ">
+                        <span>{item.meetDate}</span>
+                        <span>{item.meetTime}</span>
+                      </Card.Subtitle>
+                      <Card.Text className="text-center">
+                        {item.meetDesc}
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
