@@ -10,14 +10,21 @@ import {
 import sas from "../../assets/extra/sas.png";
 import { NavLink } from "react-router-dom";
 import { GoProject, GoProjectTemplate, GoTasklist } from "react-icons/go";
-import { GiExplosiveMeeting, GiGroupedDrops, GiTeacher } from "react-icons/gi";
+import {
+  GiExplosiveMeeting,
+  GiGroupedDrops,
+  GiProgression,
+  GiTeacher,
+} from "react-icons/gi";
 import { VscRequestChanges } from "react-icons/vsc";
-import { AiFillSchedule } from "react-icons/ai";
-import { SiGotomeeting } from "react-icons/si";
+import { AiFillSchedule, AiTwotoneSchedule } from "react-icons/ai";
+import { SiGotomeeting, SiProgress } from "react-icons/si";
 import { FaUserGraduate, FaUserTie } from "react-icons/fa";
-import { GrProjects } from "react-icons/gr";
-import { FaDiagramProject } from "react-icons/fa6";
-
+import { GrProjects, GrTask } from "react-icons/gr";
+import { FaDiagramProject, FaUsersLine } from "react-icons/fa6";
+import { MdMeetingRoom } from "react-icons/md";
+import { HiClipboardDocumentList } from "react-icons/hi2";
+import { RiCalendarEventFill, RiCalendarFill } from "react-icons/ri";
 function OtherSidebar({ expanded, setExpanded }) {
   const [user, setUser] = useState({});
   const [allLinks, setAllLinks] = useState([]);
@@ -33,7 +40,7 @@ function OtherSidebar({ expanded, setExpanded }) {
       } else if (isUser.role === "student") {
         setAllLinks(studentLinks);
       } else if (isUser.role === "teacher") {
-        //* set the links of teachers
+        setAllLinks(teacherLinks);
       } else if (isUser.role === "Project Commetiee") {
         setAllLinks(projectCommetieeLinks);
       }
@@ -152,13 +159,55 @@ function OtherSidebar({ expanded, setExpanded }) {
     },
   ];
 
+  const teacherLinks = [
+    {
+      label: "Dashboard",
+      path: "/teacher/dashboard",
+      icon: <LayoutDashboard size={20} />,
+    },
+    {
+      label: "groups",
+      path: "/teacher/groups",
+      icon: <FaUsersLine size={20} />,
+    },
+    {
+      label: "Group Request",
+      path: "/teacher/request",
+      icon: <HiClipboardDocumentList />,
+    },
+    {
+      label: "Group Progress",
+      path: "/teacher/allgroupProgress",
+      icon: <GiProgression />,
+    },
+    {
+      label: "Meetings",
+      path: "/teacher/meetings",
+      icon: <AiTwotoneSchedule />,
+    },
+    {
+      label: "Schedule",
+      path: "/teacher/schedule",
+      icon: <RiCalendarEventFill />,
+    },
+    {
+      label: "Assign New Task",
+      path: "/teacher/AssigingTask",
+      icon: <GrTask />,
+    },
+    {
+      label: "Update Progress",
+      path: "/teacher/CheckingTask",
+      icon: <SiProgress />,
+    },
+  ];
   const RenderedLinks = allLinks.map((link, index) => {
     return (
       <NavLink
         key={index}
         to={link.path}
         className={({ isActive }) =>
-          `bg-[#37373d] text-sm  hover:bg-green-400 w-full p-2 mt-2 hover:font-bold rounded-md border text-white hover:text-green-600 hover:shadow-md no-underline ${
+          `bg-[#37373d] text-sm  hover:bg-green-700 w-full p-2 mt-2 hover:font-bold rounded-md border text-white hover:text-green-600 hover:shadow-md no-underline ${
             !expanded ? "w-full transition-all" : "transition-all"
           } ${
             isActive

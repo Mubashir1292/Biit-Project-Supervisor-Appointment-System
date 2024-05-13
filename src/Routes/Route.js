@@ -23,10 +23,12 @@ import GroupRequests from "../pages/Project_Commetiee/GroupRequests/GroupRequest
 import TeacherDashboard from "../pages/Teacher/Dashboard/TeacherDashboard";
 import Groups from "../pages/Teacher/Groups/Groups";
 import TeacherMeetings from "../pages/Teacher/Meetings/TeacherMeetings";
-import teacherGroupProgress from "../pages/Teacher/Progress/teacherGroupProgress";
 import Schedule from "../pages/Teacher/Schedule/Schedule";
 import Requests from "../pages/Teacher/Requests/Requests";
 import SingleNotification from "../pages/Teacher/SingleNotifications/SingleNotification";
+import GroupProgress from "../pages/Teacher/GroupProgress/GroupProgress";
+import Task from "../pages/Teacher/Task/Task";
+import CheckingTask from "../pages/Teacher/Task/CheckingTask";
 //? === inserting all Routes for all users
 export const studentsRoutes = [
   { path: "/student/dashboard", element: <StudentDashboard /> },
@@ -66,8 +68,10 @@ export const Teacher = [
   { path: "/teacher/dashboard", element: <TeacherDashboard /> },
   { path: "/teacher/groups", element: <Groups /> },
   { path: "/teacher/meetings", element: <TeacherMeetings /> },
-  { path: "/teacher/groupProgress", element: <teacherGroupProgress /> },
-  { path: "/teacher/requests", element: <Requests /> },
+  { path: "/teacher/allgroupProgress", element: <GroupProgress /> },
+  { path: "/teacher/request", element: <Requests /> },
   { path: "/teacher/schedule", element: <Schedule /> },
   { path: "/teacher/notification", element: <SingleNotification /> },
+  { path: "/teacher/AssigingTask", element: <Task /> },
+  { path: "/teacher/CheckingTask", element: <CheckingTask /> },
 ];
