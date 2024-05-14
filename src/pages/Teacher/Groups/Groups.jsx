@@ -8,10 +8,13 @@ import man2 from "../../../assets/extra/man.png";
 import { Search } from "lucide-react";
 import GroupDetailsModal from "../../../components/Modals/BootstrapModal/SimpleModal";
 import ProjectModal from "../../../components/Modals/projectModal/ProjectModal";
+import ProfileModal from "../../../components/Modals/BootstrapModal/ProfileModal";
 function Groups() {
   const [modalShow, setModalShow] = useState(false);
+  const [studentModal, setStudentModal] = useState(false);
   const [projectmodalShow, setProjectModalShow] = useState(false);
   const [selectedProject, setSelectedProject] = useState();
+  const [selectedProfile, setSelectedProfile] = useState();
   const [searchText, setSearchText] = useState("");
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState();
@@ -197,6 +200,10 @@ function Groups() {
                           src={member.image}
                           alt={`${member.name}`}
                           className="cursor-pointer border-2 hover:border-gray-500 rounded-full"
+                          onClick={() => {
+                            setSelectedProfile(member);
+                            setStudentModal(!studentModal);
+                          }}
                         />
                       ))}
                     </div>
@@ -225,6 +232,17 @@ function Groups() {
             show={projectmodalShow}
             onHide={() => setProjectModalShow(false)}
             group={selectedProject}
+          />
+        </>
+      ) : (
+        <></>
+      )}
+      {studentModal ? (
+        <>
+          <ProfileModal
+            show={studentModal}
+            onHide={() => setStudentModal(false)}
+            student={selectedProfile}
           />
         </>
       ) : (
