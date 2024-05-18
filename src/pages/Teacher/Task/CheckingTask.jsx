@@ -4,17 +4,18 @@ import Dropdown from "../../../components/dropdown/Dropdown";
 import Table from "react-bootstrap/Table";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import InputGroup from "react-bootstrap/InputGroup";
+import Form from "react-bootstrap/Form";
+import { Button } from "react-bootstrap";
 
 function CheckingTask() {
   const [semester, setSemester] = useState(7);
-  const [selection, setSelection] = useState();
-  const [taskSelection, setTaskSelection] = useState();
+  const [selection, setSelection] = useState(null);
+  const [taskSelection, setTaskSelection] = useState(null);
   const [groups, setGroups] = useState([]);
   const [tasks, setTasks] = useState([]);
-  // do the task list with the group id
-  // fetch all group members on the base of the group id,
-  // map the group members and set the status of the task and done the changes
-  // after saving this do the calendar and done the backend with it..
+  const [membersInfo, setMembersInfo] = useState([]);
+
   useEffect(() => {
     const allgroups = [
       {
@@ -22,18 +23,9 @@ function CheckingTask() {
         semester: 7,
         value: "AI Health Engine",
         groupsMembers: [
-          {
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            id: "2020-Arid-4224",
-            name: "Touseef Sajjad",
-          },
-          {
-            id: "2020-Arid-4225",
-            name: "Faheem Abbas",
-          },
+          { id: "2020-Arid-3675", name: "Mubashir Liaqat" },
+          { id: "2020-Arid-4224", name: "Touseef Sajjad" },
+          { id: "2020-Arid-4225", name: "Faheem Abbas" },
         ],
       },
       {
@@ -41,26 +33,9 @@ function CheckingTask() {
         semester: 7,
         value: "BIIT Career Counsling",
         groupsMembers: [
-          {
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            id: "2020-Arid-4224",
-            name: "Touseef Sajjad",
-          },
-          {
-            id: "2020-Arid-4225",
-            name: "Faheem Abbas",
-          },
-          {
-            id: "2020-Arid-4225",
-            name: "Faheem Abbas",
-          },
-          {
-            id: "2020-Arid-4225",
-            name: "Faheem Abbas",
-          },
+          { id: "2020-Arid-3675", name: "Mubashir Liaqat" },
+          { id: "2020-Arid-4224", name: "Touseef Sajjad" },
+          { id: "2020-Arid-4225", name: "Faheem Abbas" },
         ],
       },
       {
@@ -68,22 +43,9 @@ function CheckingTask() {
         semester: 8,
         value: "BIIT Project Supervisor Appointment System",
         groupsMembers: [
-          {
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            id: "2020-Arid-4224",
-            name: "Touseef Sajjad",
-          },
-          {
-            id: "2020-Arid-4225",
-            name: "Faheem Abbas",
-          },
-          {
-            id: "2020-Arid-4225",
-            name: "Faheem Abbas",
-          },
+          { id: "2020-Arid-3675", name: "Mubashir Liaqat" },
+          { id: "2020-Arid-4224", name: "Touseef Sajjad" },
+          { id: "2020-Arid-4225", name: "Faheem Abbas" },
         ],
       },
       {
@@ -91,18 +53,9 @@ function CheckingTask() {
         semester: 8,
         value: "BIIT Meeting Management System",
         groupsMembers: [
-          {
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            id: "2020-Arid-4224",
-            name: "Touseef Sajjad",
-          },
-          {
-            id: "2020-Arid-4225",
-            name: "Faheem Abbas",
-          },
+          { id: "2020-Arid-3675", name: "Mubashir Liaqat" },
+          { id: "2020-Arid-4224", name: "Touseef Sajjad" },
+          { id: "2020-Arid-4225", name: "Faheem Abbas" },
         ],
       },
     ];
@@ -115,42 +68,91 @@ function CheckingTask() {
 
   const handleSelect = (option) => {
     setSelection(option);
-    // all Task List with groups
     const tasksList = [
       {
         label: 1,
         group: "BIIT Meeting Management System",
         value: "ERD Completion",
+        dueDate: "2024-05-06",
       },
       {
         label: 2,
         group: "BIIT Meeting Management System",
         value: "ERD Completion",
+        dueDate: "2024-05-06",
       },
       {
         label: 3,
         group: "BIIT Project Supervisor Appointment System",
         value: "ERD Completion",
+        dueDate: "2024-05-06",
       },
       {
         label: 4,
         group: "BIIT Career Counsling",
         value: "ERD Completion",
+        dueDate: "2024-05-06",
       },
       {
         label: 5,
         group: "BIIT Career Counsling",
         value: "ERD Completion",
+        dueDate: "2024-05-06",
       },
     ];
     const filterTaskGroup = tasksList.filter(
       (item) => item.group === option.value
     );
     setTasks(filterTaskGroup);
+
+    const initialMembersInfo = option.groupsMembers.map((member) => ({
+      id: member.id,
+      name: member.name,
+      status: false,
+      comments: "",
+    }));
+    setMembersInfo(initialMembersInfo);
   };
 
   const handleSelectTask = (option) => {
     setTaskSelection(option);
+  };
+
+  const handleSemesterChange = (newSemester) => {
+    setSemester(newSemester);
+    setSelection(null);
+    setTaskSelection(null);
+    setTasks([]);
+    setMembersInfo([]);
+  };
+
+  const handleStatusChange = (id) => {
+    setMembersInfo((prevMembersInfo) =>
+      prevMembersInfo.map((member) =>
+        member.id === id ? { ...member, status: !member.status } : member
+      )
+    );
+  };
+
+  const handleCommentsChange = (id, comments) => {
+    setMembersInfo((prevMembersInfo) =>
+      prevMembersInfo.map((member) =>
+        member.id === id ? { ...member, comments } : member
+      )
+    );
+  };
+
+  const handleSubmit = () => {
+    console.log(membersInfo);
+  };
+  const handleCancel = () => {
+    setMembersInfo((prevMembersInfo) =>
+      prevMembersInfo.map((member) => ({
+        ...member,
+        status: false,
+        comments: "",
+      }))
+    );
   };
   return (
     <React.Fragment>
@@ -164,7 +166,7 @@ function CheckingTask() {
                 ? "bg-green-500 text-white font-bold"
                 : "bg-white text-black hover:bg-green-400 hover:text-gray-500"
             } px-16 py-2 transition-all border-b border-gray-400 rounded-sm`}
-            onClick={() => setSemester(7)}
+            onClick={() => handleSemesterChange(7)}
           >
             Fyp-01
           </h6>
@@ -174,7 +176,7 @@ function CheckingTask() {
                 ? "bg-green-500 text-white font-bold"
                 : "bg-white text-black hover:bg-green-400 hover:text-gray-500"
             } px-16 py-2 border-b border-gray-400 transition-all rounded-sm`}
-            onClick={() => setSemester(8)}
+            onClick={() => handleSemesterChange(8)}
           >
             Fyp-02
           </h6>
@@ -199,33 +201,66 @@ function CheckingTask() {
             />
           </div>
           {!taskSelection ? (
-            <>
-              <div className="w-2/6 mt-3 mx-auto">
-                <SkeletonTheme highlightColor="#05B05B">
-                  <Skeleton count={4} />
-                </SkeletonTheme>
-              </div>
-            </>
+            <div className="w-2/6 mt-3 mx-auto">
+              <SkeletonTheme highlightColor="#05B05B">
+                <Skeleton count={4} />
+              </SkeletonTheme>
+            </div>
           ) : (
             <>
-              <Table bordered hover>
+              <span className="text-end text-[10px] mt-2">
+                Due Date : {taskSelection.dueDate}
+              </span>
+              <Table bordered hover className="mt-2">
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Task Status</th>
-                    <th>Comments</th>
+                    <th className="text-sm">Name</th>
+                    <th className="text-sm">Task Status</th>
+                    <th className="text-sm text-center">Comments</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
+                  {membersInfo.map((member) => (
+                    <tr key={member.id}>
+                      <td className="text-[10px]">{member.name}</td>
+                      <td className="text-center">
+                        <div className="w-full flex justify-center items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            checked={member.status}
+                            onChange={() => handleStatusChange(member.id)}
+                          />
+                          <span className="text-[8px]">Completed</span>
+                        </div>
+                      </td>
+                      <td>
+                        <InputGroup size="sm">
+                          <Form.Control
+                            aria-label="Small"
+                            aria-describedby="inputGroup-sizing-sm"
+                            placeholder="Comments..."
+                            className="text-[10px]"
+                            value={member.comments}
+                            onChange={(e) =>
+                              handleCommentsChange(member.id, e.target.value)
+                            }
+                          />
+                        </InputGroup>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </Table>
             </>
           )}
+          <div className="flex justify-center items-center space-x-3">
+            <Button variant="secondary" onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button variant="success" onClick={handleSubmit}>
+              Save
+            </Button>
+          </div>
         </div>
       </div>
     </React.Fragment>
