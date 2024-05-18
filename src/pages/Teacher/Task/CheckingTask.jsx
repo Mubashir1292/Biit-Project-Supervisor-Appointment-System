@@ -2,29 +2,119 @@ import React, { useState, useEffect } from "react";
 import BiitSAS from "../../../assets/extra/biitSAS.png";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import Table from "react-bootstrap/Table";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 function CheckingTask() {
   const [semester, setSemester] = useState(7);
   const [selection, setSelection] = useState();
+  const [taskSelection, setTaskSelection] = useState();
   const [groups, setGroups] = useState([]);
+  const [tasks, setTasks] = useState([]);
   // do the task list with the group id
   // fetch all group members on the base of the group id,
   // map the group members and set the status of the task and done the changes
   // after saving this do the calendar and done the backend with it..
   useEffect(() => {
     const allgroups = [
-      { label: 1, semester: 7, value: "AI Health Engine" },
-      { label: 2, semester: 7, value: "BIIT Career Counsling" },
+      {
+        label: 1,
+        semester: 7,
+        value: "AI Health Engine",
+        groupsMembers: [
+          {
+            id: "2020-Arid-3675",
+            name: "Mubashir Liaqat",
+          },
+          {
+            id: "2020-Arid-4224",
+            name: "Touseef Sajjad",
+          },
+          {
+            id: "2020-Arid-4225",
+            name: "Faheem Abbas",
+          },
+        ],
+      },
+      {
+        label: 2,
+        semester: 7,
+        value: "BIIT Career Counsling",
+        groupsMembers: [
+          {
+            id: "2020-Arid-3675",
+            name: "Mubashir Liaqat",
+          },
+          {
+            id: "2020-Arid-4224",
+            name: "Touseef Sajjad",
+          },
+          {
+            id: "2020-Arid-4225",
+            name: "Faheem Abbas",
+          },
+          {
+            id: "2020-Arid-4225",
+            name: "Faheem Abbas",
+          },
+          {
+            id: "2020-Arid-4225",
+            name: "Faheem Abbas",
+          },
+        ],
+      },
       {
         label: 5,
         semester: 8,
         value: "BIIT Project Supervisor Appointment System",
+        groupsMembers: [
+          {
+            id: "2020-Arid-3675",
+            name: "Mubashir Liaqat",
+          },
+          {
+            id: "2020-Arid-4224",
+            name: "Touseef Sajjad",
+          },
+          {
+            id: "2020-Arid-4225",
+            name: "Faheem Abbas",
+          },
+          {
+            id: "2020-Arid-4225",
+            name: "Faheem Abbas",
+          },
+        ],
       },
       {
         label: 6,
         semester: 8,
         value: "BIIT Meeting Management System",
+        groupsMembers: [
+          {
+            id: "2020-Arid-3675",
+            name: "Mubashir Liaqat",
+          },
+          {
+            id: "2020-Arid-4224",
+            name: "Touseef Sajjad",
+          },
+          {
+            id: "2020-Arid-4225",
+            name: "Faheem Abbas",
+          },
+        ],
       },
     ];
+
+    const filteredGroups = allgroups.filter(
+      (item) => item.semester === semester
+    );
+    setGroups(filteredGroups);
+  }, [semester]);
+
+  const handleSelect = (option) => {
+    setSelection(option);
     // all Task List with groups
     const tasksList = [
       {
@@ -53,17 +143,15 @@ function CheckingTask() {
         value: "ERD Completion",
       },
     ];
-
-    const filteredGroups = allgroups.filter(
-      (item) => item.semester === semester
+    const filterTaskGroup = tasksList.filter(
+      (item) => item.group === option.value
     );
-    setGroups(filteredGroups);
-  }, [semester]);
-
-  const handleSelect = (option) => {
-    setSelection(option);
+    setTasks(filterTaskGroup);
   };
 
+  const handleSelectTask = (option) => {
+    setTaskSelection(option);
+  };
   return (
     <React.Fragment>
       <div className="flex flex-col">
@@ -100,23 +188,44 @@ function CheckingTask() {
             className="relative w-2/12 cursor-default"
           />
         </div>
-        <div className="border-2 border-green-500 mt-3 w-4/12 flex self-center p-2 rounded-md">
-          <Table bordered hover>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Task Status</th>
-                <th>Comments</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-            </tbody>
-          </Table>
+        <div className="border-2 border-green-500 mt-3 w-4/12 flex flex-col self-center p-2 rounded-md">
+          <div className="flex justify-center items-center space-x-5">
+            <span>Select Task:</span>
+            <Dropdown
+              options={tasks}
+              value={taskSelection}
+              OnSelect={handleSelectTask}
+              className="relative w-8/12 cursor-default"
+            />
+          </div>
+          {!taskSelection ? (
+            <>
+              <div className="w-2/6 mt-3 mx-auto">
+                <SkeletonTheme highlightColor="#05B05B">
+                  <Skeleton count={4} />
+                </SkeletonTheme>
+              </div>
+            </>
+          ) : (
+            <>
+              <Table bordered hover>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Task Status</th>
+                    <th>Comments</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                  </tr>
+                </tbody>
+              </Table>
+            </>
+          )}
         </div>
       </div>
     </React.Fragment>
