@@ -25,6 +25,34 @@ function CheckingTask() {
         value: "BIIT Meeting Management System",
       },
     ];
+    // all Task List with groups
+    const tasksList = [
+      {
+        label: 1,
+        group: "BIIT Meeting Management System",
+        value: "ERD Completion",
+      },
+      {
+        label: 2,
+        group: "BIIT Meeting Management System",
+        value: "ERD Completion",
+      },
+      {
+        label: 3,
+        group: "BIIT Project Supervisor Appointment System",
+        value: "ERD Completion",
+      },
+      {
+        label: 4,
+        group: "BIIT Career Counsling",
+        value: "ERD Completion",
+      },
+      {
+        label: 5,
+        group: "BIIT Career Counsling",
+        value: "ERD Completion",
+      },
+    ];
 
     const filteredGroups = allgroups.filter(
       (item) => item.semester === semester

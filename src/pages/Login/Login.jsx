@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import BiitLogo from "../../assets/login/biitLogo.png";
 import Login from "../../assets/login/login.png";
 import { useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
+
 const LoginPage = () => {
   document.title = "BIIT Supervisor Appointment System";
   const [id, setId] = useState("");
+  const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const handleLogin = async () => {
+    setLoading(true);
     try {
       const response = await fetch(
         `http://192.168.100.4/OfficialPSAS/api/psas/Login?id=${id}&password=${password}`
@@ -79,7 +83,7 @@ const LoginPage = () => {
                 handleLogin();
               }}
             >
-              Sign In
+              {loading ? <Spinner animation="border" /> : <span>Sign In</span>}
             </button>
           </div>
         </form>
