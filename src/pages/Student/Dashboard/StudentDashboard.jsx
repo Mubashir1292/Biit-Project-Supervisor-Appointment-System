@@ -236,9 +236,9 @@ function StudentDashboard() {
               />
             </div>
             <div className="h-full">
-              <div className="bg-gray-200 overflow-auto h-80 flex flex-col items-center justify-around">
+              <div className="bg-gray-200 overflow-auto p-3 h-80 grid xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1">
                 {allMeetings.map((item, index) => (
-                  <Card key={index} className="w-[16rem] h-40 mt-2 border">
+                  <Card key={index} className="w-full h-20 mt-2 border">
                     <Card.Header className="text-center">
                       <span>{item.meetTitle}</span>
                     </Card.Header>

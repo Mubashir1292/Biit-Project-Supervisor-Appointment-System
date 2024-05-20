@@ -12,9 +12,9 @@ function CheckingTask() {
   const [semester, setSemester] = useState(7);
   const [selection, setSelection] = useState(null);
   const [taskSelection, setTaskSelection] = useState(null);
-  const [groups, setGroups] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [membersInfo, setMembersInfo] = useState([]);
+  const [groups, setGroups] = useState([]);
 
   useEffect(() => {
     const allgroups = [

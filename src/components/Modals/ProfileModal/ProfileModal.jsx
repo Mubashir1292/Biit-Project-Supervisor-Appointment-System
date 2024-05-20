@@ -1,14 +1,31 @@
-import { CircleUserIcon, Settings } from "lucide-react";
+import { CircleUserIcon, LogOut, Settings } from "lucide-react";
 import React, { useState } from "react";
 import { Col, Dropdown, DropdownMenu, DropdownToggle, Row } from "reactstrap";
 import man2 from "../../../assets/extra/man2.jpg";
+import { Button } from "react-bootstrap";
+import Modal from "react-bootstrap/Modal";
+import { CiLogout } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
 
 function ProfileModal() {
+  const [showConfirm, setShowConfirm] = useState(false);
+  const navigate = useNavigate();
   const [menu, setMenu] = useState(false);
   const profile = {
     id: "2020-Arid-3675",
     name: "Mubashir Liaqat",
     image: man2,
+  };
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
+  const toggleConfirm = () => {
+    setShowConfirm(!showConfirm);
+  };
+  const handleClicked = () => {
+    setShowConfirm(!showConfirm);
   };
   return (
     <React.Fragment>
@@ -46,7 +63,6 @@ function ProfileModal() {
             <div className="mt-2 flex justify-center items-center space-x-4">
               {profile.id.includes("Arid") ? (
                 <>
-                  <span>ID:</span>
                   <span className="text-sm font-normal">{profile.id}</span>
                 </>
               ) : (
@@ -54,12 +70,31 @@ function ProfileModal() {
               )}
             </div>
             <div className="mt-2 flex justify-center items-center space-x-4">
-              <span>Name:</span>
               <span className="text-sm font-normal">{profile.name}</span>
+            </div>
+            <div
+              className="bg-blue-600 flex mt-3 justify-around items-center w-2/6 h-10 rounded-lg cursor-pointer hover:bg-blue-700"
+              onClick={handleClicked}
+            >
+              <CiLogout className="text-[#fff]" />
+              <span className="text-[#fff]">Logout</span>
             </div>
           </div>
         </DropdownMenu>
       </Dropdown>
+      <Modal show={showConfirm} onHide={toggleConfirm}>
+        <Modal.Header closeButton>
+          <Modal.Title>Are you sure you want to logout?</Modal.Title>
+        </Modal.Header>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={toggleConfirm}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleLogout}>
+            OK
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </React.Fragment>
   );
 }

@@ -1,9 +1,21 @@
 import { BellDot, BellDotIcon, BellIcon } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Dropdown, DropdownMenu, DropdownToggle, Row } from "reactstrap";
 
 function NotificationModel() {
   const [menu, setMenu] = useState(false);
+  useEffect(() => {
+    const userString = localStorage.getItem("user");
+    const user = userString ? JSON.parse(userString) : null;
+    if (user) {
+      if (user.role === "student") {
+      } else if (user.role === "teacher") {
+      } else if (user.role === "Technical Expert") {
+      } else if (user.role === "Project Commetiee") {
+      }
+    } else {
+    }
+  }, []);
   const allRequests = [
     {
       request_type: "Group Request",
