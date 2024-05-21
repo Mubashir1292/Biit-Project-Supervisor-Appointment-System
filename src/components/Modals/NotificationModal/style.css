@@ -1,0 +1,33 @@
+.notification-item {
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.group-request {
+  background-color: #f0f8ff;
+}
+
+.project-approved {
+  background-color: #e0ffe0;
+}
+
+.new-task {
+  background-color: #fff0f0;
+}
+
+.progress-update {
+  background-color: #f0fff0;
+}
+
+.help-appointment {
+  background-color: #f0f0ff;
+}
+
+.notification-title {
+  font-weight: bold;
+}
+
+.notification-meta {
+  font-size: 0.9em;
+  color: #555;
+}

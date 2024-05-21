@@ -22,7 +22,7 @@ function Dashboard() {
   const handleGetOptions = async () => {
     try {
       const response = await fetch(
-        "http://192.168.100.4/OfficialPSAS/api/psas/GetAllDuration"
+        "http://192.168.43.100/OfficialPSAS/api/psas/GetAllDuration"
       );
       const data = await response.json();
       if (data) {
@@ -96,7 +96,7 @@ function Dashboard() {
               </CardText>
             </CardBody>
           </Card>
-        </div>        
+        </div>
       </div>
     </>
   );

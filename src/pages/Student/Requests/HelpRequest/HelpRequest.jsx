@@ -22,7 +22,7 @@ function HelpRequest() {
   const gettingTechnology = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/GetTechnology?regNo=${user.uid}`
+        `http://192.168.43.100/OfficialPSAS/api/psas/GetTechnology?regNo=${user.uid}`
       );
       const data = await response.json();
       if (data !== null) {
@@ -37,7 +37,7 @@ function HelpRequest() {
   const gettingExpertsUsingTechnology = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/FetchingRelativeTechnicalExpert?regNo=${user.uid}`
+        `http://192.168.43.100/OfficialPSAS/api/psas/FetchingRelativeTechnicalExpert?regNo=${user.uid}`
       );
       const data = await response.json();
       console.log(data);
@@ -60,7 +60,7 @@ function HelpRequest() {
   const getAllWorkingDays = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/GetAllDays`
+        `http://192.168.43.100/OfficialPSAS/api/psas/GetAllDays`
       );
       const data = await response.json();
       if (data !== null) {
@@ -81,7 +81,7 @@ function HelpRequest() {
   const getTimeSlots = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/GetTheTimeSlots?day=${
+        `http://192.168.43.100/OfficialPSAS/api/psas/GetTheTimeSlots?day=${
           Dayselection || weekDays[0].value
         }&teacher_id=${selectionExpert.label || expertList[0].label}`
       );
@@ -108,7 +108,7 @@ function HelpRequest() {
     try {
       if (selectionExpert.label && user.uid && Timeselection.label && message) {
         const response = await fetch(
-          `http://192.168.100.4/OfficialPSAS/api/psas/PostingHelpRequest?teacher_id=${
+          `http://192.168.43.100/OfficialPSAS/api/psas/PostingHelpRequest?teacher_id=${
             selectionExpert.label || expertList[0].label
           }&regno=${user.uid}&sch_id=${
             Timeselection.label || freeTimeSlots[0].label
