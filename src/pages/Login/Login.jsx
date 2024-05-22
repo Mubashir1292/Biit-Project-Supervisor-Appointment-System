@@ -1,89 +1,132 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BiitLogo from "../../assets/login/biitLogo.png";
 import Login from "../../assets/login/login.png";
 import { useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
+import { FloatingLabel } from "react-bootstrap";
+import Form from "react-bootstrap/Form";
 
 const LoginPage = () => {
   document.title = "BIIT Supervisor Appointment System";
   const [id, setId] = useState("");
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const navigate = useNavigate();
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    setIsButtonDisabled(id.length === 0 || password.length === 0);
+  }, [id, password]);
+
   const handleLogin = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/Login?id=${id}&password=${password}`
-      );
-      const res = await response.json();
-      if (res != null) {
-        localStorage.setItem("user", JSON.stringify(res));
-        if (res.role === "student") {
-          navigate("/student/dashboard", { state: res });
-        } else if (res.role === "teacher") {
-          navigate("/teacher/dashboard", { state: res });
-        } else if (res.role === "Technical Expert") {
-          navigate("/TechnicalExpert/dashboard", { state: res });
-        } else if (res.role === "Project Commetiee") {
-          navigate("/projectCommetiee/dashboard", { state: res });
-        } else {
-          navigate("/");
+    if (id.length === 0 || password.length === 0) {
+      setError(true);
+      setLoading(false);
+    } else {
+      setError(false);
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `http://192.168.1.10/OfficialPSAS/api/psas/Login?id=${id}&password=${password}`
+        );
+        const res = await response.json();
+        if (res != null) {
+          localStorage.setItem("user", JSON.stringify(res));
+          if (res.role === "student") {
+            navigate("/student/dashboard", { state: res });
+          } else if (res.role === "teacher") {
+            navigate("/teacher/dashboard", { state: res });
+          } else if (res.role === "Technical Expert") {
+            navigate("/TechnicalExpert/dashboard", { state: res });
+          } else if (res.role === "Project Commetiee") {
+            navigate("/projectCommetiee/dashboard", { state: res });
+          } else {
+            navigate("/");
+          }
         }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   };
 
   return (
-    <div className="flex justify-center bg-[#D8E9EE] items-center h-screen">
-      <div className="max-w-md  p-2 bg-[#3ae248]  shadow rounded-lg">
+    <div className="flex justify-center shadow items-center h-screen">
+      <div className="bg-green-500 w-3/12 h-[500px]">
         <div className="w-full">
           <img
             src={BiitLogo}
             alt="biitLogo"
-            className="w-[80%] mt-4 mx-auto "
+            className="w-10/12 mt-4 mx-auto "
           />
-          <img src={Login} alt="Login" className="w-[50%] mt-4 mx-auto " />
         </div>
+        <img src={Login} alt="Login" className="w-8/12 mt-4 mx-auto " />
+        <h4 className="text-center mt-3 text-[#fff]">Login to Account</h4>
+      </div>
+      <div className="w-3/12 p-2 shadow-lg h-[500px]">
         <form
-          className=" h-[100%] rounded px-8 pt-6 pb-8 mb-4"
+          className="h-[100%]  px-2 pt-6 mb-4"
           onSubmit={(e) => {
             e.preventDefault();
             handleLogin();
-            console.log("Pressed");
           }}
         >
-          <div className="mb-4 mt-3">
-            <input
-              className="shadow placeholder-gray-400 appearance-none border rounded-2xl text-black w-full text-lg py-3 px-3  leading-tight focus:outline-none focus:shadow-outline transition-all duration-300"
-              id="username"
-              type="text"
-              placeholder="Username"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-            />
-          </div>
-          <div className="mb-6">
-            <input
-              className="shadow appearance-none placeholder-gray-400 border rounded-2xl text-lg w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline transition-all duration-300"
-              id="password"
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="flex items-center justify-center ">
+          <div className="mb-4 mt-3 flex flex-col justify-center pt-10 box-border ">
+            <h3 className="text-center text-green-500">Welcome Back</h3>
+            <FloatingLabel
+              controlId="floatingInput"
+              label="Enter ID"
+              className="mb-3  mt-3 text-gray-500"
+            >
+              <Form.Control
+                type="text"
+                placeholder="01"
+                value={id}
+                onChange={(e) => setId(e.target.value)}
+                required
+              />
+            </FloatingLabel>
+            <span>
+              {error ? (
+                <span className="text-red-500">Please Fill Out This Field</span>
+              ) : (
+                ""
+              )}
+            </span>
+            <FloatingLabel
+              controlId="floatingInput"
+              label="Enter Password"
+              className="mb-3 text-gray-500"
+            >
+              <Form.Control
+                type="password"
+                placeholder="...."
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </FloatingLabel>
+            <span>
+              {error ? (
+                <span className="text-red-500">Please Fill Out This Field</span>
+              ) : (
+                ""
+              )}
+            </span>
             <button
-              className="bg-[#05B058] hover:bg-[#fff] text-[#fff] hover:text-[#05B058] hover:shadow-2xl border font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-[60%] transition-all ease-in-out"
+              className="bg-[#05B058] flex self-center justify-center items-center  hover:bg-[#fff] text-[#fff] hover:text-[#05B058] hover:shadow-2xl border font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-[100%] transition-all ease-in-out"
               type="button"
+              disabled={isButtonDisabled}
               onClick={() => {
                 handleLogin();
               }}
             >
-              {loading ? <Spinner animation="border" /> : <span>Sign In</span>}
+              {loading ? (
+                <Spinner animation="border" className="text-center" />
+              ) : (
+                <span className="text-center">Login</span>
+              )}
             </button>
           </div>
         </form>
