@@ -1,5 +1,5 @@
 import { CircleUserIcon, LogOut, Settings } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Dropdown, DropdownMenu, DropdownToggle, Row } from "reactstrap";
 import man2 from "../../../assets/extra/man2.jpg";
 import { Button } from "react-bootstrap";
@@ -13,11 +13,6 @@ function ProfileModal() {
   const [menu, setMenu] = useState(false);
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
-  const profile = {
-    id: `${user.uid}`,
-    name: `${user.username}`,
-    image: man2,
-  };
   const handleLogout = () => {
     localStorage.removeItem("user");
     navigate("/");
@@ -57,22 +52,13 @@ function ProfileModal() {
             </Row>
             <Row className="w-32 mx-auto">
               <img
-                src={profile.image}
-                alt={profile.name}
+                src={`http://192.168.100.4/OfficialPSAS/Content/Images/${user.image}`}
+                alt={user.name}
                 className="rounded-xl"
               />
             </Row>
             <div className="mt-2 flex justify-center items-center space-x-4">
-              {profile.id.includes("Arid") ? (
-                <>
-                  <span className="text-sm font-normal">{profile.id}</span>
-                </>
-              ) : (
-                <></>
-              )}
-            </div>
-            <div className="mt-2 flex justify-center items-center space-x-4">
-              <span className="text-sm font-normal">{profile.name}</span>
+              <span className="text-sm font-normal">{user.name}</span>
             </div>
             <div
               className="bg-blue-600 flex mt-3 justify-around items-center w-2/6 h-10 rounded-lg cursor-pointer hover:bg-blue-700"
