@@ -11,9 +11,11 @@ function ProfileModal() {
   const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
   const [menu, setMenu] = useState(false);
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : null;
   const profile = {
-    id: "2020-Arid-3675",
-    name: "Mubashir Liaqat",
+    id: `${user.uid}`,
+    name: `${user.username}`,
     image: man2,
   };
   const handleLogout = () => {

@@ -7,7 +7,7 @@ import { FloatingLabel } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 
 const LoginPage = () => {
-  document.title = "BIIT Supervisor Appointment System";
+  document.title = "BIIT Project Supervisor Appointment System";
   const [id, setId] = useState("");
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState("");
@@ -28,7 +28,7 @@ const LoginPage = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `http://192.168.1.10/OfficialPSAS/api/psas/Login?id=${id}&password=${password}`
+          `http://192.168.100.4/OfficialPSAS/api/psas/Login?id=${id}&password=${password}`
         );
         const res = await response.json();
         if (res != null) {
@@ -115,7 +115,7 @@ const LoginPage = () => {
               )}
             </span>
             <button
-              className="bg-[#05B058] flex self-center justify-center items-center  hover:bg-[#fff] text-[#fff] hover:text-[#05B058] hover:shadow-2xl border font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-[100%] transition-all ease-in-out"
+              className="bg-[#05B058] flex self-center justify-center items-center  hover:bg-gray-200 text-[#fff] hover:text-[#05B058] hover:shadow-2xl border font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-[100%] transition-all ease-in-out cursor-pointer"
               type="button"
               disabled={isButtonDisabled}
               onClick={() => {

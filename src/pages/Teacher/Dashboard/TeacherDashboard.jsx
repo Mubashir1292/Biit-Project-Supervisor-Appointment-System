@@ -80,7 +80,7 @@ function TeacherDashboard() {
     try {
       setIsUser(user);
       const response = await fetch(
-        `http://192.168.43.100/officialPSAS/api/psas/getAllRequests?Id=${user.uid}`
+        `http://192.168.100.4/officialPSAS/api/psas/getAllRequests?Id=${user.uid}`
       );
       const data = await response.json();
       if (data.length) {
