@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Card, Image } from "react-bootstrap";
 
-const DropzoneComponent = ({ onSubmit }) => {
+const ImageDropzoneComponent = ({ onSubmit }) => {
   const [file, setFile] = useState(null);
 
   const onDrop = (acceptedFiles) => {
@@ -15,9 +15,8 @@ const DropzoneComponent = ({ onSubmit }) => {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept:
-      "image/*,text/plain,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    multiple: true,
+    accept: "image/*",
+    multiple: false,
   });
 
   return (
@@ -40,10 +39,10 @@ const DropzoneComponent = ({ onSubmit }) => {
           <p>{file.name}</p>
         )
       ) : (
-        <p>Drag 'n' drop a file here, or click to select a file</p>
+        <p>Drag Or Select Image</p>
       )}
     </Card>
   );
 };
 
-export default DropzoneComponent;
+export default ImageDropzoneComponent;
