@@ -84,7 +84,7 @@ function ProfileModal() {
             <Row className="w-32 mx-auto">
               {user && user.image !== null ? (
                 <img
-                  src={`http://192.168.1.6/OfficialPSAS/Content/Images/${user.image}`}
+                  src={`http://192.168.100.4/OfficialPSAS/Content/Images/${user.image}`}
                   alt={user.name}
                   className="rounded-xl"
                 />
@@ -148,7 +148,7 @@ function ProfileModal() {
               />
             ) : user && user.image !== null ? (
               <img
-                src={`http://192.168.1.6/OfficialPSAS/Content/Images/${user.image}`}
+                src={`http://192.168.100.4/OfficialPSAS/Content/Images/${user.image}`}
                 alt="kamran"
                 className="w-full h-full object-cover rounded-full"
               />
