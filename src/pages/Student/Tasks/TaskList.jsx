@@ -1,240 +1,202 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import BiitSAS from "../../../assets/extra/biitSAS.png";
-import { Search } from "lucide-react";
-import { Accordion } from "../../../components/SingleTask/Accordion";
+import man from "../../../assets/extra/man.png";
+import { Badge, Card, Col, Container, Row } from "react-bootstrap";
+import ProgressBar from "react-bootstrap/ProgressBar";
+import PersonalProgress from "../../../components/Modals/BootstrapModal/PersonalProgress";
+
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
 function TaskList() {
-  const [activeIndex, setActiveIndex] = useState(-1);
-  const [allTasks, setAllTasks] = useState([]);
+  const [studentModal, setStudentModal] = useState(false);
+  const [selectedProfile, setSelectedProfile] = useState();
+  const [tasks, setTasks] = useState([]);
+  const [membersInfo, setMembersInfo] = useState([]);
 
   useEffect(() => {
-    const allTaskList = [
+    const tasksList = [
       {
-        title: "Code of Compiler",
-        members: [
-          {
-            name: "Mubashir Liaqat",
-            status: "Completed",
-            marks: 9,
-          },
-          {
-            name: "Mubashir Liaqat",
-            status: "Completed",
-            marks: 9,
-          },
-          {
-            name: "Mubashir Liaqat",
-            status: "Completed",
-            marks: 9,
-          },
-        ],
-        date: "2024-04-01",
+        label: 1,
+        group: "BIIT Meeting Management System",
+        value: "ERD Completion",
+        dueDate: "2024-05-06",
       },
       {
-        title: "Code of Compiler",
-        members: [
-          {
-            name: "Mubashir Liaqat",
-            status: "Completed",
-            marks: 9,
-          },
-          {
-            name: "Mubashir Liaqat",
-            status: "Completed",
-            marks: 9,
-          },
-          {
-            name: "Mubashir Liaqat",
-            status: "Completed",
-            marks: 9,
-          },
-        ],
-        date: "2024-04-01",
+        label: 2,
+        group: "BIIT Meeting Management System",
+        value: "ERD Completion",
+        dueDate: "2024-05-06",
       },
       {
-        title: "Code of Compiler",
-        members: [
-          {
-            name: "Mubashir Liaqat",
-            status: "Completed",
-            marks: 9,
-          },
-          {
-            name: "Mubashir Liaqat",
-            status: "Completed",
-            marks: 9,
-          },
-          {
-            name: "Mubashir Liaqat",
-            status: "Completed",
-            marks: 9,
-          },
-        ],
-        date: "2024-04-01",
+        label: 3,
+        group: "BIIT Project Supervisor Appointment System",
+        value: "ERD Completion",
+        dueDate: "2024-05-06",
+      },
+      {
+        label: 4,
+        group: "BIIT Career Counsling",
+        value: "ERD Completion",
+        dueDate: "2024-05-06",
+      },
+      {
+        label: 5,
+        group: "BIIT Career Counsling",
+        value: "ERD Completion",
+        dueDate: "2024-05-06",
       },
     ];
-    setAllTasks((prevTasks) => [...prevTasks, ...allTaskList]);
+    setTasks(tasksList);
   }, []);
 
+  // const handleModalToggle = () => {
+  //   setStudentModal(!studentModal);
+  // const initialMembersInfo = option.groupsMembers.map((member) => ({
+  //   id: member.id,
+  //   name: member.name,
+  //   status: false,
+  //   comments: "",
+  // }));
+  // setMembersInfo(initialMembersInfo);
+
   return (
-    <>
-      <div className="flex flex-col w-full h-full">
-        <div className="flex justify-center">
-          <img src={BiitSAS} alt="BiitSAS" className="w-4/12" />
-        </div>
-        <div className="flex justify-center">
-          <h1 className="text-4xl font-bold font-mono">Task List</h1>
-        </div>
-        <div className="bg-green-600 w-full justify-center p-2">
-          <form
-            action="#"
-            onSubmit={(e) => e.preventDefault()}
-            className="flex flex-row justify-center items-center mb-4"
-          >
-            <input
-              type="text"
-              name="searchTask"
-              id="searchTask"
-              placeholder="Search"
-              className="w-3/12 h-8 px-2 border border-gray-400 rounded-lg"
-            />
-            <Search className="-ml-7" />
-          </form>
-          <div className="overflow-auto h-96">
-            {allTasks.map((item, index) => (
-              <Accordion
-                key={index}
-                title={item.title}
-                members={item.members}
-                index={index}
-                activeIndex={activeIndex}
-                setActiveIndex={setActiveIndex}
-              />
-            ))}
-          </div>
-        </div>
+    <React.Fragment>
+      <div className="flex flex-col">
+        <img src={BiitSAS} alt="BiitSAS" className="self-center w-3/12" />
+        <Container className="mt-4">
+          {/* <div className="w-5/6 mt-3 mx-auto">
+              <SkeletonTheme highlightColor="#05B05B">
+                <Skeleton count={10} />
+              </SkeletonTheme>
+            </div>           */}
+          <React.Fragment>
+            <Row className="mt-3">
+              <Col
+                md={{ span: 3, offset: 1 }}
+                className="h-[450px] bg-gray-50 rounded"
+              >
+                <h5>To-do(3)</h5>
+                <div className="bg-gray-200 w-full h-full px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
+                  {tasks.map((item, index) => (
+                    <Card className="w-full" key={index}>
+                      {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+                      <Card.Body>
+                        <div className="flex justify-between items-center">
+                          <Card.Title className="text-[10px] font-normal">
+                            <span className="text-[17px]">Task Title</span>
+                          </Card.Title>
+                          <span className="text-[10px] ">2024-05-06</span>
+                        </div>
+                        <ProgressBar
+                          now={60}
+                          label={`${60}%`}
+                          variant="success"
+                        />
+                        <Card.Text>
+                          <span className="text-[10px]">Task Descriptions</span>
+                        </Card.Text>
+                      </Card.Body>
+                      <Card.Footer className="border-0 flex justify-end items-center space-x-1">
+                        <img
+                          src={man}
+                          alt="man"
+                          className="w-[20px] border-2 rounded-lg cursor-pointer hover:border-green-500"
+                        />
+                        <img src={man} alt="man" className="w-[17px]" />
+                        <img src={man} alt="man" className="w-[17px]" />
+                        <img src={man} alt="man" className="w-[17px]" />
+                      </Card.Footer>
+                    </Card>
+                  ))}
+                </div>
+              </Col>
+              <Col
+                md={{ span: 3, offset: 1 }}
+                className="h-[450px] bg-gray-50 rounded "
+              >
+                <h5>Doing(4)</h5>
+                <div className="bg-gray-200 w-full h-full px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
+                  {tasks.map((item, index) => (
+                    <Card className="w-full" key={index}>
+                      {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+                      <Card.Body>
+                        <div className="flex justify-between items-center">
+                          <Card.Title className="text-[10px] font-normal">
+                            <span className="text-[17px]">Task Title</span>
+                          </Card.Title>
+                          <span className="text-[10px] ">2024-05-06</span>
+                        </div>
+                        <ProgressBar
+                          now={60}
+                          label={`${60}%`}
+                          variant="success"
+                        />
+                        <Card.Text>
+                          <span className="text-[10px]">Task Descriptions</span>
+                        </Card.Text>
+                      </Card.Body>
+                      <Card.Footer className="border-0 flex justify-end items-center space-x-1">
+                        <img src={man} alt="man" className="w-[17px]" />
+                        <img src={man} alt="man" className="w-[17px]" />
+                        <img src={man} alt="man" className="w-[17px]" />
+                        <img src={man} alt="man" className="w-[17px]" />
+                      </Card.Footer>
+                    </Card>
+                  ))}
+                </div>
+              </Col>
+              <Col
+                md={{ span: 3, offset: 1 }}
+                className="h-[450px] bg-gray-50 rounded "
+              >
+                <h5>Done(3)</h5>
+                <div className="bg-gray-200 w-full h-full px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
+                  {tasks.map((item, index) => (
+                    <Card className="w-full" key={index}>
+                      {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+                      <Card.Body>
+                        <div className="flex justify-between items-center">
+                          <Card.Title className="text-[10px] font-normal">
+                            <span className="text-[17px]">Task Title</span>
+                          </Card.Title>
+                          <span className="text-[10px] ">2024-05-06</span>
+                        </div>
+                        <ProgressBar
+                          now={60}
+                          label={`${60}%`}
+                          variant="success"
+                        />
+                        <Card.Text>
+                          <span className="text-[10px]">Task Descriptions</span>
+                        </Card.Text>
+                      </Card.Body>
+                      <Card.Footer className="border-0 flex justify-end items-center space-x-1">
+                        <img src={man} alt="man" className="w-[17px]" />
+                        <img src={man} alt="man" className="w-[17px]" />
+                        <img src={man} alt="man" className="w-[17px]" />
+                        <img src={man} alt="man" className="w-[17px]" />
+                      </Card.Footer>
+                    </Card>
+                  ))}
+                </div>
+              </Col>
+            </Row>
+          </React.Fragment>
+        </Container>
       </div>
-    </>
+      {studentModal ? (
+        <>
+          <PersonalProgress
+            show={studentModal}
+            onHide={() => setStudentModal(false)}
+            student={selectedProfile}
+          />
+        </>
+      ) : (
+        <></>
+      )}
+    </React.Fragment>
   );
 }
 
 export default TaskList;
-
-// import React, { useEffect, useState } from "react";
-// import BiitSAS from "../../../assets/extra/biitSAS.png";
-// import { Search } from "lucide-react";
-// import { Accordion } from "../../../components/SingleTask/Accordion";
-// function TaskList() {
-//   const [activeIndex, setActiveIndex] = useState(-1);
-//   const [allTasks, setAllTasks] = useState([]);
-//   useEffect(() => {
-//     const allTaskList = [
-//       {
-//         title: "Code of Compiler",
-//         members: [
-//           {
-//             name: "Mubashir Liaqat",
-//             status: "Completed",
-//             marks: 9,
-//           },
-//           {
-//             name: "Mubashir Liaqat",
-//             status: "Completed",
-//             marks: 9,
-//           },
-//           {
-//             name: "Mubashir Liaqat",
-//             status: "Completed",
-//             marks: 9,
-//           },
-//         ],
-//         date: "2024-04-01",
-//       },
-//       {
-//         title: "Code of Compiler",
-//         members: [
-//           {
-//             name: "Mubashir Liaqat",
-//             status: "Completed",
-//             marks: 9,
-//           },
-//           {
-//             name: "Mubashir Liaqat",
-//             status: "Completed",
-//             marks: 9,
-//           },
-//           {
-//             name: "Mubashir Liaqat",
-//             status: "Completed",
-//             marks: 9,
-//           },
-//         ],
-//         date: "2024-04-01",
-//       },
-//       {
-//         title: "Code of Compiler",
-//         members: [
-//           {
-//             name: "Mubashir Liaqat",
-//             status: "Completed",
-//             marks: 9,
-//           },
-//           {
-//             name: "Mubashir Liaqat",
-//             status: "Completed",
-//             marks: 9,
-//           },
-//           {
-//             name: "Mubashir Liaqat",
-//             status: "Completed",
-//             marks: 9,
-//           },
-//         ],
-//         date: "2024-04-01",
-//       },
-//     ];
-//     setAllTasks((prevTasks) => [...prevTasks, ...allTaskList]);
-//   }, []);
-//   return (
-//     <>
-//       <div className="flex flex-col w-full">
-//         <div className="flex justify-center">
-//           <img src={BiitSAS} alt="BiitSAS" className="w-4/12" />
-//         </div>
-//         <div className="flex justify-center">
-//           <h1 className="text-4xl font-bold font-mono">Task List</h1>
-//         </div>
-//         <div className="bg-green-600 w-full justify-center p-2">
-//           <form
-//             action="#"
-//             onSubmit={(e) => e.preventDefault()}
-//             className=" flex flex-row justify-center items-center mb-4"
-//           >
-//             <input
-//               type="text"
-//               name="searchTask"
-//               id="searchTask"
-//               placeholder="Search"
-//               className="w-3/12 h-8 px-2 border border-gray-400 rounded-lg"
-//             />
-//             <Search className="-ml-7" />
-//           </form>
-//           <div className="overflow-auto h-full">
-//             {allTasks.map((item, index) => (
-//               <Accordion
-//                 key={index}
-//                 title={item.title}
-//                 members={item.members}
-//                 index={index}
-//                 activeIndex={activeIndex}
-//                 setActiveIndex={setActiveIndex}
-//               />
-//             ))}
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-
-// export default TaskList;

@@ -110,11 +110,6 @@ function OtherSidebar({ expanded, setExpanded }) {
       path: "/student/creatingGroup",
       icon: <Group size={20} />,
     },
-    // {
-    //   label: "Progress",
-    //   path: "/student/progress",
-    //   icon: <CircleDotDashed size={20} />,
-    // },
     {
       label: "Project Request",
       path: "/student/ProjectRequesting",
@@ -130,11 +125,16 @@ function OtherSidebar({ expanded, setExpanded }) {
       path: "/student/JoiningAGroup",
       icon: <UsersRound size={20} />,
     },
-    // {
-    //   label: "Task",
-    //   path: "/student/TaskList",
-    //   icon: <GoTasklist size={20} />,
-    // },
+    {
+      label: "Tasks List",
+      path: "/student/TaskList",
+      icon: <GoTasklist size={20} />,
+    },
+    {
+      label: "Progress",
+      path: "/student/progress",
+      icon: <CircleDotDashed size={20} />,
+    },
   ];
   const projectCommetieeLinks = [
     {

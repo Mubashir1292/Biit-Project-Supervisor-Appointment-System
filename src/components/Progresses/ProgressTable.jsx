@@ -13,14 +13,15 @@ const ProgressTable = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((item, index) => (
-            <tr key={index}>
-              <td className="border px-4 py-2">{item.aridNumber}</td>
-              <td className="border px-4 py-2">{item.attendance}</td>
-              <td className="border px-4 py-2">{item.marks}</td>
-              <td className="border px-4 py-2">{item.comments}</td>
-            </tr>
-          ))}
+          {data &&
+            data.map((item, index) => (
+              <tr key={index}>
+                <td className="border px-4 py-2">{item.aridNumber}</td>
+                <td className="border px-4 py-2">{item.attendance}</td>
+                <td className="border px-4 py-2">{item.marks}</td>
+                <td className="border px-4 py-2">{item.comments}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
