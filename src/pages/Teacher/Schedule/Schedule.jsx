@@ -1,44 +1,211 @@
-import React, { useState, useEffect } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css";
+import React, { useState } from "react";
+import { Modal, Button, Form } from "react-bootstrap";
 
-const localizer = momentLocalizer(moment);
+const times = [
+  "08:30 AM",
+  "09:30 AM",
+  "10:30 AM",
+  "11:30 AM",
+  "12:30 PM",
+  "01:30 PM",
+  "02:00 PM",
+  "03:00 PM",
+  "04:00 PM",
+  "05:00 PM",
+  "06:00 PM",
+];
+
+const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+
+const defaultEvents = [
+  {
+    day: "Mon",
+    time: "08:30 AM",
+    title: "Math Class",
+    description: "Algebra and Geometry",
+  },
+  {
+    day: "Tue",
+    time: "10:30 AM",
+    title: "Science Class",
+    description: "Physics and Chemistry",
+  },
+  {
+    day: "Wed",
+    time: "01:30 PM",
+    title: "History Class",
+    description: "World History",
+  },
+  {
+    day: "Thu",
+    time: "03:00 PM",
+    title: "English Class",
+    description: "Literature and Grammar",
+  },
+  {
+    day: "Fri",
+    time: "05:00 PM",
+    title: "Art Class",
+    description: "Drawing and Painting",
+  },
+];
+
+const participants = [
+  { regNo: "2020-Arid-3675", name: "Mubashir Liaqat" },
+  { regNo: "2020-Arid-4224", name: "Touseef Sajjad" },
+  { regNo: "2020-Arid-3677", name: "Usama Ijaz" },
+];
 
 function WeeklySchedule() {
-  const [events, setEvents] = useState([]);
-
-  useEffect(() => {
-    // Fetch schedule data from the backend
-    fetch("YOUR_API_ENDPOINT_FOR_SCHEDULE")
-      .then((response) => response.json())
-      .then((data) => {
-        // Map data to calendar events
-        const calendarEvents = data.map((item) => ({
-          id: item.Sch_id,
-          title: "Available Slot",
-          start: new Date(`2024-05-19T${item.slotId}:00:00`),
-          end: new Date(`2024-05-19T${item.slotId + 1}:00:00`), // Assuming slots are 1 hour long
-          resource: item,
-        }));
-        setEvents(calendarEvents);
+  const [schedule, setSchedule] = useState(
+    days.reduce((acc, day) => {
+      acc[day] = times.map((time) => {
+        const event = defaultEvents.find(
+          (event) => event.day === day && event.time === time
+        );
+        return { time, event: event || null };
       });
-  }, []);
+      return acc;
+    }, {})
+  );
+
+  const [showModal, setShowModal] = useState(false);
+  const [currentSlot, setCurrentSlot] = useState(null);
+  const [modalData, setModalData] = useState({
+    title: "",
+    description: "",
+    participant: "",
+  });
+
+  const handleSlotClick = (day, time, event) => {
+    setCurrentSlot({ day, time, event });
+    setModalData({
+      title: event?.title || "",
+      description: event?.description || "",
+      participant: event?.participant || "",
+    });
+    setShowModal(true);
+  };
+
+  const handleSave = () => {
+    const updatedSchedule = { ...schedule };
+    const slot = updatedSchedule[currentSlot.day].find(
+      (slot) => slot.time === currentSlot.time
+    );
+    slot.event = {
+      title: modalData.title,
+      description: modalData.description,
+      participant: modalData.participant,
+    };
+    setSchedule(updatedSchedule);
+    setShowModal(false);
+  };
 
   return (
-    <div>
-      <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        defaultView="week"
-        views={["week"]}
-        step={30}
-        showMultiDayTimes
-        min={new Date(2024, 0, 1, 8, 30)} // Start time 08:30am
-        max={new Date(2024, 0, 1, 18, 0)} // End time 06:00pm
-      />
+    <div className="container mx-auto my-4">
+      <div className="grid grid-cols-6 gap-4">
+        <div></div>
+        {days.map((day) => (
+          <div key={day} className="text-center font-bold">
+            {day}
+          </div>
+        ))}
+      </div>
+      {times.map((time) => (
+        <div key={time} className="grid grid-cols-6 gap-4">
+          <div className="text-right font-bold">{time}</div>
+          {days.map((day) => (
+            <div
+              key={day}
+              className={`border border-gray-300 p-3 my-1 cursor-pointer ${
+                schedule[day].find((slot) => slot.time === time).event
+                  ? "bg-blue-100"
+                  : "bg-white"
+              }`}
+              onClick={() =>
+                handleSlotClick(
+                  day,
+                  time,
+                  schedule[day].find((slot) => slot.time === time).event
+                )
+              }
+            >
+              {schedule[day].find((slot) => slot.time === time).event?.title ||
+                ""}
+            </div>
+          ))}
+        </div>
+      ))}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {currentSlot?.event ? "Event Details" : "Add Event"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group>
+              <Form.Label>Date & Time</Form.Label>
+              <Form.Control
+                type="text"
+                readOnly
+                value={`${currentSlot?.day} ${currentSlot?.time}`}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Title</Form.Label>
+              <Form.Control
+                type="text"
+                value={modalData.title}
+                onChange={(e) =>
+                  setModalData({ ...modalData, title: e.target.value })
+                }
+                readOnly={currentSlot?.event}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                value={modalData.description}
+                onChange={(e) =>
+                  setModalData({ ...modalData, description: e.target.value })
+                }
+                readOnly={currentSlot?.event}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Select Participant</Form.Label>
+              <Form.Control
+                as="select"
+                value={modalData.participant}
+                onChange={(e) =>
+                  setModalData({ ...modalData, participant: e.target.value })
+                }
+                disabled={currentSlot?.event}
+              >
+                <option value="">Select a participant</option>
+                {participants.map((participant) => (
+                  <option key={participant.regNo} value={participant.regNo}>
+                    {participant.regNo} - {participant.name}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        {!currentSlot?.event && (
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleSave}>
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        )}
+      </Modal>
     </div>
   );
 }

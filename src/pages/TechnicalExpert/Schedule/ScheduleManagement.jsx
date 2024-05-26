@@ -1,282 +1,213 @@
 import React, { useState } from "react";
-import Dropdown from "../../../components/dropdown/Dropdown";
-import biitlogo from "../../../assets/extra/biitSAS.png";
-import { Card, CardBody, CardText, CardTitle } from "reactstrap";
-import { RiDeleteBin6Line, RiEditLine, RiTimeLine } from "react-icons/ri";
-import './style.css'
-const initialSchedule = [
+import { Modal, Button, Form } from "react-bootstrap";
+
+const times = [
+  "08:30 AM",
+  "09:30 AM",
+  "10:30 AM",
+  "11:30 AM",
+  "12:30 PM",
+  "01:30 PM",
+  "02:00 PM",
+  "03:00 PM",
+  "04:00 PM",
+  "05:00 PM",
+  "06:00 PM",
+];
+
+const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+
+const defaultEvents = [
   {
-    day: "Monday",
-    events: [
-      { time: "08:15", name: "ERD Info", groupName: "BIIT Career Counsling" },
-      { time: "08:15", name: "ERD Info", groupName: "BIIT Career Counsling" },
-      {
-        time: "08:30",
-        name: "Conceptual Diagram",
-        groupName: "BIIT Career Counsling",
-      },
-      { time: "08:45", name: "Mockups", groupName: "BIIT Career Counsling" },
-      {
-        time: "09:00",
-        name: "Real Screens",
-        groupName: "BIIT Career Counsling",
-      },
-      {
-        time: "09:00",
-        name: "Real Screens",
-        groupName: "BIIT Career Counsling",
-      },
-    ],
-    slots: generateSlots(),
+    day: "Mon",
+    time: "08:30 AM",
+    title: "Math Class",
+    description: "Algebra and Geometry",
   },
   {
-    day: "Tuesday",
-    events: [
-      { time: "08:45", name: "Mockups", groupName: "BIIT Career Counsling" },
-      {
-        time: "09:00",
-        name: "Real Screens",
-        groupName: "BIIT Career Counsling",
-      },
-      { time: "08:45", name: "Mockups", groupName: "BIIT Career Counsling" },
-      {
-        time: "09:00",
-        name: "Real Screens",
-        groupName: "BIIT Career Counsling",
-      },
-      {
-        time: "09:00",
-        name: "Real Screens",
-        groupName: "BIIT Career Counsling",
-      },
-    ],
-    slots: generateSlots(),
+    day: "Tue",
+    time: "10:30 AM",
+    title: "Science Class",
+    description: "Physics and Chemistry",
   },
   {
-    day: "Wednesday",
-    events: [
-      { time: "08:45", name: "Mockups", groupName: "BIIT Career Counsling" },
-      {
-        time: "09:00",
-        name: "Real Screens",
-        groupName: "BIIT Career Counsling",
-      },
-      { time: "08:45", name: "Mockups", groupName: "BIIT Career Counsling" },
-      {
-        time: "09:00",
-        name: "Real Screens",
-        groupName: "BIIT Career Counsling",
-      },
-      {
-        time: "09:00",
-        name: "Real Screens",
-        groupName: "BIIT Career Counsling",
-      },
-    ],
-    slots: generateSlots(),
+    day: "Wed",
+    time: "01:30 PM",
+    title: "History Class",
+    description: "World History",
   },
   {
-    day: "Thursday",
-    events: [
-      {
-        time: "08:30",
-        name: "Real Screens",
-        groupName: "BIIT Career Counsling",
-      },
-    ],
-    slots: generateSlots(),
+    day: "Thu",
+    time: "03:00 PM",
+    title: "English Class",
+    description: "Literature and Grammar",
   },
   {
-    day: "Friday",
-    events: [
-      {
-        time: "09:00",
-        name: "Real Screens",
-        groupName: "BIIT Career Counsling",
-      },
-      {
-        time: "09:00",
-        name: "Real Screens",
-        groupName: "BIIT Career Counsling",
-      },
-    ],
-    slots: generateSlots(),
+    day: "Fri",
+    time: "05:00 PM",
+    title: "Art Class",
+    description: "Drawing and Painting",
   },
 ];
 
-function generateSlots() {
-  const slots = [];
-  let time = { hour: 8, minute: 15 };
-  while (time.hour < 13) {
-    const startTime = `${time.hour.toString().padStart(2, "0")}:${time.minute
-      .toString()
-      .padStart(2, "0")}`;
-    time.minute += 15;
-    if (time.minute === 60) {
-      time.minute = 0;
-      time.hour++;
-    }
-    const endTime = `${time.hour.toString().padStart(2, "0")}:${time.minute
-      .toString()
-      .padStart(2, "0")}`;
-    slots.push({ start: startTime, end: endTime, available: true });
-  }
-  return slots;
-}
+const participants = [
+  { regNo: "2020-Arid-3675", name: "Mubashir Liaqat" },
+  { regNo: "2020-Arid-4224", name: "Touseef Sajjad" },
+  { regNo: "2020-Arid-3677", name: "Usama Ijaz" },
+];
 
-function WeeklyScheduleUpdater() {
-  const [schedule, setSchedule] = useState(initialSchedule);
-  const [selectedDay, setSelectedDay] = useState("");
-  const [selectedSlot, setSelectedSlot] = useState("");
-  const [eventName, setEventName] = useState("");
-  const [groupName, setGroupName] = useState("");
-
-  const handleAddEvent = () => {
-    if (selectedDay && selectedSlot && eventName && groupName) {
-      setSchedule((prevSchedule) => {
-        return prevSchedule.map((day) => {
-          if (day.day === selectedDay) {
-            const updatedEvents = [
-              ...day.events,
-              { time: selectedSlot, name: eventName, groupName: groupName },
-            ];
-            const updatedSlots = day.slots.map((slot) => {
-              if (slot.start === selectedSlot) {
-                return { ...slot, available: false };
-              }
-              return slot;
-            });
-            return { ...day, events: updatedEvents, slots: updatedSlots };
-          }
-          return day;
-        });
+function WeeklySchedule() {
+  const [schedule, setSchedule] = useState(
+    days.reduce((acc, day) => {
+      acc[day] = times.map((time) => {
+        const event = defaultEvents.find(
+          (event) => event.day === day && event.time === time
+        );
+        return { time, event: event || null };
       });
-      setSelectedDay("");
-      setSelectedSlot("");
-      setEventName("");
-      setGroupName("");
-    } else {
-      alert("Please select enter event name, and enter group ID.");
-    }
+      return acc;
+    }, {})
+  );
+
+  const [showModal, setShowModal] = useState(false);
+  const [currentSlot, setCurrentSlot] = useState(null);
+  const [modalData, setModalData] = useState({
+    title: "",
+    description: "",
+    participant: "",
+  });
+
+  const handleSlotClick = (day, time, event) => {
+    setCurrentSlot({ day, time, event });
+    setModalData({
+      title: event?.title || "",
+      description: event?.description || "",
+      participant: event?.participant || "",
+    });
+    setShowModal(true);
   };
 
-  const handleSelectSlot = (slot) => {
-    setSelectedSlot(slot.label);
-  };
-
-  const generateDropdownOptions = () => {
-    const day = schedule.find((day) => day.day === selectedDay);
-    const availableSlots = day.slots.filter((slot) => slot.available);
-    return availableSlots.map((slot) => ({
-      label: `${slot.start} - ${slot.end}`,
-      value: slot.start,
-    }));
+  const handleSave = () => {
+    const updatedSchedule = { ...schedule };
+    const slot = updatedSchedule[currentSlot.day].find(
+      (slot) => slot.time === currentSlot.time
+    );
+    slot.event = {
+      title: modalData.title,
+      description: modalData.description,
+      participant: modalData.participant,
+    };
+    setSchedule(updatedSchedule);
+    setShowModal(false);
   };
 
   return (
-    <div className="container mx-auto">
-      <div className="w-full flex justify-center items-center">
-        <img src={biitlogo} alt="biit Logo" className="w-2/6" />
+    <div className="container mx-auto my-4">
+      <div className="grid grid-cols-6 gap-4">
+        <div></div>
+        {days.map((day) => (
+          <div key={day} className="text-center font-bold">
+            {day}
+          </div>
+        ))}
       </div>
-      <h1 className="text-2xl font-bold my-4 text-center">Weekly Schedule</h1>
-      {/* days Monday,Tuesday,Wednesday */}
-      <div className="flex flex-row space-x-4 justify-center">
-        {schedule.map((day, index) => (
-          <div key={index}>
-            <button
-              className={`p-2 rounded-md border ${
-                selectedDay === day.day
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200"
+      {times.map((time) => (
+        <div key={time} className="grid grid-cols-6 gap-4">
+          <div className="text-right font-bold">{time}</div>
+          {days.map((day) => (
+            <div
+              key={day}
+              className={`border border-gray-300 p-3 my-1 cursor-pointer ${
+                schedule[day].find((slot) => slot.time === time).event
+                  ? "bg-blue-100"
+                  : "bg-white"
               }`}
-              onClick={() => setSelectedDay(day.day)}
+              onClick={() =>
+                handleSlotClick(
+                  day,
+                  time,
+                  schedule[day].find((slot) => slot.time === time).event
+                )
+              }
             >
-              {day.day}
-            </button>
-          </div>
-        ))}
-      </div>
-      {selectedDay && (
-        <div className="flex justify-center items-center space-x-3">
-          <h2 className="text-lg font-semibold mt-2">
-            Available Slots for {selectedDay}:
-          </h2>
-          <Dropdown
-            options={generateDropdownOptions()}
-            value={selectedSlot}
-            OnSelect={handleSelectSlot}
-            className="mt-2 w-3/12"
-          />
-        </div>
-      )}
-      {selectedSlot && (
-        <div className="mt-4 flex flex-col space-y-3 justify-center items-center">
-          <input
-            type="text"
-            placeholder="Enter event title"
-            value={eventName}
-            onChange={(e) => setEventName(e.target.value)}
-            className="w-1/2 p-2 rounded-md border"
-          />
-          <input
-            type="number"
-            placeholder="Enter group Name"
-            value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
-            className="w-1/2 p-2 rounded-md border "
-          />
-          <button
-            className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md"
-            onClick={handleAddEvent}
-          >
-            Add Event
-          </button>
-        </div>
-      )}
-      <h2 className="text-2xl font-semibold text-center my-4">
-        Scheduled Events
-      </h2>
-      {/* Separate section for each day's events */}
-      <div className="flex  justify-center">
-        {schedule.map((day, index) => (
-          <div key={index} className="p-4 mb-4">
-            <h3 className="text-xl font-semibold mb-2 ml-3 text-center">{day.day}</h3>
-            <div className={`flex flex-col h-96 overflow-hidden ${day.events.length > 1 ? "overflow-y-scroll":""}`}>
-              {/* Map through events for the selected day */}
-              {day.events.map((event, idx) => (
-                <Card
-                  key={`${index}-${idx}`}
-                  className="w-[11rem] bg-white py-4 px-4 rounded border border-gray-300 shadow-lg mb-2"
-                >
-                  <CardBody>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-gray-500 flex items-center">
-                        <RiTimeLine className="mr-1" />
-                        {event.time}
-                      </span>
-                      <div className="flex">
-                        <RiEditLine className="h-5 w-5 mr-2 text-green-500 cursor-pointer" />
-                        <RiDeleteBin6Line className="h-5 w-5 text-red-500 cursor-pointer" />
-                      </div>
-                    </div>
-                    <CardTitle tag="h5" className="font-bold text-center mb-2">
-                      {event.name}
-                    </CardTitle>
-                    <CardText className="font-bold">
-                      Group:
-                      <span className="text-sm font-normal">
-                        {event.groupName}
-                      </span>
-                    </CardText>
-                  </CardBody>
-                </Card>
-              ))}
+              {schedule[day].find((slot) => slot.time === time).event?.title ||
+                ""}
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ))}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {currentSlot?.event ? "Event Details" : "Add Event"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group>
+              <Form.Label>Date & Time</Form.Label>
+              <Form.Control
+                type="text"
+                readOnly
+                value={`${currentSlot?.day} ${currentSlot?.time}`}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Title</Form.Label>
+              <Form.Control
+                type="text"
+                value={modalData.title}
+                onChange={(e) =>
+                  setModalData({ ...modalData, title: e.target.value })
+                }
+                readOnly={currentSlot?.event}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                value={modalData.description}
+                onChange={(e) =>
+                  setModalData({ ...modalData, description: e.target.value })
+                }
+                readOnly={currentSlot?.event}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Select Participant</Form.Label>
+              <Form.Control
+                as="select"
+                value={modalData.participant}
+                onChange={(e) =>
+                  setModalData({ ...modalData, participant: e.target.value })
+                }
+                disabled={currentSlot?.event}
+              >
+                <option value="">Select a participant</option>
+                {participants.map((participant) => (
+                  <option key={participant.regNo} value={participant.regNo}>
+                    {participant.regNo} - {participant.name}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        {!currentSlot?.event && (
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowModal(false)}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleSave}>
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        )}
+      </Modal>
     </div>
   );
 }
 
-export default WeeklyScheduleUpdater;
+export default WeeklySchedule;

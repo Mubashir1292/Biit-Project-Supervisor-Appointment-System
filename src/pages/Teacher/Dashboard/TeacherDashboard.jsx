@@ -5,6 +5,7 @@ import Card from "react-bootstrap/Card";
 import { ArrowDownWideNarrow, ArrowUpWideNarrow } from "lucide-react";
 import Calendar from "react-calendar";
 import "../../../assets/css/style.css";
+import "react-calendar/dist/Calendar.css";
 function TeacherDashboard() {
   const [sentRequest, setSentRequest] = useState([]);
   const [isUser, setIsUser] = useState(null);
