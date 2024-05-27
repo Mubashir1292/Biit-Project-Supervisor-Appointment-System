@@ -10,15 +10,24 @@ function Meetings() {
   const [selectedSlot, setSelectedSlot] = useState();
   const [eventsList, setEventsList] = useState([
     {
-      title: "Event 1",
+      title: "Meeting with Ali Safeer",
       start: new Date(),
       end: new Date(new Date().setHours(new Date().getHours() + 1)),
     },
     {
-      title: "Event 2",
+      title: "Meeting With Mubashir",
       start: new Date(new Date().setDate(new Date().getDate() + 1)),
       end: new Date(
         new Date(new Date().setDate(new Date().getDate() + 1)).setHours(
+          new Date().getHours() + 1
+        )
+      ),
+    },
+    {
+      title: "Meeting With Nouman",
+      start: new Date(new Date().setDate(new Date().getDate() + 1)),
+      end: new Date(
+        new Date(new Date().setDate(new Date().getDate() + 2)).setHours(
           new Date().getHours() + 1
         )
       ),

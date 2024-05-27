@@ -100,7 +100,7 @@ function GroupCreation() {
   const GetGroupStatus = async () => {
     const MySelf = {
       dateTime: formattedDateTime,
-      name: user.name,
+      name: user.username,
       receiver: {
         uid: user.uid,
         username: user.username,
@@ -261,7 +261,7 @@ function GroupCreation() {
         <>
           <div className="w-full h-full flex flex-col items-center">
             <div className="w-full flex justify-center">
-              <img src={BiitSAS} alt="BiitSAS" className="w-5/12 h-auto mt-0" />
+              <img src={BiitSAS} alt="BiitSAS" className="w-3/12" />
             </div>
             <div className="flex flex-col mb-4">
               <div className="flex flex-row items-center justify-evenly">

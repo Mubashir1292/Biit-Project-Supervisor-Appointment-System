@@ -29,6 +29,7 @@ import SingleNotification from "../pages/Teacher/SingleNotifications/SingleNotif
 import GroupProgress from "../pages/Teacher/GroupProgress/GroupProgress";
 import Task from "../pages/Teacher/Task/Task";
 import CheckingTask from "../pages/Teacher/Task/CheckingTask";
+import ReceivedGroupRequest from "../pages/Student/Requests/ReceivedGroupJoiningRequest/ReceivedGroupRequest";
 //? === inserting all Routes for all users
 export const studentsRoutes = [
   { path: "/student/dashboard", element: <StudentDashboard /> },
@@ -44,6 +45,7 @@ export const studentsRoutes = [
   { path: "/student/JoiningAGroup", element: <JoingingAGroupRequest /> },
   { path: "/student/TaskList", element: <TaskList /> },
   { path: "/search", element: <Search /> },
+  { path: "/student/ReceivedGroupRequest", element: <ReceivedGroupRequest /> },
 ];
 export const technicalExpertRoutes = [
   { path: "/TechnicalExpert/dashboard", element: <ExpertDashboard /> },

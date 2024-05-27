@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BiitSAS from "../../../../assets/extra/biitSAS.png";
 import Dropdown from "../../../../components/dropdown/Dropdown";
-import { object } from "prop-types";
 function HelpRequest() {
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
@@ -46,7 +45,6 @@ function HelpRequest() {
           label: item.teacher.tid,
           value: item.teacher.username,
         }));
-        console.log(expertListData);
         setExpertList(expertListData);
       } else {
         setExpertList([]);
@@ -82,7 +80,7 @@ function HelpRequest() {
     try {
       const response = await fetch(
         `http://192.168.100.4/OfficialPSAS/api/psas/GetTheTimeSlots?day=${
-          Dayselection || weekDays[0].value
+          Dayselection || weekDays[0].label
         }&teacher_id=${selectionExpert.label || expertList[0].label}`
       );
       const data = await response.json();

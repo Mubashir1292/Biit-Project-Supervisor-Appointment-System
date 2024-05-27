@@ -16,32 +16,8 @@ function TaskList() {
   useEffect(() => {
     const tasksList = [
       {
-        label: 1,
-        group: "BIIT Meeting Management System",
-        value: "ERD Completion",
-        dueDate: "2024-05-06",
-      },
-      {
-        label: 2,
-        group: "BIIT Meeting Management System",
-        value: "ERD Completion",
-        dueDate: "2024-05-06",
-      },
-      {
         label: 3,
         group: "BIIT Project Supervisor Appointment System",
-        value: "ERD Completion",
-        dueDate: "2024-05-06",
-      },
-      {
-        label: 4,
-        group: "BIIT Career Counsling",
-        value: "ERD Completion",
-        dueDate: "2024-05-06",
-      },
-      {
-        label: 5,
-        group: "BIIT Career Counsling",
         value: "ERD Completion",
         dueDate: "2024-05-06",
       },
@@ -75,25 +51,25 @@ function TaskList() {
                 md={{ span: 3, offset: 1 }}
                 className="h-[450px] bg-gray-50 rounded"
               >
-                <h5>To-do(3)</h5>
-                <div className="bg-gray-200 w-full h-full px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
+                <h5>To-do({tasks.length})</h5>
+                <div className="bg-gray-200 w-full h-max px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
                   {tasks.map((item, index) => (
                     <Card className="w-full" key={index}>
                       {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
                       <Card.Body>
                         <div className="flex justify-between items-center">
                           <Card.Title className="text-[10px] font-normal">
-                            <span className="text-[17px]">Task Title</span>
+                            <span className="text-[17px]">Complete Pitch</span>
                           </Card.Title>
                           <span className="text-[10px] ">2024-05-06</span>
                         </div>
-                        <ProgressBar
+                        {/* <ProgressBar
                           now={60}
                           label={`${60}%`}
                           variant="success"
-                        />
+                        /> */}
                         <Card.Text>
-                          <span className="text-[10px]">Task Descriptions</span>
+                          <span className="text-[10px]">Pitch and Demo</span>
                         </Card.Text>
                       </Card.Body>
                       <Card.Footer className="border-0 flex justify-end items-center space-x-1">
@@ -114,25 +90,29 @@ function TaskList() {
                 md={{ span: 3, offset: 1 }}
                 className="h-[450px] bg-gray-50 rounded "
               >
-                <h5>Doing(4)</h5>
-                <div className="bg-gray-200 w-full h-full px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
+                <h5>Doing({tasks.length})</h5>
+                <div className="bg-gray-200 w-full h-max px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
                   {tasks.map((item, index) => (
                     <Card className="w-full" key={index}>
                       {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
                       <Card.Body>
                         <div className="flex justify-between items-center">
                           <Card.Title className="text-[10px] font-normal">
-                            <span className="text-[17px]">Task Title</span>
+                            <span className="text-[17px]">
+                              Complete Screens
+                            </span>
                           </Card.Title>
                           <span className="text-[10px] ">2024-05-06</span>
                         </div>
-                        <ProgressBar
+                        {/* <ProgressBar
                           now={60}
                           label={`${60}%`}
                           variant="success"
-                        />
+                        /> */}
                         <Card.Text>
-                          <span className="text-[10px]">Task Descriptions</span>
+                          <span className="text-[10px]">
+                            Complete Erd Within the dueDate
+                          </span>
                         </Card.Text>
                       </Card.Body>
                       <Card.Footer className="border-0 flex justify-end items-center space-x-1">
@@ -149,15 +129,15 @@ function TaskList() {
                 md={{ span: 3, offset: 1 }}
                 className="h-[450px] bg-gray-50 rounded "
               >
-                <h5>Done(3)</h5>
-                <div className="bg-gray-200 w-full h-full px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
+                <h5>Done({tasks.length})</h5>
+                <div className="bg-gray-200 w-full h-max px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
                   {tasks.map((item, index) => (
                     <Card className="w-full" key={index}>
                       {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
                       <Card.Body>
                         <div className="flex justify-between items-center">
                           <Card.Title className="text-[10px] font-normal">
-                            <span className="text-[17px]">Task Title</span>
+                            <span className="text-[17px]">Figma Designs</span>
                           </Card.Title>
                           <span className="text-[10px] ">2024-05-06</span>
                         </div>
@@ -167,7 +147,9 @@ function TaskList() {
                           variant="success"
                         />
                         <Card.Text>
-                          <span className="text-[10px]">Task Descriptions</span>
+                          <span className="text-[10px]">
+                            Complete Figma Screens and Apis..
+                          </span>
                         </Card.Text>
                       </Card.Body>
                       <Card.Footer className="border-0 flex justify-end items-center space-x-1">

@@ -10,12 +10,39 @@ function TeacherMeetings() {
   const [selectedSlot, setSelectedSlot] = useState();
   const [eventsList, setEventsList] = useState([
     {
-      title: "Event 1",
+      title: "Meeting",
       start: new Date(),
       end: new Date(new Date().setHours(new Date().getHours() + 1)),
     },
     {
-      title: "Event 2",
+      title: "Meeting with Group ",
+      start: new Date(new Date().setDate(new Date().getDate() + 1)),
+      end: new Date(
+        new Date(new Date().setDate(new Date().getDate() + 1)).setHours(
+          new Date().getHours() + 1
+        )
+      ),
+    },
+    {
+      title: "Meeting with Group ",
+      start: new Date(new Date().setDate(new Date().getDate() + 1)),
+      end: new Date(
+        new Date(new Date().setDate(new Date().getDate() + 1)).setHours(
+          new Date().getHours() + 1
+        )
+      ),
+    },
+    {
+      title: "Meeting With Group",
+      start: new Date(new Date().setDate(new Date().getDate() - 1)),
+      end: new Date(
+        new Date(new Date().setDate(new Date().getDate() - 1)).setHours(
+          new Date().getHours() + 1
+        )
+      ),
+    },
+    {
+      title: "Meeting with group",
       start: new Date(new Date().setDate(new Date().getDate() + 1)),
       end: new Date(
         new Date(new Date().setDate(new Date().getDate() + 1)).setHours(

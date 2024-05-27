@@ -13,6 +13,7 @@ function ProjectRequesting() {
   const [options, setOptions] = useState([]);
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
+  console.log(user);
   const [currentGroupCgpa, setCurrentGroupCgpa] = useState(0);
   const [myGroupDetails, setMyGroupDetails] = useState([]);
   const GetGroupCgpa = async () => {

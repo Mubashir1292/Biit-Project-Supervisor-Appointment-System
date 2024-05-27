@@ -2,37 +2,28 @@ import React, { useEffect, useState } from "react";
 import {
   CircleDotDashed,
   Group,
-  GroupIcon,
   HelpCircle,
   LayoutDashboard,
   UsersRound,
 } from "lucide-react";
 import sas from "../../assets/extra/sas.png";
 import { NavLink } from "react-router-dom";
-import { GoProject, GoProjectTemplate, GoTasklist } from "react-icons/go";
-import {
-  GiExplosiveMeeting,
-  GiGroupedDrops,
-  GiProgression,
-  GiTeacher,
-} from "react-icons/gi";
+import { GoProject, GoTasklist } from "react-icons/go";
+import { GiProgression } from "react-icons/gi";
 import { VscRequestChanges } from "react-icons/vsc";
 import { AiFillSchedule, AiTwotoneSchedule } from "react-icons/ai";
 import { SiGotomeeting, SiProgress } from "react-icons/si";
 import { FaUserGraduate, FaUserTie } from "react-icons/fa";
-import { GrProjects, GrTask } from "react-icons/gr";
+import { GrTask } from "react-icons/gr";
 import { FaDiagramProject, FaUsersLine } from "react-icons/fa6";
-import { MdMeetingRoom } from "react-icons/md";
 import { HiClipboardDocumentList } from "react-icons/hi2";
-import { RiCalendarEventFill, RiCalendarFill } from "react-icons/ri";
+import { RiCalendarEventFill } from "react-icons/ri";
 function OtherSidebar({ expanded, setExpanded }) {
   const [user, setUser] = useState({});
   const [allLinks, setAllLinks] = useState([]);
   const userString = localStorage.getItem("user");
   const isUser = userString ? JSON.parse(userString) : null;
   useEffect(() => {
-    console.log("otherSideBar");
-    console.log(isUser);
     if (isUser !== null) {
       setUser(isUser);
       if (isUser.role === "Technical Expert") {
@@ -106,7 +97,7 @@ function OtherSidebar({ expanded, setExpanded }) {
       icon: <LayoutDashboard size={20} />,
     },
     {
-      label: "group",
+      label: "My Group",
       path: "/student/creatingGroup",
       icon: <Group size={20} />,
     },
@@ -166,7 +157,7 @@ function OtherSidebar({ expanded, setExpanded }) {
       icon: <LayoutDashboard size={20} />,
     },
     {
-      label: "groups",
+      label: "Groups",
       path: "/teacher/groups",
       icon: <FaUsersLine size={20} />,
     },
@@ -229,7 +220,7 @@ function OtherSidebar({ expanded, setExpanded }) {
   });
   return (
     <div
-      className={`sticky h-screen overflow-y-none items-center bg-[#37373d]  shadow-sm ${
+      className={`sticky h-screen min-h-full overflow-y-none items-center bg-[#37373d]  shadow-sm ${
         expanded ? "w-52" : "w-20"
       }`}
     >

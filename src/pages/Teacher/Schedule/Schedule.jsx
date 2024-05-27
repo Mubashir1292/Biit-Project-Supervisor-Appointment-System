@@ -21,31 +21,43 @@ const defaultEvents = [
   {
     day: "Mon",
     time: "08:30 AM",
-    title: "Math Class",
+    title: "Class",
     description: "Algebra and Geometry",
   },
   {
     day: "Tue",
     time: "10:30 AM",
-    title: "Science Class",
+    title: "Class",
     description: "Physics and Chemistry",
   },
   {
     day: "Wed",
     time: "01:30 PM",
-    title: "History Class",
+    title: "Class",
     description: "World History",
   },
   {
     day: "Thu",
     time: "03:00 PM",
-    title: "English Class",
+    title: "Class",
     description: "Literature and Grammar",
   },
   {
     day: "Fri",
     time: "05:00 PM",
-    title: "Art Class",
+    title: "Class",
+    description: "Drawing and Painting",
+  },
+  {
+    day: "Fri",
+    time: "03:00 PM",
+    title: "Meeting With Group..",
+    description: "Drawing and Painting",
+  },
+  {
+    day: "Fri",
+    time: "02:00 PM",
+    title: "Meeting With Group..",
     description: "Drawing and Painting",
   },
 ];

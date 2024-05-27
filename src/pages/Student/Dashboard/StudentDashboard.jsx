@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import biitlogo from "../../../assets/extra/biitSAS.png";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import { ArrowDownWideNarrow, ArrowUpWideNarrow } from "lucide-react";
 import Calendar from "react-calendar";
@@ -83,8 +83,9 @@ function StudentDashboard() {
         `http://192.168.100.4/officialPSAS/api/psas/getAllRequests?Id=${user.uid}`
       );
       const data = await response.json();
-      if (data.length) {
+      if (data.length !== 0) {
         setSentRequest(data);
+        console.log(data);
       } else {
         console.log(response.status);
       }
@@ -98,10 +99,10 @@ function StudentDashboard() {
     const user = userString ? JSON.parse(userString) : null;
     if (user) {
       console.log(user);
+      handleGetRequests(user);
     } else {
       navigate("/");
     }
-    handleGetRequests(user);
   }, []);
 
   const handleSelectDate = (date) => {
