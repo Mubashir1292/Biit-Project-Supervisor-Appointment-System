@@ -20,7 +20,7 @@ function Layout() {
   return (
     <div className="relative min-h-screen flex flex-col">
       <Header expanded={expanded} setExpanded={toggleExpanded} />
-      <div className="flex flex-1">
+      <div className="flex">
         <div
           className={`fixed inset-y-0 left-0 transform ${
             expanded ? "translate-x-0" : "-translate-x-full"
@@ -28,7 +28,7 @@ function Layout() {
         >
           <OtherSidebar expanded={expanded} setExpanded={toggleExpanded} />
         </div>
-        <div className="flex-grow p-4">
+        <div className="w-full">
           <Outlet />
         </div>
       </div>

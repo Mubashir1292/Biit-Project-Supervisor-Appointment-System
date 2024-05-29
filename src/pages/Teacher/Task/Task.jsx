@@ -93,20 +93,22 @@ function Task() {
 
   return (
     <React.Fragment>
-      <div className="flex flex-col justify-around">
-        <img
-          src={BiitSAS}
-          alt="Biit SAS Logo"
-          className="w-3/12 flex self-center"
-        />
-        <h3 className="text-center font-normal">Assign Task</h3>
+      <div className="flex  flex-col sm:justify-around xl:justify-center w-full max-[320px]:w-[320px]">
+        <div className="flex justify-center items-center max-[320px]:w-full w-full">
+          <img
+            src={BiitSAS}
+            alt="Biit SAS Logo"
+            className="min-[320px]:w-5/12 w-4/12"
+          />
+        </div>
+        <h3 className="text-center font-normal text-green-500">Assign Task</h3>
         <div className="flex justify-center">
           <h6
             className={`cursor-pointer ${
               semester === 7
                 ? "bg-green-500 text-white font-bold"
                 : "bg-white text-black hover:bg-green-400 hover:text-gray-500"
-            } px-16 py-2 transition-all border-b border-gray-400 rounded-sm`}
+            } max-[320px]:px-8 max-[320px]:py-2 px-28 py-6 transition-all border-b border-gray-400 rounded-sm max-[320px]:text-xs`}
             onClick={() => setSemester(7)}
           >
             Fyp-01
@@ -116,23 +118,23 @@ function Task() {
               semester === 8
                 ? "bg-green-500 text-white font-bold"
                 : "bg-white text-black hover:bg-green-400 hover:text-gray-500"
-            } px-16 py-2 border-b border-gray-400 transition-all rounded-sm`}
+            }  max-[320px]:px-8 max-[320px]:py-2 px-28 py-6 border-b border-gray-400 transition-all rounded-sm max-[320px]:text-xs`}
             onClick={() => setSemester(8)}
           >
             Fyp-02
           </h6>
         </div>
-        <div className="flex justify-center space-x-3 items-center">
-          <span>Select Group:</span>
+        <div className="flex max-[320px]:justify-around  justify-center items-center">
+          <span className="max-[320px]:text-xs text-lg">Select Group:</span>
           <Dropdown
             options={groups}
             value={selection}
             OnSelect={handleSelect}
-            className="relative w-2/12 cursor-default"
+            className="relative max-[320px]:w-4/6 w-1/6 cursor-default max-[320px]:text-[10px]"
           />
         </div>
-        <div className="flex justify-center items-center mt-2">
-          <div className="border-2 border-green-600 rounded w-2/6 p-3">
+        <div className="flex max-[320px]:w-[320px] w-full max-[320px]:justify-center items-center mt-2">
+          <div className="border-2 border-green-600 max-[320px]:w-full w-2/6 mx-auto rounded self-center p-3">
             <FloatingLabel
               controlId="floatingInput"
               label="Title"

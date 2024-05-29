@@ -101,7 +101,7 @@ function GroupProgress() {
   return (
     <React.Fragment>
       <div className="flex flex-col">
-        <img src={BiitSAS} alt="BiitSAS" className="self-center w-3/12" />
+        <img src={BiitSAS} alt="BiitSAS" className="self-center w-7/12" />
         <Container className="mt-4">
           <Row>
             <Col>
@@ -109,9 +109,9 @@ function GroupProgress() {
                 <h6
                   className={`cursor-pointer ${
                     semester === 7
-                      ? "bg-green-500 text-white font-bold"
-                      : "bg-white text-black hover:bg-green-400 hover:text-gray-500"
-                  } px-28 py-2 transition-all border-b border-gray-400 rounded-sm`}
+                      ? "bg-green-500 text-white font-bold text-sm"
+                      : "bg-white text-black hover:bg-green-400 hover:text-gray-500 text-sm"
+                  } px-8 py-2 transition-all border-b border-gray-400 rounded-sm`}
                   onClick={() => handleSemesterChange(7)}
                 >
                   Fyp-01
@@ -119,21 +119,21 @@ function GroupProgress() {
                 <h6
                   className={`cursor-pointer ${
                     semester === 8
-                      ? "bg-green-500 text-white font-bold"
-                      : "bg-white text-black hover:bg-green-400 hover:text-gray-500"
-                  } px-28 py-2 border-b border-gray-400 transition-all rounded-sm`}
+                      ? "bg-green-500 text-white font-bold text-sm"
+                      : "bg-white text-black hover:bg-green-400 hover:text-gray-500 text-sm"
+                  } px-8 py-2 border-b border-gray-400 transition-all rounded-sm`}
                   onClick={() => handleSemesterChange(8)}
                 >
                   Fyp-02
                 </h6>
               </div>
-              <div className="flex justify-center space-x-5 items-center">
-                <span>Select Group:</span>
+              <div className="flex justify-center  items-center">
+                <span className="text-sm">Select Group:</span>
                 <Dropdown
                   options={groups}
                   value={selection}
                   OnSelect={handleSelect}
-                  className="relative w-max cursor-default"
+                  className="relative w-max cursor-default text-[9px]"
                 />
               </div>
             </Col>
@@ -141,7 +141,7 @@ function GroupProgress() {
           {!selection ? (
             <div className="w-5/6 mt-3 mx-auto">
               <SkeletonTheme highlightColor="#05B05B">
-                <Skeleton count={10} />
+                <Skeleton count={4} />
               </SkeletonTheme>
             </div>
           ) : (
@@ -149,7 +149,7 @@ function GroupProgress() {
               <Row className="mt-3">
                 <Col
                   md={{ span: 3, offset: 1 }}
-                  className="h-[450px] bg-gray-50 rounded"
+                  className="h-max bg-gray-50 rounded"
                 >
                   <h5>To-do({tasks.length})</h5>
                   <div className="bg-gray-200 w-full h-max px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
@@ -191,7 +191,7 @@ function GroupProgress() {
                 </Col>
                 <Col
                   md={{ span: 3, offset: 1 }}
-                  className="h-[450px] bg-gray-50 rounded "
+                  className="h-max bg-gray-50 rounded "
                 >
                   <h5>Doing({tasks.length})</h5>
                   <div className="bg-gray-200 w-full h-max px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
@@ -230,7 +230,7 @@ function GroupProgress() {
                 </Col>
                 <Col
                   md={{ span: 3, offset: 1 }}
-                  className="h-[450px] bg-gray-50 rounded "
+                  className="h-max bg-gray-50 rounded "
                 >
                   <h5>Done({tasks.length})</h5>
                   <div className="bg-gray-200 w-full h-max px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">

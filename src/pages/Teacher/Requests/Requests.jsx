@@ -56,9 +56,16 @@ function Requests() {
   ]);
   return (
     <React.Fragment>
-      <div className="flex flex-col justify-center items-center">
-        <img src={BiitSAS} alt="Biit SAS" />
-        <Card>
+      <div className="flex flex-col xl:w-full lg:w-full justify-center items-center min-[320px]:w-[320px] box-border">
+        <div className="flex flex-col justify-center items-center">
+          <img
+            src={BiitSAS}
+            alt="Biit SAS"
+            className="max-[320px]:w-3/6 w-5/6"
+          />
+          <h3 className="text-green-500">Group Request</h3>
+        </div>
+        <Card className="w-full">
           {/* group Image */}
           <div className="w-2/6 flex self-center rounded-full mt-1">
             <Card.Img src={groupDetail.groupImage} alt={`${groupDetail}`} />
@@ -74,7 +81,7 @@ function Requests() {
               <span className="text-sm">Group CGPA :</span>
               <span className="text-sm">{groupDetail.groupCGPA}</span>
             </Card.Subtitle>
-            <Table responsive bordered hover>
+            <Table responsive bordered hover className="w-3/6">
               <thead>
                 <tr>
                   <th>#</th>

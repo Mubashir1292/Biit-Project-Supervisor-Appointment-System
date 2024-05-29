@@ -44,19 +44,19 @@ function GroupDetailsModal(props) {
             <div className="flex flex-col space-y-3 border border-black p-2 rounded">
               {props.group.groupMembers.map((member, index) => (
                 <div
-                  className="flex justify-evenly hover:bg-gray-100 cursor-default"
+                  className="flex justify-around items-center hover:bg-gray-100 cursor-default space-x-2"
                   key={index}
                 >
-                  <img src={member.image} alt={`${member.name}`} />
-                  <span>{member.id}</span>
-                  <span>{member.name}</span>
+                  <img src={member.image} alt={`${member.name}`} className="" />
+                  <span className="text-xs">{member.id}</span>
+                  <span className="text-xs">{member.name}</span>
                 </div>
               ))}
             </div>
           </div>
         </Container>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer className="flex flex-col">
         <Button onClick={props.onHide} variant="success">
           Schedule Meeting
         </Button>

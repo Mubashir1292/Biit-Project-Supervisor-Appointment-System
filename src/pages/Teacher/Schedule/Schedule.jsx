@@ -125,11 +125,11 @@ function WeeklySchedule() {
       </div>
       {times.map((time) => (
         <div key={time} className="grid grid-cols-6 gap-4">
-          <div className="text-right font-bold">{time}</div>
+          <div className="text-right font-semibold text-xs">{time}</div>
           {days.map((day) => (
             <div
               key={day}
-              className={`border border-gray-300 p-3 my-1 cursor-pointer ${
+              className={`border border-gray-300 my-1 cursor-pointer text-left text-[8px] ${
                 schedule[day].find((slot) => slot.time === time).event
                   ? "bg-blue-100"
                   : "bg-white"

@@ -140,9 +140,9 @@ function Groups() {
     <React.Fragment>
       <div className="flex flex-col">
         <img src={BiitSAS} alt="BiitSAS" className="flex self-center" />
+        <h2 className="text-xl text-center text-green-500">All Groups</h2>
         <div className="flex flex-col bg-gray-200">
           <div className="flex justify-around">
-            <h2 className="text-2xl">All Groups</h2>
             <div>
               <InputGroup className="mb-3">
                 <Form.Control

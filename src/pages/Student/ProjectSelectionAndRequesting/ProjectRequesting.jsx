@@ -17,7 +17,7 @@ function ProjectRequesting() {
   const GetGroupCgpa = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.9/OfficialPSAS/api/psas/GroupCgpaByRegNo?regNo=${user.uid}`
+        `http://192.168.1.5/OfficialPSAS/api/psas/GroupCgpaByRegNo?regNo=${user.uid}`
       );
       const data = await response.json();
       let parsedNumber = parseFloat(data?.toFixed(2));
@@ -30,7 +30,7 @@ function ProjectRequesting() {
   const handleGetOptions = async () => {
     try {
       const response = await fetch(
-        "http://192.168.1.9/OfficialPSAS/api/psas/AllDomains"
+        "http://192.168.1.5/OfficialPSAS/api/psas/AllDomains"
       );
       const data = await response.json();
       if (data) {
@@ -47,7 +47,7 @@ function ProjectRequesting() {
   const GettingCompleteGroup = async (pid) => {
     try {
       const response = await fetch(
-        `http://192.168.1.9/OfficialPSAS/api/psas/DetailsProjectSupervisorGroup?projectId=${choosedProject.pid}&regNo=${user.uid}`
+        `http://192.168.1.5/OfficialPSAS/api/psas/DetailsProjectSupervisorGroup?projectId=${choosedProject.pid}&regNo=${user.uid}`
       );
       const data = await response.json();
       console.log(data.singleGroupDetails);
@@ -66,7 +66,7 @@ function ProjectRequesting() {
 
     // fetching the Projects on the base on domain and cgpa
     const response = await fetch(
-      `http://192.168.1.9/OfficialPSAS/api/psas/ProjectsByDomain?Domain=${option.value}&regNo=${user.uid}`
+      `http://192.168.1.5/OfficialPSAS/api/psas/ProjectsByDomain?Domain=${option.value}&regNo=${user.uid}`
     );
     const data = await response.json();
     setSelectedProjects(data);
@@ -86,7 +86,7 @@ function ProjectRequesting() {
   const handlePostedRequest = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.9/OfficialPSAS/api/psas/PostingRequesttoSupervisor?projectId=${choosedProject.pid}&regNo=${user.uid}`,
+        `http://192.168.1.5/OfficialPSAS/api/psas/PostingRequesttoSupervisor?projectId=${choosedProject.pid}&regNo=${user.uid}`,
         {
           method: "POST",
           headers: {

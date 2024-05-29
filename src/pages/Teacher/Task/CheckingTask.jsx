@@ -156,16 +156,22 @@ function CheckingTask() {
   };
   return (
     <React.Fragment>
-      <div className="flex flex-col">
-        <img src={BiitSAS} alt="Biit-SAS" className="w-3/12 flex self-center" />
-        <h3 className="text-center font-normal">Update Progress</h3>
+      <div className="flex flex-col max-[320px]:w-[320px]">
+        <img
+          src={BiitSAS}
+          alt="Biit-SAS"
+          className="max-[320px]:w-8/12 flex self-center"
+        />
+        <h3 className="text-center font-normal text-green-500">
+          Update Progress
+        </h3>
         <div className="flex justify-center">
           <h6
             className={`cursor-pointer ${
               semester === 7
                 ? "bg-green-500 text-white font-bold"
                 : "bg-white text-black hover:bg-green-400 hover:text-gray-500"
-            } px-16 py-2 transition-all border-b border-gray-400 rounded-sm`}
+            } px-16 py-2 max-[320px]:px-8 max-[320px]:py-2 max-[320px]:text-xs  transition-all border-b border-gray-400 rounded-sm`}
             onClick={() => handleSemesterChange(7)}
           >
             Fyp-01
@@ -175,29 +181,29 @@ function CheckingTask() {
               semester === 8
                 ? "bg-green-500 text-white font-bold"
                 : "bg-white text-black hover:bg-green-400 hover:text-gray-500"
-            } px-16 py-2 border-b border-gray-400 transition-all rounded-sm`}
+            } px-16 py-2 max-[320px]:px-8 max-[320px]:py-2 max-[320px]:text-xs border-b border-gray-400 transition-all rounded-sm`}
             onClick={() => handleSemesterChange(8)}
           >
             Fyp-02
           </h6>
         </div>
-        <div className="flex justify-center space-x-5 items-center">
-          <span>Select Group:</span>
+        <div className="flex justify-center max-[320px]:space-x-0 space-x-5 items-center">
+          <span className="max-[320px]:text-xs text-sm">Select Group:</span>
           <Dropdown
             options={groups}
             value={selection}
             OnSelect={handleSelect}
-            className="relative w-2/12 cursor-default"
+            className="relative  max-[320px]:w-3/6 w-2/12 cursor-default max-[320px]:text-xs text-sm"
           />
         </div>
-        <div className="border-2 border-green-500 mt-3 w-4/12 flex flex-col self-center p-2 rounded-md">
-          <div className="flex justify-center items-center space-x-5">
-            <span>Select Task:</span>
+        <div className="border-2 border-green-500 mt-3 max-[320px]:w-full w-4/12 flex flex-col self-center p-2 rounded-md">
+          <div className="flex justify-center items-center max-[320px]:space-x-0 space-x-5">
+            <span className="max-[320px]:text-xs text-sm">Select Task:</span>
             <Dropdown
               options={tasks}
               value={taskSelection}
               OnSelect={handleSelectTask}
-              className="relative w-8/12 cursor-default"
+              className="relative max-[320px]:w-8/12 w-5/12 cursor-default"
             />
           </div>
           {!taskSelection ? (
