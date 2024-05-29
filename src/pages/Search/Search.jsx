@@ -18,7 +18,7 @@ function Search() {
             <Alert type="failure" message="can't founded any result.." />
           )}
           <div className="flex flex-row items-center m-2">
-            <label htmlFor="searchInput" className="mr-2">
+            <label htmlFor="searchInput" className="mr-2 text-[8px]">
               You Search for:
             </label>
             <form action="#" onSubmit={(e) => e.preventDefault()}>

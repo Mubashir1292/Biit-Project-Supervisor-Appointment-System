@@ -61,7 +61,7 @@ function ProfileModal() {
         isOpen={menu}
         toggle={() => setMenu(!menu)}
         className="dropdown d-inline-block"
-        size="lg"
+        size="md"
       >
         <DropdownToggle
           className="btn header-item noti-icon position-relative p-sm-2 p-0"
@@ -84,7 +84,7 @@ function ProfileModal() {
             <Row className="w-32 mx-auto">
               {user && user.image !== null ? (
                 <img
-                  src={`http://192.168.100.4/OfficialPSAS/Content/Images/${user.image}`}
+                  src={`http://192.168.1.9/OfficialPSAS/Content/Images/${user.image}`}
                   alt={user.name}
                   className="rounded-xl"
                 />
@@ -96,19 +96,19 @@ function ProfileModal() {
                 </div>
               )}
             </Row>
-            <div className="mt-2 flex justify-center items-center space-x-4">
+            <div className="mt-2 flex flex-col justify-center items-center space-x-4">
               <span className="text-sm font-normal">{user.name}</span>
             </div>
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col justify-between items-center">
               <div
-                className="bg-green-500 flex mt-3 justify-around items-center w-2/6 h-10 rounded-lg cursor-pointer hover:bg-green-600 space-x-3"
+                className="bg-green-500 flex mt-3 justify-around items-center w-full h-10 rounded-lg cursor-pointer hover:bg-green-600 space-x-3"
                 onClick={handleClicked}
               >
                 <CiLogout className="text-[#fff]" />
                 <span className="text-[#fff]">Logout</span>
               </div>
               <div
-                className="bg-green-500 flex mt-3 justify-around items-center space-x-2 w-3/6 h-10 rounded-lg cursor-pointer hover:bg-green-600"
+                className="bg-green-500 flex mt-3 justify-around items-center space-x-2 w-full h-10 rounded-lg cursor-pointer hover:bg-green-600"
                 onClick={handleToggleModal}
               >
                 <FilePenLine className="text-[#fff]" />
@@ -148,7 +148,7 @@ function ProfileModal() {
               />
             ) : user && user.image !== null ? (
               <img
-                src={`http://192.168.100.4/OfficialPSAS/Content/Images/${user.image}`}
+                src={`http://192.168.1.9/OfficialPSAS/Content/Images/${user.image}`}
                 alt="kamran"
                 className="w-full h-full object-cover rounded-full"
               />

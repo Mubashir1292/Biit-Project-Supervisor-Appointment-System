@@ -27,7 +27,7 @@ function Header({ expanded, setExpanded }) {
 
   return (
     <SearchContextProvider>
-      <div className="w-full h-16 sticky bg-[#05B058] flex justify-between items-center px-5">
+      <div className="w-full h-16 sticky bg-[#05B058] flex justify-between items-center">
         <button
           onClick={() => setExpanded(!expanded)}
           className="p-1.5 rounded-lg bg-gray-100 hover:bg-gray-100"

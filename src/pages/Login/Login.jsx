@@ -28,7 +28,7 @@ const LoginPage = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `http://192.168.100.4/OfficialPSAS/api/psas/Login?id=${id}&password=${password}`
+          `http://192.168.1.9/OfficialPSAS/api/psas/Login?id=${id}&password=${password}`
         );
         const res = await response.json();
         if (res != null) {
@@ -52,19 +52,11 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex justify-center shadow items-center h-screen">
-      <div className="bg-green-500 w-3/12 h-[500px]">
-        <div className="w-full">
-          <img
-            src={BiitLogo}
-            alt="biitLogo"
-            className="w-10/12 mt-4 mx-auto "
-          />
+    <div className="flex xl:flex-row lg:flex-row md:flex-col sm:flex-col justify-center  shadow items-center h-screen">
+      <div className="xl:w-4/12 lg:w-4/12 md:w-80 sm:w-80 p-2 shadow-lg h-[500px]">
+        <div className="w-full flex justify-center items-center">
+          <img src={BiitLogo} alt="BiitLogo" className="w-5/6" />
         </div>
-        <img src={Login} alt="Login" className="w-8/12 mt-4 mx-auto " />
-        <h4 className="text-center mt-3 text-[#fff]">Login to Account</h4>
-      </div>
-      <div className="w-3/12 p-2 shadow-lg h-[500px]">
         <form
           className="h-[100%]  px-2 pt-6 mb-4"
           onSubmit={(e) => {
@@ -72,12 +64,12 @@ const LoginPage = () => {
             handleLogin();
           }}
         >
-          <div className="mb-4 mt-3 flex flex-col justify-center pt-10 box-border ">
+          <div className="mb-4 mt-3 flex flex-col justify-center box-border ">
             <h3 className="text-center text-green-500">Welcome Back</h3>
             <FloatingLabel
               controlId="floatingInput"
               label="Enter ID"
-              className="mb-3  mt-3 text-gray-500"
+              className="mb-3 mt-3 text-gray-500"
             >
               <Form.Control
                 type="text"
@@ -85,6 +77,7 @@ const LoginPage = () => {
                 value={id}
                 onChange={(e) => setId(e.target.value)}
                 required
+                className="h-[20px]"
               />
             </FloatingLabel>
             <span>
@@ -105,6 +98,7 @@ const LoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="h-[20px]"
               />
             </FloatingLabel>
             <span>

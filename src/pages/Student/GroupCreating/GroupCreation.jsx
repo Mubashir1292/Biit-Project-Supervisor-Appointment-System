@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import BiitSAS from "../../../assets/extra/biitSAS.png";
 import Button from "../../../components/button/Button";
 import Dropdown from "../../../components/dropdown/Dropdown";
+import { Table } from "react-bootstrap";
 
 function GroupCreation() {
   const [isGroupCreated, setIsGroupCreated] = useState(false);
@@ -31,7 +32,7 @@ function GroupCreation() {
   const handleGetAllTechnologies = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/FillingDropDown`
+        `http://192.168.1.9/OfficialPSAS/api/psas/FillingDropDown`
       );
       const data = await response.json();
       setListOfTechnologies(data);
@@ -47,7 +48,7 @@ function GroupCreation() {
   const handleGetOptions = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/GettingTechnolgiesOtherThenCreatorTechnology?regNo=${user.uid}`
+        `http://192.168.1.9/OfficialPSAS/api/psas/GettingTechnolgiesOtherThenCreatorTechnology?regNo=${user.uid}`
       );
       const data = await response.json();
       if (data) {
@@ -62,7 +63,7 @@ function GroupCreation() {
   const checkingGroupExistance = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/ChekingGroupExistence?id=${user.uid}`
+        `http://192.168.1.9/OfficialPSAS/api/psas/ChekingGroupExistence?id=${user.uid}`
       );
       const data = await response.json();
       if (data === 0) {
@@ -78,7 +79,7 @@ function GroupCreation() {
   const GetGroupCgpa = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/GroupCgpaByRegNo?regNo=${user.uid}`
+        `http://192.168.1.9/OfficialPSAS/api/psas/GroupCgpaByRegNo?regNo=${user.uid}`
       );
       const data = await response.json();
       let parsedNumber = parseFloat(data?.toFixed(2));
@@ -108,7 +109,7 @@ function GroupCreation() {
       status: "Me",
     };
     const response = await fetch(
-      `http://192.168.100.4/OfficialPSAS/api/psas/getAllRequests?Id=${user.uid}`
+      `http://192.168.1.9/OfficialPSAS/api/psas/getAllRequests?Id=${user.uid}`
     );
     let result = await response.json();
     setRes(result);
@@ -130,7 +131,7 @@ function GroupCreation() {
   };
   const handleSubmit = async () => {
     const response = await fetch(
-      `http://192.168.100.4/OfficialPSAS/api/psas/CreateNewGroup?regNo=${user.uid}&title=${title}&desc=${desc}&creatorTechnology=${selection.value}`,
+      `http://192.168.1.9/OfficialPSAS/api/psas/CreateNewGroup?regNo=${user.uid}&title=${title}&desc=${desc}&creatorTechnology=${selection.value}`,
       {
         method: "POST",
         headers: {
@@ -153,7 +154,7 @@ function GroupCreation() {
     }
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/CheckingStudentGroupStatus?regNo=${completeAridNumber}`
+        `http://192.168.1.9/OfficialPSAS/api/psas/CheckingStudentGroupStatus?regNo=${completeAridNumber}`
       );
       const data = await response.json();
       console.log(data);
@@ -176,7 +177,7 @@ function GroupCreation() {
   const handleRequest = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/SendingRequestToMember?senderId=${user.uid}&receiverId=${completeAridNumber}&technology=${selection.label}&Message=${message}`,
+        `http://192.168.1.9/OfficialPSAS/api/psas/SendingRequestToMember?senderId=${user.uid}&receiverId=${completeAridNumber}&technology=${selection.label}&Message=${message}`,
         {
           method: "POST",
           headers: {
@@ -194,9 +195,13 @@ function GroupCreation() {
     <>
       {isGroupCreated ? (
         <>
-          <div className=" flex flex-col space-x-0 justify-start items-center h-full p-0">
-            <div className="w-full flex justify-center">
-              <img src={BiitSAS} alt="BiitSAS" className="w-3/12 h-auto mt-0" />
+          <div className=" flex flex-col space-x-0">
+            <div className="w-full">
+              <img
+                src={BiitSAS}
+                alt="BiitSAS"
+                className="w-3/12 flex self-start"
+              />
             </div>
             <h1 className="text-gray-600 font-bold mt-2 text-center">
               You haven't created any group
@@ -259,19 +264,23 @@ function GroupCreation() {
         </>
       ) : (
         <>
-          <div className="w-full h-full flex flex-col items-center">
-            <div className="w-full flex justify-center">
-              <img src={BiitSAS} alt="BiitSAS" className="w-3/12" />
+          <div className="w-full h-full flex flex-col ">
+            <div className="w-5/6 flex justify-center min-[320px]:justify-center">
+              <img
+                src={BiitSAS}
+                alt="BiitSAS"
+                className="w-full min-[320px]:w-40"
+              />
             </div>
             <div className="flex flex-col mb-4">
-              <div className="flex flex-row items-center justify-evenly">
-                <label className="text-xl">My Group's Cgpa :</label>
+              <div className="w-full flex flex-row items-center justify-center space-x-2">
+                <label className="text-sm">My Group's Cgpa :</label>
                 <input
                   type="text"
                   name="groupCgpa"
                   id="groupCgpa"
                   readOnly
-                  className="text-xl"
+                  className="text-sm w-20"
                   value={currentGroupCgpa || 0}
                 />
               </div>
@@ -281,32 +290,34 @@ function GroupCreation() {
                   e.preventDefault();
                 }}
               >
-                <div className="flex flex-row justify-center items-center space-x-3  p-3">
+                <div className="w-5/6 flex flex-col justify-center items-center">
                   <label htmlFor="desc" className="text-gray-700 mb-1">
-                    Enter the Arid-Number:
+                    Enter Arid-Number:
                   </label>
-                  <input
-                    type="number"
-                    name="Year"
-                    id="Year"
-                    className="border border-gray-400 rounded-md py-1 px-3 w-[80px] h-4/6"
-                    value={aridYear}
-                    onChange={(e) => setAridYear(e.target.value)}
-                  />
-                  <input
-                    type="text"
-                    value="-Arid-"
-                    readOnly
-                    className="border-none w-1/12 bg-transparent font-bold"
-                  />
-                  <input
-                    type="number"
-                    name="RollNumber"
-                    id="RollNumber"
-                    className="border border-gray-400 rounded-md py-1 px-1 w-[80px] h-4/6"
-                    value={aridNumber}
-                    onChange={(e) => setAridNumber(e.target.value)}
-                  />
+                  <div className="flex flex-row space-x-1 my-2">
+                    <input
+                      type="number"
+                      name="Year"
+                      id="Year"
+                      className="border border-gray-400 rounded-md py-1 px-3 w-[80px] h-4/6"
+                      value={aridYear}
+                      onChange={(e) => setAridYear(e.target.value)}
+                    />
+                    <input
+                      type="text"
+                      value="-Arid-"
+                      readOnly
+                      className="border-none w-12 bg-transparent font-bold"
+                    />
+                    <input
+                      type="number"
+                      name="RollNumber"
+                      id="RollNumber"
+                      className="border border-gray-400 rounded-md py-1 px-1 w-[80px] h-4/6"
+                      value={aridNumber}
+                      onChange={(e) => setAridNumber(e.target.value)}
+                    />
+                  </div>
                   <input
                     type="submit"
                     value="Search"
@@ -316,23 +327,25 @@ function GroupCreation() {
                 </div>
               </form>
               <div className="flex flex-row justify-center items-center space-x-3 mt-2">
-                <label>Name :</label>
-                <input
-                  type="text"
-                  name="nameFetched"
-                  id="nameFetched"
-                  className="border-b border-b-gray-700 text-center"
-                  readOnly
-                  value={nameOfMember || ""}
-                />
-                <label className="text-green-600">
-                  {groupStatus
-                    ? "This Student is Available"
-                    : "This Student is not Available"}
-                </label>
+                <label className="text-xs">Name:</label>
+                <div className="flex flex-col">
+                  <input
+                    type="text"
+                    name="nameFetched"
+                    id="nameFetched"
+                    className="border-b border-b-gray-700 text-center"
+                    readOnly
+                    value={nameOfMember || ""}
+                  />
+                  <label className="text-green-600 text-xs">
+                    {groupStatus
+                      ? "This Student is Available"
+                      : "This Student is not Available"}
+                  </label>
+                </div>
               </div>
-              <div className="flex flex-row justify-center items-center  space-x-3">
-                <label className="text-2xl">Choose Technology :</label>
+              <div className="flex flex-row justify-center items-center space-x-2">
+                <label className="text-sm">Choose Technology:</label>
                 <Dropdown
                   label="Technology"
                   options={options}
@@ -341,7 +354,7 @@ function GroupCreation() {
                   className="relative w-3/12"
                 />
               </div>
-              <div className="flex flex-row justify-center space-x-3 items-center mt-3">
+              <div className="w-full flex flex-row justify-center space-x-3 items-center mt-3">
                 <label htmlFor="Message">Message : </label>
                 <textarea
                   name="Message"
@@ -351,16 +364,16 @@ function GroupCreation() {
                   onChange={(e) => setMessage(e.target.value)}
                 ></textarea>
               </div>
-              <div className="flex flex-row justify-center items-center space-x-4 mt-3">
+              <div className="w-full flex flex-row justify-center items-center space-x-4 mt-3">
                 <button
                   type="button"
-                  className="bg-black text-white px-6 py-2 rounded hover:bg-gray-50 hover:text-black transition-all border border-black hover:font-bold"
+                  className="bg-black text-white px-2 py-1 rounded hover:bg-gray-50 hover:text-black transition-all border border-black hover:font-bold text-xs"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
-                  className={`bg-green-600 text-white px-6 py-2 rounded border border-green-600 ${
+                  className={`bg-green-600 text-white px-2 py-1 rounded border border-green-600 text-xs ${
                     groupStatus
                       ? "hover:bg-gray-50 hover:text-green-600 transition-all  hover:font-bold"
                       : ""
@@ -371,33 +384,47 @@ function GroupCreation() {
                   Request
                 </button>
               </div>
-              <div className="overflow-x-auto mt-2">
-                <table className="w-full whitespace-nowrap">
+              <div className="w-5/6 overflow-auto my-2">
+                <Table bordered hover responsive="sm">
                   <thead>
                     <tr className="bg-green-600 text-white">
-                      <th className="px-6 py-3 text-left">Full Name</th>
-                      <th className="px-6 py-3 text-left">Arid-Number</th>
-                      <th className="px-6 py-3 text-left">Technology</th>
-                      <th className="px-6 py-3 text-left">Date</th>
-                      <th className="px-6 py-3 text-left">Status</th>
+                      <th className="px-2 py-1 text-left text-xs font-semibold">
+                        Name
+                      </th>
+                      <th className="px-2 py-1 text-left text-xs font-semibold">
+                        Arid#
+                      </th>
+                      <th className="px-2 py-1 text-left text-xs font-semibold">
+                        Technology
+                      </th>
+                      <th className="px-2 py-1 text-left text-xs font-semibold">
+                        Date
+                      </th>
+                      <th className="px-2 py-1 text-left text-xs font-semibold">
+                        Status
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {res?.map((item, index) => (
                       <tr className="bg-gray-300 hover:bg-gray-400" key={index}>
-                        <td className="px-6 py-4">{item.receiver.username}</td>
-                        <td className="px-6 py-4">{item.receiver.uid}</td>
-                        <td className="px-6 py-4">{item.name}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-2 py-1 text-xs">
+                          {item.receiver.username}
+                        </td>
+                        <td className="px-2 py-1 text-xs">
+                          {item.receiver.uid}
+                        </td>
+                        <td className="px-2 py-1 text-xs">{item.name}</td>
+                        <td className="px-2 py-1 text-xs">
                           {item.datetime ? (
                             <span>{item.datetime.slice(0, 10)}</span>
                           ) : (
-                            <span className="text-center font-bold">
+                            <span className="text-center font-bold text-xs">
                               ------------
                             </span>
                           )}
                         </td>
-                        <td className="px-6 py-4 text-red-600 font-bold">
+                        <td className="px-6 py-4 text-red-600 text-xs">
                           {item.status === 0
                             ? "pending"
                             : item.status === 1
@@ -406,26 +433,8 @@ function GroupCreation() {
                         </td>
                       </tr>
                     ))}
-                    {/* <tr className="bg-gray-300 hover:bg-gray-400">
-                      <td className="px-6 py-4">Faheem Abbas</td>
-                      <td className="px-6 py-4">2020-Arid-4225</td>
-                      <td className="px-6 py-4">React-Js</td>
-                      <td className="px-6 py-4">20-03-2024</td>
-                      <td className="px-6 py-4 text-red-600 font-bold">
-                        Rejected
-                      </td>
-                    </tr>
-                    <tr className="bg-gray-300 hover:bg-gray-400">
-                      <td className="px-6 py-4">Touseef Sajjad</td>
-                      <td className="px-6 py-4">2020-Arid-4224</td>
-                      <td className="px-6 py-4">Flutter</td>
-                      <td className="px-6 py-4">30-03-2024</td>
-                      <td className="px-6 py-4 text-green-600 font-bold">
-                        Approved
-                      </td>
-                    </tr> */}
                   </tbody>
-                </table>
+                </Table>
               </div>
             </div>
           </div>

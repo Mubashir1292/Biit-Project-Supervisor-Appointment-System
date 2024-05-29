@@ -37,7 +37,7 @@ function Dropdown({ label, options, value, OnSelect, className, ...rest }) {
             onClick={() => handleOptionClick(option)}
             className="hover:bg-gray-300 flex justify-content rounded cursor-pointer border-b border-gray-400 mt-2"
           >
-            {option.value}
+            <span className="text-xs">{option.value}</span>
           </div>
         </div>
       ))
@@ -57,7 +57,7 @@ function Dropdown({ label, options, value, OnSelect, className, ...rest }) {
         )}
       </Panel>
       {isOpen && (
-        <Panel className="absolute w-1/6 z-20 shadow-2xl py-1 px-2 ">
+        <Panel className="absolute w-1/6 z-20 shadow-xl ">
           {renderedElements}
         </Panel>
       )}

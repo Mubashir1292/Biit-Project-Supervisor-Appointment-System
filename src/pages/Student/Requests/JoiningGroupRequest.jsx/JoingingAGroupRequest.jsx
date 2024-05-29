@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import BiitSAS from "../../../../assets/extra/biitSAS.png";
 import Dropdown from "../../../../components/dropdown/Dropdown";
-import Table from "../../../../components/Table/Table";
+import Table from "react-bootstrap/Table";
 function JoingingAGroupRequest() {
   const [isGroupDetailsShown, setIsGroupDetailsShown] = useState(false);
   const [choosedProject, setChoosedProject] = useState("");
@@ -22,7 +22,7 @@ function JoingingAGroupRequest() {
   const gettingAllProjectDomains = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/FillingDropDown`
+        `http://192.168.1.9/OfficialPSAS/api/psas/FillingDropDown`
       );
       const data = await response.json();
       console.log(data);
@@ -40,7 +40,7 @@ function JoingingAGroupRequest() {
   const getGroupsOnTechnologyBase = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/GroupsFetching?techName=${selectedDomain.value}&regNo=${user.uid}`
+        `http://192.168.1.9/OfficialPSAS/api/psas/GroupsFetching?techName=${selectedDomain.value}&regNo=${user.uid}`
       );
       const data = await response.json();
       if (data !== "not Founded") {
@@ -74,7 +74,7 @@ function JoingingAGroupRequest() {
   const getDetailsAboutProjectAndGroup = async () => {
     try {
       const response = await fetch(
-        `http://192.168.100.4/OfficialPSAS/api/psas/GetTheDetails?group_id=${choosedProject.gid}&project_id=${choosedProject.pid}`
+        `http://192.168.1.9/OfficialPSAS/api/psas/GetTheDetails?group_id=${choosedProject.gid}&project_id=${choosedProject.pid}`
       );
       const data = await response.json();
       console.log(data);
@@ -90,7 +90,7 @@ function JoingingAGroupRequest() {
   };
   const handlePostingRequesting = async () => {
     const response = await fetch(
-      `http://192.168.100.4/OfficialPSAS/api/psas/PostingRequestForGroupJoining?regNo=${user.uid}&gid=${choosedProject.gid}&tecid=${selectedDomain.label}&message=${message}`,
+      `http://192.168.1.9/OfficialPSAS/api/psas/PostingRequestForGroupJoining?regNo=${user.uid}&gid=${choosedProject.gid}&tecid=${selectedDomain.label}&message=${message}`,
       {
         method: "POST",
         headers: {
@@ -109,38 +109,40 @@ function JoingingAGroupRequest() {
         <>
           <div className="flex flex-col w-full">
             <div className="flex justify-center">
-              <img src={BiitSAS} alt="BiitSAS" />
+              <img src={BiitSAS} alt="BiitSAS" className="w-5/6" />
             </div>
             <div className="flex justify-center">
-              <h1 className="text-4xl font-bold">Joining a Group</h1>
+              <h1 className="text-xl font-semibold text-green-500">
+                Joining a Group
+              </h1>
             </div>
             <div className="flex flex-row justify-center space-x-4 mt-2">
-              <label className="text-xl">My Cgpa :</label>
-              <b className="text-xl">{user.cgpa}</b>
+              <label className="text-sm">My Cgpa:</label>
+              <b className="text-sm">{user.cgpa}</b>
             </div>
-            <div className="flex flex-row justify-center items-center space-x-3 mt-3">
-              <label>Select Your Technology :</label>
+            <div className="flex flex-row justify-center items-center mt-3">
+              <label className="text-sm">Select Technology:</label>
               <Dropdown
                 options={domains}
                 value={selectedDomain}
                 OnSelect={handleSelect}
-                className="relative w-2/12"
+                className="relative w-6/12 text-sm"
               />
             </div>
-            <div className="flex flex-row w-full h-full justify-center space-x-8 items-center mt-3">
-              <label className="text-xl">Offered Projects :</label>
+            <div className="flex flex-col w-full h-full justify-center  items-center mt-3">
+              <label className="text-sm">Offered Projects:</label>
               <Table
                 data={selectedProjects}
                 handleSelect={handleProjectTitle}
               />
             </div>
-            <div className="flex flex-row w-full h-full justify-center space-x-12 items-center mt-2">
-              <label className="text-xl">Project Details :</label>
+            <div className="flex flex-col w-full h-full justify-center space-x-1 items-center mt-2">
+              <label className="text-sm">Project Details:</label>
               <textarea
                 name="projectDetails"
                 id="projectDetails"
                 readOnly
-                className="border border-gray-500 rounded w-4/12 h-32 p-2"
+                className="border border-gray-500 rounded w-9/12 h-32 p-2"
                 value={description || ""}
               ></textarea>
             </div>
@@ -161,42 +163,48 @@ function JoingingAGroupRequest() {
         <>
           <div className="flex flex-col w-full justify-center items-center">
             <div className="w-full flex justify-center">
-              <img src={BiitSAS} alt="BiitSAS" className="w-4/12" />
+              <img src={BiitSAS} alt="BiitSAS" className="w-8/12" />
+            </div>
+            <div className="flex flex-row justify-center items-center space-x-1 mt-3">
+              <label className="text-xs">Project-Title :</label>
+              <b className="text-xs">{choosedProject.title}</b>
             </div>
             <div className="flex flex-row justify-center items-center space-x-4 mt-3">
-              <label>Project-Title :</label>
-              <b>{choosedProject.title}</b>
+              <label className="text-xs">Supervisor :</label>
+              <b className="text-xs">{choosedProject.username}</b>
             </div>
-            <div className="flex flex-row justify-center items-center space-x-4 mt-3">
-              <label>Supervisor :</label>
-              <b>{choosedProject.username}</b>
-            </div>
-            <div className="overflow-x-auto mt-2 w-8/12">
-              <table className="w-full whitespace-nowrap">
+            <div className="overflow-auto mt-2 w-full">
+              <Table responsive bordered hover>
                 <thead>
                   <tr className="bg-green-600 text-white border">
-                    <th className="px-6 py-3 text-left">Full Name</th>
-                    <th className="px-6 py-3 text-left">Arid-Number</th>
-                    <th className="px-6 py-3 text-left">Technology</th>
+                    <th className="px-2 py-1 text-left text-sm text-semibold">
+                      Name
+                    </th>
+                    <th className="px-2 py-1 text-left text-sm text-semibold">
+                      Arid#
+                    </th>
+                    <th className="px-2 py-1 text-left text-sm text-semibold">
+                      Technology
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {groupDetails.map((item, index) => (
                     <tr className="bg-gray-300 hover:bg-gray-400" key={index}>
-                      <td className="px-6 py-4">{item.name}</td>
-                      <td className="px-6 py-4">{item.regNo}</td>
-                      <td className="px-6 py-4">{item.technology}</td>
+                      <td className="px-2 py-1 text-xs">{item.name}</td>
+                      <td className="px-2 py-1 text-xs">{item.regNo}</td>
+                      <td className="px-2 py-1 text-xs">{item.technology}</td>
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </Table>
             </div>
-            <div className="flex flex-row justify-center items-center mt-3 space-x-3">
-              <label>Message :</label>
+            <div className="flex flex-row justify-center items-center mt-3">
+              <label>Message:</label>
               <textarea
                 name="projectDetails"
                 id="projectDetails"
-                className="border border-gray-500 rounded w-8/12 h-20 p-2"
+                className="border border-gray-500 rounded w-8/12 h-20 p-2 text-xs"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               ></textarea>
@@ -206,12 +214,12 @@ function JoingingAGroupRequest() {
                 onClick={() => {
                   ToggleGroupDetails();
                 }}
-                className="bg-black text-white hover:bg-transparent hover:text-black border border-black transition-all ease-in-out p-3 rounded-md"
+                className="bg-black text-white hover:bg-transparent hover:text-black border border-black transition-all ease-in-out p-1 rounded-md"
               >
                 Discard
               </button>
               <button
-                className="bg-green-600 text-white hover:bg-transparent hover:text-green-600 border border-green-600 transition-all ease-in-out p-3 rounded-md"
+                className="bg-green-600 text-white hover:bg-transparent hover:text-green-600 border border-green-600 transition-all ease-in-out p-1 rounded-md"
                 onClick={handlePostingRequesting}
               >
                 Request

@@ -25,11 +25,11 @@ function Progress() {
   return (
     <div className="container">
       <div className="text-center mb-4 flex flex-col justify-center items-center">
-        <img src={BiitSAS} alt="BiitSAS" className="w-3/12" />
-        <h1 className="mt-3">Personal Progress</h1>
+        <img src={BiitSAS} alt="BiitSAS" className="w-8/12" />
+        <h1 className="mt-3 text-green-500">Personal Progress</h1>
       </div>
       <Card className="mb-4">
-        <Card.Header className="d-flex justify-content-between">
+        <Card.Header className="flex flex-col justify-around">
           <span>Supervisor: Dr. Hassan</span>
           <span>Project Title: AI Health Engine</span>
         </Card.Header>
@@ -40,10 +40,13 @@ function Progress() {
               className="d-flex justify-content-between align-items-center"
             >
               <div>
-                <h5 className="text-md">{task.title}</h5>
-                <p className="mb-1 text-xs">{task.description}</p>
+                <h5 className="text-md font-semibold">{task.title}</h5>
+                <p className="mb-1 text-[10px] text-gray-500">
+                  {task.description}
+                </p>
                 <p className="mb-0">
-                  <strong>Comment:</strong> {task.comment}
+                  <strong className="text-semibold">Comment:</strong>{" "}
+                  {task.comment}
                 </p>
               </div>
               <Badge pill variant={task.status ? "success" : "danger"}>

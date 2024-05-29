@@ -197,6 +197,7 @@ function OtherSidebar({ expanded, setExpanded }) {
       <NavLink
         key={index}
         to={link.path}
+        onClick={(curr) => setExpanded(!curr)}
         className={({ isActive }) =>
           `bg-[#37373d] text-sm  hover:bg-green-700 w-full p-2 mt-2 hover:font-bold rounded-md border text-white hover:text-green-600 hover:shadow-md no-underline ${
             !expanded ? "w-full transition-all" : "transition-all"
@@ -221,7 +222,7 @@ function OtherSidebar({ expanded, setExpanded }) {
   return (
     <div
       className={`sticky h-screen min-h-full overflow-y-none items-center bg-[#37373d]  shadow-sm ${
-        expanded ? "w-52" : "w-20"
+        expanded ? "xl:w-52 lg:w-52 md:w-32 sm:24" : "w-20"
       }`}
     >
       <div className="p-1 pb-2 flex justify-between items-center">
@@ -229,13 +230,13 @@ function OtherSidebar({ expanded, setExpanded }) {
           src={sas}
           alt="logo"
           className={`overflow-hidden transition-all cursor-pointer bg-green-700 m-3 rounded-xl ${
-            expanded ? "w-32" : "w-0"
+            expanded ? "w-32 md:w-12 sm:w-12" : "w-0"
           }`}
         />
       </div>
       <div
         className={`w-full flex flex-col p-4 ${
-          expanded ? "w-full" : "w-[86px]"
+          expanded ? "w-full " : "w-[86px]"
         }`}
       >
         {RenderedLinks}

@@ -10,7 +10,7 @@ function Layout() {
     setUser(currentUser);
     // now checking the user and sending the different routes to it...
   }, []);
-  const [expanded, setExpanded] = useState(true); // Initialize expanded state
+  const [expanded, setExpanded] = useState(false); // Initialize expanded state
 
   // Function to toggle the expanded state
   const toggleExpanded = () => {
@@ -18,26 +18,26 @@ function Layout() {
   };
 
   return (
-    <div className="flex flex-row min-w-full">
-      <div
-        className={
-          expanded
-            ? "xl:w-0/12 lg:w-0/12 md:w-0/12 sm:w-0/12 max-[420px]:hidden"
-            : "w-0/12"
-        }
-      >
-        <OtherSidebar expanded={expanded} />
+    <div className="relative min-h-screen flex flex-col">
+      <Header expanded={expanded} setExpanded={toggleExpanded} />
+      <div className="flex flex-1">
+        <div
+          className={`fixed inset-y-0 left-0 transform ${
+            expanded ? "translate-x-0" : "-translate-x-full"
+          } transition-transform duration-300 ease-in-out w-64 bg-[#37373d] z-50`}
+        >
+          <OtherSidebar expanded={expanded} setExpanded={toggleExpanded} />
+        </div>
+        <div className="flex-grow p-4">
+          <Outlet />
+        </div>
       </div>
-      <div
-        className={
-          expanded
-            ? "flex flex-col w-11/12 max-[420px]:w-full"
-            : "flex flex-col w-full"
-        }
-      >
-        <Header expanded={expanded} setExpanded={toggleExpanded} />
-        <Outlet />
-      </div>
+      {expanded && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={toggleExpanded}
+        ></div>
+      )}
     </div>
   );
 }

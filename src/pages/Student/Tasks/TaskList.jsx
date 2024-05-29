@@ -38,7 +38,8 @@ function TaskList() {
   return (
     <React.Fragment>
       <div className="flex flex-col">
-        <img src={BiitSAS} alt="BiitSAS" className="self-center w-3/12" />
+        <img src={BiitSAS} alt="BiitSAS" className="self-center w-8/12" />
+        <h3 className="text-green-500 text-2xl text-center">Task List</h3>
         <Container className="mt-4">
           {/* <div className="w-5/6 mt-3 mx-auto">
               <SkeletonTheme highlightColor="#05B05B">
@@ -49,7 +50,7 @@ function TaskList() {
             <Row className="mt-3">
               <Col
                 md={{ span: 3, offset: 1 }}
-                className="h-[450px] bg-gray-50 rounded"
+                className="h-max p-2 bg-gray-50 rounded"
               >
                 <h5>To-do({tasks.length})</h5>
                 <div className="bg-gray-200 w-full h-max px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
@@ -88,7 +89,7 @@ function TaskList() {
               </Col>
               <Col
                 md={{ span: 3, offset: 1 }}
-                className="h-[450px] bg-gray-50 rounded "
+                className="h-max p-2 bg-gray-50 rounded my-2 "
               >
                 <h5>Doing({tasks.length})</h5>
                 <div className="bg-gray-200 w-full h-max px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
@@ -127,7 +128,7 @@ function TaskList() {
               </Col>
               <Col
                 md={{ span: 3, offset: 1 }}
-                className="h-[450px] bg-gray-50 rounded "
+                className="h-max bg-gray-50 rounded my-2"
               >
                 <h5>Done({tasks.length})</h5>
                 <div className="bg-gray-200 w-full h-max px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">

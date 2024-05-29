@@ -5,30 +5,19 @@ import Card from "react-bootstrap/Card";
 import { ArrowDownWideNarrow, ArrowUpWideNarrow } from "lucide-react";
 import Calendar from "react-calendar";
 import "../../../assets/css/style.css";
+
 function StudentDashboard() {
   const [sentRequest, setSentRequest] = useState([]);
   const [isUser, setIsUser] = useState(null);
   const [value, setValue] = useState(new Date());
   const navigate = useNavigate();
   const [allgroupRequests, setAllGroupRequests] = useState([
-    {
-      group_Id: "8",
-      group_Title: "Fyp-02",
-    },
-    {
-      group_Id: "9",
-      group_Title: "Fyp-2",
-    },
+    { group_Id: "8", group_Title: "Fyp-02" },
+    { group_Id: "9", group_Title: "Fyp-2" },
   ]);
   const [allSentRequests, setAllSentRequest] = useState([
-    {
-      group_Id: "8",
-      group_Title: "Fyp-2",
-    },
-    {
-      group_Id: "9",
-      group_Title: "Fyp-1",
-    },
+    { group_Id: "8", group_Title: "Fyp-2" },
+    { group_Id: "9", group_Title: "Fyp-1" },
   ]);
   const [allSupervisorMeetings, setAllSupervisorMeetings] = useState([
     {
@@ -80,7 +69,7 @@ function StudentDashboard() {
     try {
       setIsUser(user);
       const response = await fetch(
-        `http://192.168.100.4/officialPSAS/api/psas/getAllRequests?Id=${user.uid}`
+        `http://192.168.1.9/officialPSAS/api/psas/getAllRequests?Id=${user.uid}`
       );
       const data = await response.json();
       if (data.length !== 0) {
@@ -124,145 +113,145 @@ function StudentDashboard() {
   };
 
   return (
-    <>
-      <div className="w-full h-full p-1 bg-gray-50">
-        <div className="flex justify-center">
-          <img src={biitlogo} alt="biit Logo" />
-        </div>
-        <div className="container w-full h-auto flex flex-row justify-evenly mt-2">
-          <Card className="w-[16rem]">
-            <Card.Header className="font-bold text-[13px] text-center">
+    <div className="w-full h-full p-1 bg-gray-50">
+      <div className="flex justify-center">
+        <img
+          src={biitlogo}
+          alt="biit Logo"
+          className="xl:w-2/6 lg:w-3/6 md:w-4/6 sm:w-5/6"
+        />
+      </div>
+      <div className="container mx-auto p-2">
+        <div className="grid 2xl:grid-cols-4 xl:grid-cols-4 grid-cols-2 gap-2">
+          <Card className="w-full">
+            <Card.Header className="font-semibold text-xs text-center">
               Group Creation Requests
             </Card.Header>
             <Card.Body>
               <Card.Title className="flex justify-center items-center">
-                <span className="text-4xl">{allgroupRequests.length}</span>
+                <span className="text-xl">{allgroupRequests.length}</span>
                 <span>
                   {allSentRequests.length > 0 ? (
-                    <ArrowUpWideNarrow className="text-2xl" />
+                    <ArrowUpWideNarrow className="w-[16px]" />
                   ) : (
-                    <ArrowDownWideNarrow className="text-2xl" />
+                    <ArrowDownWideNarrow className="w-[16px]" />
                   )}
                 </span>
               </Card.Title>
             </Card.Body>
           </Card>
-          <Card className="w-[16rem]">
-            <Card.Header className="font-bold text-[13px] text-center">
+          <Card className="w-full">
+            <Card.Header className="font-semibold text-xs text-center">
               Sent Group Requests
             </Card.Header>
             <Card.Body>
               <Card.Title className="flex justify-center items-center">
-                <span className="text-4xl">{allSentRequests.length}</span>
+                <span className="text-xl">{allSentRequests.length}</span>
                 <span>
                   {allSentRequests.length > 0 ? (
-                    <ArrowUpWideNarrow className="text-2xl" />
+                    <ArrowUpWideNarrow className="w-[16px]" />
                   ) : (
-                    <ArrowDownWideNarrow className="text-2xl" />
+                    <ArrowDownWideNarrow className="w-[16px]" />
                   )}
                 </span>
               </Card.Title>
             </Card.Body>
           </Card>
-          <Card className="w-[16rem]">
-            <Card.Header className="font-bold text-[13px] text-center">
+          <Card className="w-full">
+            <Card.Header className="font-semibold text-xs text-center">
               Technical Assistance Requests
             </Card.Header>
             <Card.Body>
               <Card.Title className="flex justify-center items-center">
-                <span className="text-4xl">{allSentRequests.length}</span>
+                <span className="text-xl">{allSentRequests.length}</span>
                 <span>
                   {allSentRequests.length > 0 ? (
-                    <ArrowUpWideNarrow className="text-2xl" />
+                    <ArrowUpWideNarrow className="w-[16px]" />
                   ) : (
-                    <ArrowDownWideNarrow className="text-2xl" />
+                    <ArrowDownWideNarrow className="w-[16px]" />
                   )}
                 </span>
               </Card.Title>
             </Card.Body>
           </Card>
-          <Card className="w-[16rem]">
-            <Card.Header className="font-bold text-[13px] text-center">
+          <Card className="w-full">
+            <Card.Header className="font-semibold text-xs text-center">
               Group Messages
             </Card.Header>
             <Card.Body>
               <Card.Title className="flex justify-center items-center">
-                <span className="text-4xl">{allSentRequests.length}</span>
+                <span className="text-xl">{allSentRequests.length}</span>
                 <span>
                   {allSentRequests.length > 0 ? (
-                    <ArrowUpWideNarrow className="text-2xl" />
+                    <ArrowUpWideNarrow className="w-[16px]" />
                   ) : (
-                    <ArrowDownWideNarrow className="text-2xl" />
+                    <ArrowDownWideNarrow className="w-[16px]" />
                   )}
                 </span>
               </Card.Title>
             </Card.Body>
           </Card>
         </div>
-        <div className="container w-full h-auto mt-2">
-          <h3 className="text-center text-xl">Upcomming Meetings</h3>
-          <div className="grid grid-cols-2">
-            <div>
-              <Calendar
-                value={value}
-                onChange={setValue}
-                onClickDay={handleSelectDate}
-                tileContent={({ date, view }) => {
-                  const supervisorMeetingsOnDate = allSupervisorMeetings.filter(
-                    (meeting) =>
-                      new Date(meeting.meetDate).toDateString() ===
-                      date.toDateString()
-                  );
-                  const expertMeetingsOnDate =
-                    allTechnicalExpertMeetings.filter(
-                      (meeting) =>
-                        new Date(meeting.meetDate).toDateString() ===
-                        date.toDateString()
-                    );
-                  const totalMeetings = [
-                    ...supervisorMeetingsOnDate,
-                    ...expertMeetingsOnDate,
-                  ];
-                  return totalMeetings.length > 0 ? (
-                    <div className="flex justify-center items-center">
-                      {[...Array(totalMeetings.length)].map((_, index) => (
-                        <div
-                          key={index}
-                          className="dot bg-green-400 ml-[2px]"
-                        ></div>
-                      ))}
-                    </div>
-                  ) : null;
-                }}
-              />
-            </div>
-            <div className="h-full">
-              <div className="bg-gray-200 overflow-auto p-3 h-80 grid xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1">
-                {allMeetings.map((item, index) => (
-                  <Card key={index} className="w-full h-20 mt-2 border">
-                    <Card.Header className="text-center">
-                      <span>{item.meetTitle}</span>
-                    </Card.Header>
-                    <Card.Body>
-                      <Card.Title className="text-center">
-                        <span>{item.teacher}</span>
-                      </Card.Title>
-                      <Card.Subtitle className="flex justify-evenly items-center space-x-2 ">
-                        <span>{item.meetDate}</span>
-                        <span>{item.meetTime}</span>
-                      </Card.Subtitle>
-                      <Card.Text className="text-center">
-                        {item.meetDesc}
-                      </Card.Text>
-                    </Card.Body>
-                  </Card>
-                ))}
-              </div>
-            </div>
+      </div>
+      <div className="container mt-4">
+        <h3 className="text-center text-xl">Meetings</h3>
+        <div className="grid md:grid-cols-2 sm:grid-cols-1 -ml-1">
+          <div>
+            <Calendar
+              value={value}
+              onChange={setValue}
+              className="w-full"
+              onClickDay={handleSelectDate}
+              tileContent={({ date, view }) => {
+                const supervisorMeetingsOnDate = allSupervisorMeetings.filter(
+                  (meeting) =>
+                    new Date(meeting.meetDate).toDateString() ===
+                    date.toDateString()
+                );
+                const expertMeetingsOnDate = allTechnicalExpertMeetings.filter(
+                  (meeting) =>
+                    new Date(meeting.meetDate).toDateString() ===
+                    date.toDateString()
+                );
+                const totalMeetings = [
+                  ...supervisorMeetingsOnDate,
+                  ...expertMeetingsOnDate,
+                ];
+                return totalMeetings.length > 0 ? (
+                  <div className="flex justify-center items-center">
+                    {[...Array(totalMeetings.length)].map((_, index) => (
+                      <div
+                        key={index}
+                        className="dot bg-green-400 ml-1 w-2 h-2 rounded-full"
+                      ></div>
+                    ))}
+                  </div>
+                ) : null;
+              }}
+            />
+          </div>
+          <div className="h-full bg-gray-200 overflow-auto p-3">
+            {allMeetings.map((item, index) => (
+              <Card key={index} className="w-full mb-2">
+                <Card.Header className="text-center">
+                  {item.meetTitle}
+                </Card.Header>
+                <Card.Body>
+                  <Card.Title className="text-center">
+                    {item.teacher}
+                  </Card.Title>
+                  <Card.Subtitle className="flex justify-evenly items-center space-x-2">
+                    <span>{item.meetDate}</span>
+                    <span>{item.meetTime}</span>
+                  </Card.Subtitle>
+                  <Card.Text className="text-center">{item.meetDesc}</Card.Text>
+                </Card.Body>
+              </Card>
+            ))}
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
