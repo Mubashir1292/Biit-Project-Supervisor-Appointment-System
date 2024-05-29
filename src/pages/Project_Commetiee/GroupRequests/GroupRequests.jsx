@@ -56,12 +56,18 @@ function GroupRequests() {
   ]);
   return (
     <React.Fragment>
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-center max-[320px]:w-[320px] items-center">
         <div className="flex flex-col justify-center items-center">
-          <img src={BiitSAS} alt="Biit logo" className="w-2/6" />
-          <h2 className="text-md ">Generic Project Request</h2>
+          <img
+            src={BiitSAS}
+            alt="Biit logo"
+            className="max-[320px]:w-3/6 w-2/6"
+          />
+          <h2 className="text-md max-[320px]:text-sm text-green-500">
+            Generic Project Request
+          </h2>
         </div>
-        <Card>
+        <Card className="max-[320px]:w-[320px]">
           {/* group Image */}
           <div className="w-full flex justify-center  items-center mb-3">
             <div className="w-2/6">
@@ -88,7 +94,10 @@ function GroupRequests() {
               <tr>
                 <th>#</th>
                 {tableHeadings.map((item, index) => (
-                  <th key={index} className="text-sm font-semibold">
+                  <th
+                    key={index}
+                    className="text-sm max-[320px]:text-xs font-semibold"
+                  >
                     {item}
                   </th>
                 ))}
@@ -105,13 +114,13 @@ function GroupRequests() {
                       className="w-5"
                     />
                   </td>
-                  <td>{item.regNo}</td>
-                  <td>{item.name}</td>
-                  <td>{item.Technology}</td>
-                  <td>{item.Cgpa}</td>
-                  <td>{item.grade}</td>
-                  <td>{item.semester}</td>
-                  <td>{item.section}</td>
+                  <td className="text-xs">{item.regNo}</td>
+                  <td className="text-xs">{item.name}</td>
+                  <td className="text-xs">{item.Technology}</td>
+                  <td className="text-xs">{item.Cgpa}</td>
+                  <td className="text-xs">{item.grade}</td>
+                  <td className="text-xs">{item.semester}</td>
+                  <td className="text-xs">{item.section}</td>
                 </tr>
               ))}
             </tbody>

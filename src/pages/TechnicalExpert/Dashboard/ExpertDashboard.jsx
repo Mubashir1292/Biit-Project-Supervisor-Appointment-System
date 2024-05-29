@@ -127,7 +127,7 @@ function TeacherDashboard() {
     <>
       <div className="w-full h-full p-1 bg-gray-50">
         <div className="flex justify-center">
-          <img src={biitlogo} alt="biit Logo" />
+          <img src={biitlogo} alt="biit Logo" className="max-[320px]:w-9/12" />
         </div>
         <div className="container w-full h-auto flex flex-row justify-evenly mt-2">
           <Card className="w-[16rem]">
@@ -149,8 +149,8 @@ function TeacherDashboard() {
           </Card>
         </div>
         <div className="container w-full h-auto mt-2">
-          <h3 className="text-center text-xl">Upcomming Meetings</h3>
-          <div className="grid grid-cols-2">
+          <h3 className="text-center text-xl">Meetings</h3>
+          <div className="grid grid-cols-2 max-[320px]:grid-cols-1">
             <div>
               <Calendar
                 value={value}

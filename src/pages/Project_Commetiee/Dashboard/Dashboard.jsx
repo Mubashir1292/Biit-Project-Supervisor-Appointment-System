@@ -25,8 +25,8 @@ function Dashboard() {
           {/* setting the image of the Biit Logo */}
           <img src={biitSas} alt="Biit Logo" />
         </div>
-        <div className="flex justify-around mt-3">
-          <Card className="w-[16rem]">
+        <div className="grid grid-cols-3 max-[320px]:grid-cols-1 max-[320px]:w-[320px]  mt-3">
+          <Card className="w-[16rem] max-[320px]:w-full my-1">
             <Card.Header className="font-bold text-[13px] text-center">
               Supervising Requests
             </Card.Header>
@@ -43,7 +43,7 @@ function Dashboard() {
               </Card.Title>
             </Card.Body>
           </Card>
-          <Card className="w-[16rem]">
+          <Card className="w-[16rem] max-[320px]:w-full my-1">
             <Card.Header className="font-bold text-[13px] text-center">
               Group Joining Requests
             </Card.Header>
@@ -60,7 +60,7 @@ function Dashboard() {
               </Card.Title>
             </Card.Body>
           </Card>
-          <Card className="w-[16rem]">
+          <Card className="w-[16rem] max-[320px]:w-full my-1">
             <Card.Header className="font-bold text-[13px] text-center">
               Generic Project Requests
             </Card.Header>

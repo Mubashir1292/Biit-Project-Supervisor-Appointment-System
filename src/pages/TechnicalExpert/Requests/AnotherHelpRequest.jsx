@@ -42,30 +42,34 @@ function AnotherHelpRequest() {
 
   return (
     <div className="flex flex-col items-center py-6">
-      <div className="flex justify-center mb-4">
-        <img src={biitSas} alt="Biit Logo" className="w-1/2" />
+      <div className="flex justify-center w-full mb-4">
+        <img
+          src={biitSas}
+          alt="Biit Logo"
+          className="w-3/12 max-[320px]:w-4/6"
+        />
       </div>
-      <h1 className="text-2xl font-bold mb-4">Help Request</h1>
+      <h1 className="text-2xl font-bold mb-4 text-green-500">Help Request</h1>
       <div className="bg-gray-100 w-full max-w-2xl p-6 rounded-lg shadow-md">
         <table className="table-auto w-full">
           <tbody>
             <tr>
-              <td className="font-bold py-2">Arid Number:</td>
+              <td className="font-semibold text-sm py-2">Arid Number:</td>
               <td>{request.aridNo}</td>
             </tr>
             <tr>
-              <td className="font-bold py-2">Name:</td>
+              <td className="font-semibold text-sm py-2">Name:</td>
               <td>{request.name}</td>
             </tr>
             <tr>
-              <td className="font-bold py-2">Technology:</td>
+              <td className="font-semibold py-2">Technology:</td>
               <td>{request.technology}</td>
             </tr>
             <tr>
-              <td className="font-bold py-2">Date:</td>
+              <td className="font-semibold py-2">Date:</td>
               <td>
                 {!toggle ? (
-                  <span className="font-bold">
+                  <span className="font-semibold">
                     {currentDate || request.date}
                   </span>
                 ) : (
@@ -81,14 +85,14 @@ function AnotherHelpRequest() {
               </td>
             </tr>
             <tr>
-              <td className="font-bold py-2">Day:</td>
+              <td className="font-semibold py-2">Day:</td>
               <td>
                 <span className="font-normal">{day || request.day}</span>
               </td>
             </tr>
             <tr>
               <td className="font-bold py-2">Time:</td>
-              <td>
+              <td className="font-bold">
                 {!toggle ? (
                   <span>
                     {request.timeSlot ||

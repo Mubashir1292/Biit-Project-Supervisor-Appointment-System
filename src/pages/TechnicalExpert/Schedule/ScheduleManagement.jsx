@@ -21,14 +21,44 @@ const defaultEvents = [
   {
     day: "Mon",
     time: "08:30 AM",
-    title: "Meeting With Ali",
+    title: "Class",
     description: "Algebra and Geometry",
   },
   {
     day: "Tue",
     time: "10:30 AM",
-    title: "Meeting with Mubashir",
+    title: "Class",
     description: "Physics and Chemistry",
+  },
+  {
+    day: "Wed",
+    time: "01:30 PM",
+    title: "Class",
+    description: "World History",
+  },
+  {
+    day: "Thu",
+    time: "03:00 PM",
+    title: "Class",
+    description: "Literature and Grammar",
+  },
+  {
+    day: "Fri",
+    time: "05:00 PM",
+    title: "Class",
+    description: "Drawing and Painting",
+  },
+  {
+    day: "Fri",
+    time: "03:00 PM",
+    title: "Meeting With Group..",
+    description: "Drawing and Painting",
+  },
+  {
+    day: "Fri",
+    time: "02:00 PM",
+    title: "Meeting With Group..",
+    description: "Drawing and Painting",
   },
 ];
 
@@ -95,11 +125,11 @@ function WeeklySchedule() {
       </div>
       {times.map((time) => (
         <div key={time} className="grid grid-cols-6 gap-4">
-          <div className="text-right font-bold">{time}</div>
+          <div className="text-right font-semibold text-xs">{time}</div>
           {days.map((day) => (
             <div
               key={day}
-              className={`border border-gray-300 p-3 my-1 cursor-pointer ${
+              className={`border border-gray-300 my-1 cursor-pointer text-left text-[8px] ${
                 schedule[day].find((slot) => slot.time === time).event
                   ? "bg-blue-100"
                   : "bg-white"

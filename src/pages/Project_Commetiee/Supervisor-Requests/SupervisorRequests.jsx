@@ -57,9 +57,9 @@ function SupervisorRequests() {
   ]);
   return (
     <React.Fragment>
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col max-[320px]:w-[320px] justify-center items-center">
         <img src={BiitSAS} alt="Biit SAS" />
-        <Card>
+        <Card className="max-[320px]:w-[320px]">
           {/* group Image */}
           <div className="flex justify-center items-center">
             <div className="w-1/6">
@@ -87,7 +87,7 @@ function SupervisorRequests() {
               </Card.Subtitle>
             </Card.Body>
           </div>
-          <Table responsive bordered hover>
+          <Table responsive bordered hover className="max-[320px]:w-[320px]">
             <thead>
               <tr>
                 <th>#</th>

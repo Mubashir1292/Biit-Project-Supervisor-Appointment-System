@@ -69,20 +69,29 @@ function JoinToGroup() {
     <React.Fragment>
       <div className="flex flex-col justify-center items-center">
         <div className="flex flex-col justify-center items-center">
-          <img src={BiitSAS} alt="BiitSAS" classname="w-2/6" />
-          <h2 className="text-md font-normal">Join To Group</h2>
+          <img
+            src={BiitSAS}
+            alt="BiitSAS"
+            classname="w-2/6 max-[320px]:w-1/6"
+          />
+          <h2 className="text-md font-normal text-green-500">Join To Group</h2>
         </div>
-        <Card>
+        <Card className="max-[320px]:w-[320px]">
           {/* group Image */}
           <div className="flex flex-col justify-center items-center space-x-3">
-            <div className="w-full">
+            <div className="w-full max-[320px]:w-[320px]">
               <h4 className="text-lg text-center">Student Details</h4>
-              <Table responsive bordered hover>
+              <Table
+                responsive
+                bordered
+                hover
+                className="max-[320px]:w-[320px]"
+              >
                 <thead>
                   <tr>
                     <th>#</th>
                     {tableHeadings.map((item, index) => (
-                      <th key={index} className="text-md font-semibold">
+                      <th key={index} className="text-xs font-semibold">
                         {item}
                       </th>
                     ))}
@@ -99,13 +108,13 @@ function JoinToGroup() {
                           className="w-5"
                         />
                       </td>
-                      <td>{studentDetails.regNo}</td>
-                      <td>{studentDetails.name}</td>
-                      <td>{studentDetails.Technology}</td>
-                      <td>{studentDetails.Cgpa}</td>
-                      <td>{studentDetails.grade}</td>
-                      <td>{studentDetails.semester}</td>
-                      <td>{studentDetails.section}</td>
+                      <td className="text-xs">{studentDetails.regNo}</td>
+                      <td className="text-xs">{studentDetails.name}</td>
+                      <td className="text-xs">{studentDetails.Technology}</td>
+                      <td className="text-xs">{studentDetails.Cgpa}</td>
+                      <td className="text-xs">{studentDetails.grade}</td>
+                      <td className="text-xs">{studentDetails.semester}</td>
+                      <td className="text-xs">{studentDetails.section}</td>
                     </tr>
                   }
                 </tbody>
@@ -134,12 +143,12 @@ function JoinToGroup() {
               </Card.Subtitle>
             </Card.Body>
           </div>
-          <Table responsive bordered hover>
+          <Table responsive bordered hover className="max-[320px]:w-[320px]">
             <thead>
               <tr>
                 <th>#</th>
                 {tableHeadings.map((item, index) => (
-                  <th key={index} className="text-md font-semibold">
+                  <th key={index} className="text-xs font-semibold">
                     {item}
                   </th>
                 ))}
@@ -156,19 +165,19 @@ function JoinToGroup() {
                       className="w-5"
                     />
                   </td>
-                  <td>{item.regNo}</td>
-                  <td>{item.name}</td>
-                  <td>{item.Technology}</td>
-                  <td>{item.Cgpa}</td>
-                  <td>{item.grade}</td>
-                  <td>{item.semester}</td>
-                  <td>{item.section}</td>
+                  <td className="text-xs">{item.regNo}</td>
+                  <td className="text-xs">{item.name}</td>
+                  <td className="text-xs">{item.Technology}</td>
+                  <td className="text-xs">{item.Cgpa}</td>
+                  <td className="text-xs">{item.grade}</td>
+                  <td className="text-xs">{item.semester}</td>
+                  <td className="text-xs">{item.section}</td>
                 </tr>
               ))}
             </tbody>
           </Table>
           <div className="flex justify-center items-center space-x-3 mt-0 mb-2">
-            <Button variant="success">Accept</Button>
+            <Button variant="success">Approve</Button>
             <Button variant="secondary">Reject</Button>
           </div>
         </Card>
