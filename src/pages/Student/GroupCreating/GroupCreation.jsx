@@ -32,7 +32,7 @@ function GroupCreation() {
   const handleGetAllTechnologies = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.5/OfficialPSAS/api/psas/FillingDropDown`
+        `http://192.168.1.4/OfficialPSAS/api/psas/FillingDropDown`
       );
       const data = await response.json();
       setListOfTechnologies(data);
@@ -48,7 +48,7 @@ function GroupCreation() {
   const handleGetOptions = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.5/OfficialPSAS/api/psas/GettingTechnolgiesOtherThenCreatorTechnology?regNo=${user.uid}`
+        `http://192.168.1.4/OfficialPSAS/api/psas/GettingTechnolgiesOtherThenCreatorTechnology?regNo=${user.uid}`
       );
       const data = await response.json();
       if (data) {
@@ -63,7 +63,7 @@ function GroupCreation() {
   const checkingGroupExistance = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.5/OfficialPSAS/api/psas/ChekingGroupExistence?id=${user.uid}`
+        `http://192.168.1.4/OfficialPSAS/api/psas/ChekingGroupExistence?id=${user.uid}`
       );
       const data = await response.json();
       if (data === 0) {
@@ -79,7 +79,7 @@ function GroupCreation() {
   const GetGroupCgpa = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.5/OfficialPSAS/api/psas/GroupCgpaByRegNo?regNo=${user.uid}`
+        `http://192.168.1.4/OfficialPSAS/api/psas/GroupCgpaByRegNo?regNo=${user.uid}`
       );
       const data = await response.json();
       let parsedNumber = parseFloat(data?.toFixed(2));
@@ -109,7 +109,7 @@ function GroupCreation() {
       status: "Me",
     };
     const response = await fetch(
-      `http://192.168.1.5/OfficialPSAS/api/psas/getAllRequests?Id=${user.uid}`
+      `http://192.168.1.4/OfficialPSAS/api/psas/getAllRequests?Id=${user.uid}`
     );
     let result = await response.json();
     setRes(result);
@@ -131,7 +131,7 @@ function GroupCreation() {
   };
   const handleSubmit = async () => {
     const response = await fetch(
-      `http://192.168.1.5/OfficialPSAS/api/psas/CreateNewGroup?regNo=${user.uid}&title=${title}&desc=${desc}&creatorTechnology=${selection.value}`,
+      `http://192.168.1.4/OfficialPSAS/api/psas/CreateNewGroup?regNo=${user.uid}&title=${title}&desc=${desc}&creatorTechnology=${selection.value}`,
       {
         method: "POST",
         headers: {
@@ -154,7 +154,7 @@ function GroupCreation() {
     }
     try {
       const response = await fetch(
-        `http://192.168.1.5/OfficialPSAS/api/psas/CheckingStudentGroupStatus?regNo=${completeAridNumber}`
+        `http://192.168.1.4/OfficialPSAS/api/psas/CheckingStudentGroupStatus?regNo=${completeAridNumber}`
       );
       const data = await response.json();
       console.log(data);
@@ -177,7 +177,7 @@ function GroupCreation() {
   const handleRequest = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.5/OfficialPSAS/api/psas/SendingRequestToMember?senderId=${user.uid}&receiverId=${completeAridNumber}&technology=${selection.label}&Message=${message}`,
+        `http://192.168.1.4/OfficialPSAS/api/psas/SendingRequestToMember?senderId=${user.uid}&receiverId=${completeAridNumber}&technology=${selection.label}&Message=${message}`,
         {
           method: "POST",
           headers: {
