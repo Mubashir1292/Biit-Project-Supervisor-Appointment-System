@@ -7,102 +7,104 @@ import Calendar from "react-calendar";
 import "../../../assets/css/style.css";
 import "react-calendar/dist/Calendar.css";
 function TeacherDashboard() {
-  const [sentRequest, setSentRequest] = useState([]);
-  const [isUser, setIsUser] = useState(null);
+  const userString = localStorage.getItem("user");
+  const userFounded = userString ? JSON.parse(userString) : null;
+  const [isUser, setIsUser] = useState(userFounded);
+  const [allNewAssignedTasks, setAllNewAssignedTasks] = useState([]);
+  //! Group Requests
+  const [allgroupRequests, setAllGroupRequests] = useState([]);
   const [value, setValue] = useState(new Date());
   const navigate = useNavigate();
-  const [allgroupRequests, setAllGroupRequests] = useState([
-    {
-      group_Id: "8",
-      group_Title: "Fyp-02",
-    },
-    {
-      group_Id: "9",
-      group_Title: "Fyp-2",
-    },
-  ]);
-  const [allSentRequests, setAllSentRequest] = useState([
-    {
-      group_Id: "8",
-      group_Title: "Fyp-2",
-    },
-    {
-      group_Id: "9",
-      group_Title: "Fyp-1",
-    },
-  ]);
+
   const [allSupervisorMeetings, setAllSupervisorMeetings] = useState([
-    {
-      meetId: "1",
-      meetTitle: "Weekly Meeting",
-      meetDesc: "Please Come in my office",
-      meetDate: "2024-05-01",
-      meetTime: "12:30pm",
-      teacher: "Sir Zahid",
-    },
-    {
-      meetId: "2",
-      meetTitle: "Weekly Meeting",
-      meetDesc: "Please Come in my office",
-      meetDate: "2024-05-01",
-      meetTime: "12:30pm",
-      teacher: "Sir Zahid",
-    },
-    {
-      meetId: "3",
-      meetTitle: "Weekly Meeting",
-      meetDesc: "Please Come in my office",
-      meetDate: "2024-05-01",
-      meetTime: "12:30pm",
-      teacher: "Sir Zahid",
-    },
+    // {
+    //   meetId: "3",
+    //   meetTitle: "Weekly Meeting",
+    //   meetDesc: "Please Come in my office",
+    //   meetDate: "2024-05-01",
+    //   meetTime: "12:30pm",
+    //   teacher: "Sir Zahid",
+    // },
   ]);
   const [allTechnicalExpertMeetings, setAllTechnicalExpertMeetings] = useState([
-    {
-      meetId: "1",
-      meetTitle: "Weekly Meeting",
-      meetDesc: "Please Come in my office",
-      meetDate: "2024-05-01",
-      meetTime: "12:30pm",
-      teacher: "Sir Zahid",
-    },
-    {
-      meetId: "1",
-      meetTitle: "Weekly Meeting",
-      meetDesc: "Please Come in my office",
-      meetDate: "2024-05-02",
-      meetTime: "12:30pm",
-      teacher: "Sir Zahid",
-    },
+    // {
+    //   meetId: "1",
+    //   meetTitle: "Weekly Meeting",
+    //   meetDesc: "Please Come in my office",
+    //   meetDate: "2024-05-02",
+    //   meetTime: "12:30pm",
+    //   teacher: "Sir Zahid",
+    // },
   ]);
   const [allMeetings, setAllMeetings] = useState([]);
+  const [projectCommetieeApprovals, setProjectCommettieeAprovals] = useState(
+    []
+  );
 
-  const handleGetRequests = async (user) => {
+  const groupRequestsForProject = async () => {
     try {
-      setIsUser(user);
       const response = await fetch(
-        `http://192.168.1.4/officialPSAS/api/psas/getAllRequests?Id=${user.uid}`
+        `http://localhost/officialPSAS/api/PSAS_Supervisor_Expert/GroupRequests?teacher_id=${isUser.uid}`
       );
       const data = await response.json();
-      if (data.length) {
-        setSentRequest(data);
-      } else {
-        console.log(response.status);
+      if (data) {
+        setAllGroupRequests(data);
       }
     } catch (error) {
-      console.log("Error:", error);
+      console.log(error);
+    }
+  };
+  const projectCommetieeApproval = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/officialPSAS/api/PSAS_Supervisor_Expert/ProjectCommittieeAproval?teacher_id=${isUser.uid}`
+      );
+      const data = await response.json();
+      if (data) {
+        setProjectCommettieeAprovals(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const allAssignedTasks = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/officialPSAS/api/PSAS_Supervisor_Expert/allAssignedTasks?teacher_id=${isUser.uid}`
+      );
+      const data = await response.json();
+      if (data) {
+        setAllNewAssignedTasks(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const FetchallMeetings = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/officialPSAS/api/PSAS_Supervisor_Expert/FetchAllMeetings?teacher_id=${isUser.uid}`
+      );
+      const data = await response.json();
+      if (data) {
+        setAllMeetings(data);
+        console.log(data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   useEffect(() => {
-    const userString = localStorage.getItem("user");
-    const user = userString ? JSON.parse(userString) : null;
-    if (user) {
-      console.log(user);
+    if (isUser) {
+      groupRequestsForProject();
+      projectCommetieeApproval();
+      allAssignedTasks();
+      FetchallMeetings();
     } else {
       navigate("/");
     }
-    handleGetRequests(user);
   }, []);
 
   const handleSelectDate = (date) => {
@@ -136,9 +138,11 @@ function TeacherDashboard() {
             </Card.Header>
             <Card.Body>
               <Card.Title className="flex justify-center items-center">
-                <span className="text-lg">{allgroupRequests.length}</span>
+                <span className="text-lg">
+                  {allgroupRequests && allgroupRequests.length}
+                </span>
                 <span>
-                  {allSentRequests.length > 0 ? (
+                  {allgroupRequests && allgroupRequests.length > 0 ? (
                     <ArrowUpWideNarrow className="w-[10px]" />
                   ) : (
                     <ArrowDownWideNarrow className="w-[10px]" />
@@ -153,9 +157,13 @@ function TeacherDashboard() {
             </Card.Header>
             <Card.Body>
               <Card.Title className="flex justify-center items-center">
-                <span className="text-lg">{allSentRequests.length}</span>
+                <span className="text-lg">
+                  {projectCommetieeApprovals &&
+                    projectCommetieeApprovals.length}
+                </span>
                 <span>
-                  {allSentRequests.length > 0 ? (
+                  {projectCommetieeApprovals &&
+                  projectCommetieeApprovals.length > 0 ? (
                     <ArrowUpWideNarrow className="w-[10px]" />
                   ) : (
                     <ArrowDownWideNarrow className="w-[10px]" />
@@ -170,9 +178,11 @@ function TeacherDashboard() {
             </Card.Header>
             <Card.Body>
               <Card.Title className="flex justify-center items-center">
-                <span className="text-lg">{allSentRequests.length}</span>
+                <span className="text-lg">
+                  {allNewAssignedTasks && allNewAssignedTasks.length}
+                </span>
                 <span>
-                  {allSentRequests.length > 0 ? (
+                  {allNewAssignedTasks && allNewAssignedTasks.length > 0 ? (
                     <ArrowUpWideNarrow className="w-[10px]" />
                   ) : (
                     <ArrowDownWideNarrow className="w-[10px]" />

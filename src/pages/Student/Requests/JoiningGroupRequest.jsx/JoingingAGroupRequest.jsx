@@ -22,7 +22,7 @@ function JoingingAGroupRequest() {
   const gettingAllProjectDomains = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.4/OfficialPSAS/api/psas/FillingDropDown`
+        `http://localhost/OfficialPSAS/api/psas/FillingDropDown`
       );
       const data = await response.json();
       console.log(data);
@@ -40,7 +40,7 @@ function JoingingAGroupRequest() {
   const getGroupsOnTechnologyBase = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.4/OfficialPSAS/api/psas/GroupsFetching?techName=${selectedDomain.value}&regNo=${user.uid}`
+        `http://localhost/OfficialPSAS/api/psas/GroupsFetching?techName=${selectedDomain.value}&regNo=${user.uid}`
       );
       const data = await response.json();
       if (data !== "not Founded") {
@@ -74,7 +74,7 @@ function JoingingAGroupRequest() {
   const getDetailsAboutProjectAndGroup = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.4/OfficialPSAS/api/psas/GetTheDetails?group_id=${choosedProject.gid}&project_id=${choosedProject.pid}`
+        `http://localhost/OfficialPSAS/api/psas/GetTheDetails?group_id=${choosedProject.gid}&project_id=${choosedProject.pid}`
       );
       const data = await response.json();
       console.log(data);
@@ -90,7 +90,7 @@ function JoingingAGroupRequest() {
   };
   const handlePostingRequesting = async () => {
     const response = await fetch(
-      `http://192.168.1.4/OfficialPSAS/api/psas/PostingRequestForGroupJoining?regNo=${user.uid}&gid=${choosedProject.gid}&tecid=${selectedDomain.label}&message=${message}`,
+      `http://localhost/OfficialPSAS/api/psas/PostingRequestForGroupJoining?regNo=${user.uid}&gid=${choosedProject.gid}&tecid=${selectedDomain.label}&message=${message}`,
       {
         method: "POST",
         headers: {

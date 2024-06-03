@@ -3,13 +3,16 @@ import BiitSAS from "../../../assets/extra/biitSAS.png";
 import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
-import man from "../../../assets/extra/man2.jpg";
 import man2 from "../../../assets/extra/man.png";
 import { Search } from "lucide-react";
 import GroupDetailsModal from "../../../components/Modals/BootstrapModal/SimpleModal";
 import ProjectModal from "../../../components/Modals/projectModal/ProjectModal";
 import ProfileModal from "../../../components/Modals/BootstrapModal/ProfileModal";
+
 function Groups() {
+  const userString = localStorage.getItem("user");
+  const userFounded = userString ? JSON.parse(userString) : null;
+  const [isUser, setIsUser] = useState(userFounded);
   const [modalShow, setModalShow] = useState(false);
   const [studentModal, setStudentModal] = useState(false);
   const [projectmodalShow, setProjectModalShow] = useState(false);
@@ -18,6 +21,7 @@ function Groups() {
   const [searchText, setSearchText] = useState("");
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState();
+
   const handleSearch = (search) => {
     if (search) {
       const findingGroup = groups.filter((item) =>
@@ -29,12 +33,27 @@ function Groups() {
       setGroups(groups);
     }
   };
+
+  //! Fetching all groups
+  const FetchAllGroups = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/officialPSAS/api/PSAS_Supervisor_Expert/AllocatedGroupsToTeacher?teacher_id=${isUser.uid}`
+      );
+      const data = await response.json();
+      if (data) {
+        setGroups(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const groupsAll = [
       {
         title: "AI Health Engine",
         description: "Health Care of Patients",
-        image: man,
         CGPA: 2.3,
         groupMembers: [
           {
@@ -64,78 +83,19 @@ function Groups() {
           },
         ],
       },
-      {
-        title: "BIIT Career Counsling",
-        description: "Health Care of Patients",
-        image: man,
-        CGPA: 3.3,
-        groupMembers: [
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-        ],
-      },
-      {
-        title: "BIIT Project Supervisor Appointment System",
-        description: "Health Care of Patients",
-        image: man,
-        CGPA: 3.6,
-        groupMembers: [
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-        ],
-      },
     ];
+    FetchAllGroups();
     setGroups(groupsAll);
   }, []);
+
   const handleToggle = () => {
     setModalShow(!modalShow);
   };
+
+  const getPlaceholder = (title) => {
+    return title ? title.charAt(0).toUpperCase() : "N/A";
+  };
+
   return (
     <React.Fragment>
       <div className="flex flex-col">
@@ -180,12 +140,15 @@ function Groups() {
                     className="flex justify-center items-center"
                     onClick={() => setSelectedGroup(item)}
                   >
-                    <img
-                      src={item.image}
-                      alt={`${item.title}`}
-                      className="cursor-pointer w-9/12 rounded m-2"
+                    {/* Placeholder for group image */}
+                    <div
+                      className="flex justify-center items-center w-2/12 h-12 bg-gray-200 rounded-full m-2"
                       onClick={handleToggle}
-                    />
+                    >
+                      <span className="text-2xl font-bold">
+                        {getPlaceholder(item.title)}
+                      </span>
+                    </div>
                   </div>
                   <div className="flex flex-col border-r border-gray-300 border-l justify-center items-center cursor-pointer">
                     <h6>{item.title}</h6>
