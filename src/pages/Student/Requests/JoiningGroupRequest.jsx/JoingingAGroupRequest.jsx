@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import BiitSAS from "../../../../assets/extra/biitSAS.png";
 import Dropdown from "../../../../components/dropdown/Dropdown";
+import ProjectTable from "../../../../components/Table/Table";
 import Table from "react-bootstrap/Table";
+
 function JoingingAGroupRequest() {
   const [isGroupDetailsShown, setIsGroupDetailsShown] = useState(false);
   const [choosedProject, setChoosedProject] = useState("");
@@ -16,6 +18,7 @@ function JoingingAGroupRequest() {
   const user = userString ? JSON.parse(userString) : null;
   const handleSelect = (option) => {
     setSelectedDomain(option);
+    getGroupsOnTechnologyBase(option);
   };
 
   //*getting all domains
@@ -25,9 +28,10 @@ function JoingingAGroupRequest() {
         `http://localhost/OfficialPSAS/api/psas/FillingDropDown`
       );
       const data = await response.json();
-      console.log(data);
-      if (data !== null) {
+      if (Array.isArray(data)) {
         setDomains(data);
+      } else {
+        alert(data);
       }
     } catch (error) {
       console.log(error);
@@ -37,25 +41,22 @@ function JoingingAGroupRequest() {
     gettingAllProjectDomains();
   }, []);
   //*finding the project which not have the This technology Member
-  const getGroupsOnTechnologyBase = async () => {
+  const getGroupsOnTechnologyBase = async (option) => {
     try {
       const response = await fetch(
-        `http://localhost/OfficialPSAS/api/psas/GroupsFetching?techName=${selectedDomain.value}&regNo=${user.uid}`
+        `http://localhost/OfficialPSAS/api/psas/GroupsFetching?techName=${option.value}&regNo=${user.uid}`
       );
       const data = await response.json();
-      if (data !== "not Founded") {
+      if (Array.isArray(data)) {
+        console.log(data);
         setSelectedProjects(data);
       } else {
-        setSelectedProjects([]);
+        alert(data);
       }
     } catch (error) {
       console.log(error);
     }
   };
-  //! calling the function when the domains changed
-  useEffect(() => {
-    getGroupsOnTechnologyBase();
-  }, [selectedDomain]);
 
   const handleProjectTitle = (option) => {
     setChoosedProject(option);
@@ -82,7 +83,7 @@ function JoingingAGroupRequest() {
         setProjectDetails(data);
         setGroupDetails(data.groupDetails);
         // console.log(data.groupDetails);
-        console.log(projectDetails.findingProject.project.title);
+        ///console.log(projectDetails.findingProject.project.title);
       }
     } catch (error) {
       console.log(error);
@@ -99,8 +100,7 @@ function JoingingAGroupRequest() {
       }
     );
     const data = await response.json();
-    console.log(data);
-    // alert(data);
+    alert(data);
   };
 
   return (
@@ -118,20 +118,22 @@ function JoingingAGroupRequest() {
             </div>
             <div className="flex flex-row justify-center space-x-4 mt-2">
               <label className="text-sm">My Cgpa:</label>
-              <b className="text-sm">{user.cgpa}</b>
+              <b className="text-sm">{user && user.cgpa}</b>
             </div>
             <div className="flex flex-row justify-center items-center mt-3">
               <label className="text-sm">Select Technology:</label>
-              <Dropdown
-                options={domains}
-                value={selectedDomain}
-                OnSelect={handleSelect}
-                className="relative w-6/12 text-sm"
-              />
+              {domains && (
+                <Dropdown
+                  options={domains}
+                  value={selectedDomain}
+                  OnSelect={handleSelect}
+                  className="relative w-6/12 text-sm"
+                />
+              )}
             </div>
             <div className="flex flex-col w-full h-full justify-center  items-center mt-3">
-              <label className="text-sm">Offered Projects:</label>
-              <Table
+              <label className="text-sm">Available Projects:</label>
+              <ProjectTable
                 data={selectedProjects}
                 handleSelect={handleProjectTitle}
               />
@@ -161,7 +163,7 @@ function JoingingAGroupRequest() {
         </>
       ) : (
         <>
-          <div className="flex flex-col w-full justify-center items-center">
+          <div className="flex flex-col w-full justify-center items-center min-[320px]:w-[320px]">
             <div className="w-full flex justify-center">
               <img src={BiitSAS} alt="BiitSAS" className="w-8/12" />
             </div>

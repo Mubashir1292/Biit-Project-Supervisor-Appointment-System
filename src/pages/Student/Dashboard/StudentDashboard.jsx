@@ -11,14 +11,8 @@ function StudentDashboard() {
   const [isUser, setIsUser] = useState(null);
   const [value, setValue] = useState(new Date());
   const navigate = useNavigate();
-  const [allgroupRequests, setAllGroupRequests] = useState([
-    { group_Id: "8", group_Title: "Fyp-02" },
-    { group_Id: "9", group_Title: "Fyp-2" },
-  ]);
-  const [allSentRequests, setAllSentRequest] = useState([
-    { group_Id: "8", group_Title: "Fyp-2" },
-    { group_Id: "9", group_Title: "Fyp-1" },
-  ]);
+  const [allgroupRequests, setAllGroupRequests] = useState([]);
+  const [allSentRequests, setAllSentRequest] = useState([]);
   const [allSupervisorMeetings, setAllSupervisorMeetings] = useState([
     {
       meetId: "1",

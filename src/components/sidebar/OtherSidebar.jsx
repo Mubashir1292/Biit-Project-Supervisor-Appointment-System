@@ -126,6 +126,11 @@ function OtherSidebar({ expanded, setExpanded }) {
       path: "/student/progress",
       icon: <CircleDotDashed size={20} />,
     },
+    {
+      label: "Group Requests",
+      path: "/student/ReceivedGroupRequest",
+      icon: <CircleDotDashed size={20} />,
+    },
   ];
   const projectCommetieeLinks = [
     {

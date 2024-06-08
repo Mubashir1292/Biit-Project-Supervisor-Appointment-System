@@ -4,8 +4,8 @@ import Dropdown from "../../../components/dropdown/Dropdown";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import BasicDatePicker from "../../../components/DatePicker/BasicDatePicker";
-import DropzoneComponent from "../../../components/DragDrop/DropZone";
-import Button from "react-bootstrap/button";
+import Button from "react-bootstrap/Button";
+
 function Task() {
   const [semester, setSemester] = useState(7);
   const [selection, setSelection] = useState();
@@ -16,6 +16,7 @@ function Task() {
     title: "",
     description: "",
   });
+
   useEffect(() => {
     const allgroups = [
       { label: 1, semester: 7, value: "AI Health Engine" },
@@ -45,9 +46,10 @@ function Task() {
     setDate(newDate);
   };
 
-  const handleFileSubmit = (f) => {
-    setFile(f);
+  const handleFileSubmit = (e) => {
+    setFile(e.target.files[0]);
   };
+
   const handleDescriptionChange = (e) => {
     setTaskDetails((prev) => ({
       ...prev,
@@ -62,7 +64,6 @@ function Task() {
     }));
   };
 
-  /// main Save
   const handleSave = () => {
     if (
       selection &&
@@ -88,7 +89,10 @@ function Task() {
     setSelection("");
     setDate("");
     setFile(null);
-    setTaskDetails(null);
+    setTaskDetails({
+      title: "",
+      description: "",
+    });
   };
 
   return (
@@ -150,7 +154,10 @@ function Task() {
             <FloatingLabel controlId="floatingInputDateTime" className="mb-1">
               <BasicDatePicker date={date} onSubmit={handleSubmit} />
             </FloatingLabel>
-            <DropzoneComponent onSubmit={handleFileSubmit} />
+            <Form.Group controlId="formFile" className="mb-3">
+              <Form.Label>Upload File</Form.Label>
+              <Form.Control type="file" onChange={handleFileSubmit} />
+            </Form.Group>
             <FloatingLabel
               controlId="floatingInput"
               label="Description"

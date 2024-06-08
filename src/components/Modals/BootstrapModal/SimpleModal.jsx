@@ -45,7 +45,9 @@ function GroupDetailsModal(props) {
               <span className="text-sm">Group CGPA:</span>
             </Col>
             <Col>
-              <span className="text-xs">{props.group.group.avgCgpa}</span>
+              <span className="text-xs">
+                {props.group.group.avgCgpa.toFixed(2)}
+              </span>
             </Col>
           </Row>
           <div className="flex flex-col mt-2">
@@ -74,14 +76,7 @@ function GroupDetailsModal(props) {
           </div>
         </Container>
       </Modal.Body>
-      <Modal.Footer className="flex flex-col">
-        <Button onClick={props.onHide} variant="success">
-          Schedule Meeting
-        </Button>
-        <Button onClick={props.onHide} variant="success">
-          Assign New Task
-        </Button>
-      </Modal.Footer>
+      <Modal.Footer className="flex flex-col"></Modal.Footer>
     </Modal>
   );
 }

@@ -13,95 +13,97 @@ function GroupProgress() {
   const [studentModal, setStudentModal] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState();
   const [tasks, setTasks] = useState([]);
+  const [todoTasks, setTodoTasks] = useState([]);
+  const [doingTasks, setDoingTasks] = useState([]);
+  const [doneTasks, setDoneTasks] = useState([]);
   const [membersInfo, setMembersInfo] = useState([]);
   const [groups, setGroups] = useState([]);
 
-  useEffect(() => {}, []);
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : null;
+  useEffect(() => {
+    if (tasks.length > 0) {
+      const todo = tasks.filter((task) => task.status === 0);
+      const doing = tasks.filter((task) => task.status === 1);
+      const done = tasks.filter((task) => task.status === 2);
+
+      setTodoTasks(todo);
+      setDoingTasks(doing);
+      setDoneTasks(done);
+    }
+  }, [tasks]);
+
   const handleModalToggle = () => {
     setStudentModal(!studentModal);
   };
 
+  const fetchTheRelativeGroupsOnSemeterBasis = async (sem) => {
+    try {
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/Psas_Supervisor_Expert/getAllGroups?semester=${sem}&teacher_id=${user.uid}`
+      );
+      const result = await response.json();
+      if (result) {
+        setGroups(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleSemesterChange = (newSemester) => {
     setSemester(newSemester);
     setSelection(null);
+    fetchTheRelativeGroupsOnSemeterBasis(newSemester);
+  };
+  const fetchAllTasksRelatedToGroup = async (group) => {
+    try {
+      console.log(group);
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/Psas_Supervisor_Expert/getAllTasks?gid=${group.label}`
+      );
+      const result = await response.json();
+      if (result) {
+        setTasks(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   useEffect(() => {
-    const allgroups = [
-      {
-        label: 1,
-        semester: 7,
-        value: "AI Health Engine",
-        groupsMembers: [
-          { id: "2020-Arid-3675", name: "Mubashir Liaqat" },
-          { id: "2020-Arid-4224", name: "Touseef Sajjad" },
-          { id: "2020-Arid-4225", name: "Faheem Abbas" },
-        ],
-      },
-      {
-        label: 2,
-        semester: 7,
-        value: "BIIT Career Counsling",
-        groupsMembers: [
-          { id: "2020-Arid-3675", name: "Mubashir Liaqat" },
-          { id: "2020-Arid-4224", name: "Touseef Sajjad" },
-          { id: "2020-Arid-4225", name: "Faheem Abbas" },
-        ],
-      },
-      {
-        label: 5,
-        semester: 8,
-        value: "BIIT Project Supervisor Appointment System",
-        groupsMembers: [
-          { id: "2020-Arid-3675", name: "Mubashir Liaqat" },
-          { id: "2020-Arid-4224", name: "Touseef Sajjad" },
-          { id: "2020-Arid-4225", name: "Faheem Abbas" },
-        ],
-      },
-      {
-        label: 6,
-        semester: 8,
-        value: "BIIT Meeting Management System",
-        groupsMembers: [
-          { id: "2020-Arid-3675", name: "Mubashir Liaqat" },
-          { id: "2020-Arid-4224", name: "Touseef Sajjad" },
-          { id: "2020-Arid-4225", name: "Faheem Abbas" },
-        ],
-      },
-    ];
-
-    const filteredGroups = allgroups.filter(
-      (item) => item.semester === semester
-    );
-    setGroups(filteredGroups);
-  }, [semester]);
-
+    fetchAllTasksRelatedToGroup(selection);
+  }, [selection]);
   const handleSelect = (option) => {
     setSelection(option);
-    const tasksList = [
-      {
-        label: 5,
-        group: "BIIT Career Counsling",
-        value: "ERD Completion",
-        dueDate: "2024-05-06",
-      },
-    ];
-    const filterTaskGroup = tasksList.filter(
-      (item) => item.group === option.value
-    );
-    setTasks(filterTaskGroup);
-    const initialMembersInfo = option.groupsMembers.map((member) => ({
-      id: member.id,
-      name: member.name,
-      status: false,
-      comments: "",
-    }));
-    setMembersInfo(initialMembersInfo);
+
+    // const tasksList = [
+    //   {
+    //     label: 5,
+    //     group: "BIIT Career Counsling",
+    //     value: "ERD Completion",
+    //     dueDate: "2024-05-06",
+    //   },
+    // ];
+    // const filterTaskGroup = tasksList.filter(
+    //   (item) => item.group === option.value
+    // );
+    // setTasks(filterTaskGroup);
+    // const initialMembersInfo = option.groupsMembers.map((member) => ({
+    //   id: member.id,
+    //   name: member.name,
+    //   status: false,
+    //   comments: "",
+    // }));
+    // setMembersInfo(initialMembersInfo);
   };
 
   return (
     <React.Fragment>
       <div className="flex flex-col">
-        <img src={BiitSAS} alt="BiitSAS" className="self-center w-7/12" />
+        <img
+          src={BiitSAS}
+          alt="BiitSAS"
+          className="self-center max-[320px]:w-7/12 w-3/12"
+        />
         <Container className="mt-4">
           <Row>
             <Col>
@@ -151,120 +153,125 @@ function GroupProgress() {
                   md={{ span: 3, offset: 1 }}
                   className="h-max bg-gray-50 rounded"
                 >
-                  <h5>To-do({tasks.length})</h5>
+                  <h5>To-do({todoTasks.length})</h5>
                   <div className="bg-gray-200 w-full h-max px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
-                    {tasks.map((item, index) => (
-                      <Card className="w-full" key={index}>
-                        {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-                        <Card.Body>
-                          <div className="flex justify-between items-center">
-                            <Card.Title className="text-[10px] font-normal">
-                              <span className="text-[17px]">Complete ERD</span>
-                            </Card.Title>
-                            <span className="text-[10px] ">2024-05-06</span>
-                          </div>
-                          {/* <ProgressBar
+                    {todoTasks.length > 0 &&
+                      todoTasks.map((item, index) => (
+                        <Card className="w-full" key={index}>
+                          {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+                          <Card.Body>
+                            <div className="flex justify-between items-center">
+                              <Card.Title className="text-[10px] font-normal">
+                                <span className="text-[17px]">
+                                  Complete ERD
+                                </span>
+                              </Card.Title>
+                              <span className="text-[10px] ">2024-05-06</span>
+                            </div>
+                            {/* <ProgressBar
                             now={60}
                             label={`${60}%`}
                             variant="success"
                           /> */}
-                          <Card.Text>
-                            <span className="text-[10px]">
-                              Complete Erd With All Conditions
-                            </span>
-                          </Card.Text>
-                        </Card.Body>
-                        <Card.Footer className="border-0 flex justify-end items-center space-x-1">
-                          <img
-                            src={man}
-                            alt="man"
-                            className="w-[20px] border-2 rounded-lg cursor-pointer hover:border-green-500"
-                            onClick={handleModalToggle}
-                          />
-                          <img src={man} alt="man" className="w-[17px]" />
-                          <img src={man} alt="man" className="w-[17px]" />
-                          <img src={man} alt="man" className="w-[17px]" />
-                        </Card.Footer>
-                      </Card>
-                    ))}
+                            <Card.Text>
+                              <span className="text-[10px]">
+                                Complete Erd With All Conditions
+                              </span>
+                            </Card.Text>
+                          </Card.Body>
+                          <Card.Footer className="border-0 flex justify-end items-center space-x-1">
+                            <img
+                              src={man}
+                              alt="man"
+                              className="w-[20px] border-2 rounded-lg cursor-pointer hover:border-green-500"
+                              onClick={handleModalToggle}
+                            />
+                            <img src={man} alt="man" className="w-[17px]" />
+                            <img src={man} alt="man" className="w-[17px]" />
+                            <img src={man} alt="man" className="w-[17px]" />
+                          </Card.Footer>
+                        </Card>
+                      ))}
                   </div>
                 </Col>
                 <Col
                   md={{ span: 3, offset: 1 }}
                   className="h-max bg-gray-50 rounded "
                 >
-                  <h5>Doing({tasks.length})</h5>
+                  <h5>Doing({doingTasks.length})</h5>
                   <div className="bg-gray-200 w-full h-max px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
-                    {tasks.map((item, index) => (
-                      <Card className="w-full" key={index}>
-                        {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-                        <Card.Body>
-                          <div className="flex justify-between items-center">
-                            <Card.Title className="text-[10px] font-normal">
-                              <span className="text-[17px]">
-                                Complete Figma Screens
-                              </span>
-                            </Card.Title>
-                            <span className="text-[10px] ">2024-05-06</span>
-                          </div>
-                          {/* <ProgressBar
+                    {doingTasks.length &&
+                      doingTasks.map((item, index) => (
+                        <Card className="w-full" key={index}>
+                          {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+                          <Card.Body>
+                            <div className="flex justify-between items-center">
+                              <Card.Title className="text-[10px] font-normal">
+                                <span className="text-[17px]">
+                                  Complete Figma Screens
+                                </span>
+                              </Card.Title>
+                              <span className="text-[10px] ">2024-05-06</span>
+                            </div>
+                            {/* <ProgressBar
                             now={60}
                             label={`${60}%`}
                             variant="success"
                           /> */}
-                          <Card.Text>
-                            <span className="text-[10px]">
-                              Complete Screens in Figma
-                            </span>
-                          </Card.Text>
-                        </Card.Body>
-                        <Card.Footer className="border-0 flex justify-end items-center space-x-1">
-                          <img src={man} alt="man" className="w-[17px]" />
-                          <img src={man} alt="man" className="w-[17px]" />
-                          <img src={man} alt="man" className="w-[17px]" />
-                          <img src={man} alt="man" className="w-[17px]" />
-                        </Card.Footer>
-                      </Card>
-                    ))}
+                            <Card.Text>
+                              <span className="text-[10px]">
+                                Complete Screens in Figma
+                              </span>
+                            </Card.Text>
+                          </Card.Body>
+                          <Card.Footer className="border-0 flex justify-end items-center space-x-1">
+                            <img src={man} alt="man" className="w-[17px]" />
+                            <img src={man} alt="man" className="w-[17px]" />
+                            <img src={man} alt="man" className="w-[17px]" />
+                            <img src={man} alt="man" className="w-[17px]" />
+                          </Card.Footer>
+                        </Card>
+                      ))}
                   </div>
                 </Col>
                 <Col
                   md={{ span: 3, offset: 1 }}
                   className="h-max bg-gray-50 rounded "
                 >
-                  <h5>Done({tasks.length})</h5>
+                  <h5>Done({doneTasks.length})</h5>
                   <div className="bg-gray-200 w-full h-max px-2 py-2 rounded flex flex-col space-y-2 justify-start overflow-auto">
-                    {tasks.map((item, index) => (
-                      <Card className="w-full" key={index}>
-                        {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-                        <Card.Body>
-                          <div className="flex justify-between items-center">
-                            <Card.Title className="text-[10px] font-normal">
-                              <span className="text-[17px]">
-                                Complete Pitch
+                    {doneTasks.length > 0 &&
+                      doneTasks.map((item, index) => (
+                        <Card className="w-full" key={index}>
+                          {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+                          <Card.Body>
+                            <div className="flex justify-between items-center">
+                              <Card.Title className="text-[10px] font-normal">
+                                <span className="text-[17px]">
+                                  Complete Pitch
+                                </span>
+                              </Card.Title>
+                              <span className="text-[10px] ">2024-05-06</span>
+                            </div>
+                            <ProgressBar
+                              now={60}
+                              label={`${60}%`}
+                              variant="success"
+                            />
+                            <Card.Text>
+                              <span className="text-[10px]">
+                                Complete Pitch with all other Requirments
                               </span>
-                            </Card.Title>
-                            <span className="text-[10px] ">2024-05-06</span>
-                          </div>
-                          <ProgressBar
-                            now={60}
-                            label={`${60}%`}
-                            variant="success"
-                          />
-                          <Card.Text>
-                            <span className="text-[10px]">
-                              Complete Pitch with all other Requirments
-                            </span>
-                          </Card.Text>
-                        </Card.Body>
-                        <Card.Footer className="border-0 flex justify-end items-center space-x-1">
-                          <img src={man} alt="man" className="w-[17px]" />
-                          <img src={man} alt="man" className="w-[17px]" />
-                          <img src={man} alt="man" className="w-[17px]" />
-                          <img src={man} alt="man" className="w-[17px]" />
-                        </Card.Footer>
-                      </Card>
-                    ))}
+                            </Card.Text>
+                          </Card.Body>
+                          <Card.Footer className="border-0 flex justify-end items-center space-x-1">
+                            <img src={man} alt="man" className="w-[17px]" />
+                            <img src={man} alt="man" className="w-[17px]" />
+                            <img src={man} alt="man" className="w-[17px]" />
+                            <img src={man} alt="man" className="w-[17px]" />
+                          </Card.Footer>
+                        </Card>
+                      ))}
                   </div>
                 </Col>
               </Row>

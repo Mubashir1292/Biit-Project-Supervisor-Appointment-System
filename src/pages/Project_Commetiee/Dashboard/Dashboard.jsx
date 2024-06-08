@@ -3,12 +3,32 @@ import { useNavigate } from "react-router-dom";
 import biitSas from "../../../assets/extra/biitSAS.png";
 import Card from "react-bootstrap/Card";
 import { ArrowDownWideNarrow, ArrowUpWideNarrow } from "lucide-react";
+
 function Dashboard() {
   const [user, setUser] = useState();
-  const [supervisingRequests, setSupervisorRequests] = useState([{}]);
-  const [groupJoinging, setGroupJoining] = useState([{}]);
-  const [genericProjectRequests, setGenericProjectRequests] = useState([{}]);
+  const [supervisingRequests, setSupervisorRequests] = useState([]);
+  const [groupJoining, setGroupJoining] = useState([]);
+  const [genericProjectRequests, setGenericProjectRequests] = useState([]);
+  const [allNotifications, setAllNotifications] = useState([]);
   const navigate = useNavigate();
+
+  const GetAllNotifications = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/psas/GetAllNotifications`
+      );
+      const result = await response.json();
+      if (result) {
+        console.log(result);
+        setGroupJoining(result.Students_Requests_For_GroupJoining || []);
+        setSupervisorRequests(result.Superising_Approval_Requests || []);
+        setGenericProjectRequests(result.Generic_Project_Requests || []);
+        setAllNotifications(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const userString = localStorage.getItem("user");
@@ -16,6 +36,8 @@ function Dashboard() {
     if (user) {
       setUser(user);
     } else navigate("/");
+
+    GetAllNotifications();
   }, []);
 
   return (
@@ -32,7 +54,9 @@ function Dashboard() {
             </Card.Header>
             <Card.Body>
               <Card.Title className="flex justify-center items-center">
-                <span className="text-4xl">{supervisingRequests.length}</span>
+                <span className="text-4xl">
+                  {supervisingRequests.length || 0}
+                </span>
                 <span>
                   {supervisingRequests.length > 0 ? (
                     <ArrowUpWideNarrow className="text-2xl" />
@@ -49,9 +73,9 @@ function Dashboard() {
             </Card.Header>
             <Card.Body>
               <Card.Title className="flex justify-center items-center">
-                <span className="text-4xl">{groupJoinging.length}</span>
+                <span className="text-4xl">{groupJoining.length || 0}</span>
                 <span>
-                  {groupJoinging.length > 0 ? (
+                  {groupJoining.length > 0 ? (
                     <ArrowUpWideNarrow className="text-2xl" />
                   ) : (
                     <ArrowDownWideNarrow className="text-2xl" />
@@ -67,7 +91,7 @@ function Dashboard() {
             <Card.Body>
               <Card.Title className="flex justify-center items-center">
                 <span className="text-4xl">
-                  {genericProjectRequests.length}
+                  {genericProjectRequests.length || 0}
                 </span>
                 <span>
                   {genericProjectRequests.length > 0 ? (

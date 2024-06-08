@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import moment from "moment";
 import AddMeeting from "./AddMeeting";
-import { ScheduleMeeting } from "react-schedule-meeting";
-import { format } from "date-fns";
-import { enUS } from "date-fns/locale";
+const localizer = momentLocalizer(moment);
+
 function TeacherMeetings() {
   const [showMeetingModal, setShowMeetingModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState();
@@ -50,64 +51,23 @@ function TeacherMeetings() {
       ),
     },
   ]);
-  const availableTimeslots = [0, 1, 2, 3, 4, 5].map((id) => {
-    return {
-      id,
-      startTime: new Date(
-        new Date(new Date().setDate(new Date().getDate() + id)).setHours(
-          9,
-          0,
-          0,
-          0
-        )
-      ),
-      endTime: new Date(
-        new Date(new Date().setDate(new Date().getDate() + id)).setHours(
-          17,
-          0,
-          0,
-          0
-        )
-      ),
-    };
-  });
 
   const handleSelectSlot = (slotInfo) => {
     setSelectedSlot(slotInfo);
     setShowMeetingModal(!showMeetingModal);
     console.log(slotInfo);
   };
-  const handleTimeslotClicked = (startTimeEventEmit) => {
-    startTimeEventEmit.resetDate();
-    startTimeEventEmit.resetSelectedTimeState();
-    alert(
-      `Time selected: ${format(
-        startTimeEventEmit.startTime,
-        "cccc, LLLL do h:mm a"
-      )}`
-    );
-  };
+
   return (
     <div>
-      <ScheduleMeeting
-        borderRadius={10}
-        primaryColor="#3f5b85"
-        eventDurationInMinutes={30}
-        availableTimeslots={availableTimeslots}
-        onStartTimeSelect={handleTimeslotClicked}
-        lang_cancelButtonText="Cancel"
-        lang_confirmButtonText="Confirm"
-        lang_emptyListText="No times available"
-        lang_goToNextAvailableDayText="Next Available"
-        lang_noFutureTimesText="No future times available"
-        lang_selectedButtonText="Selected:"
-        startTimeListStyle="scroll-list"
-        // Date format props
-        format_nextFutureStartTimeAvailableFormatString="cccc, LLLL do"
-        format_selectedDateDayTitleFormatString="cccc, LLLL do"
-        format_selectedDateMonthTitleFormatString="LLLL yyyy"
-        format_startTimeFormatString="h:mm a"
-        locale={enUS}
+      <Calendar
+        localizer={localizer}
+        events={eventsList}
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: 500 }}
+        selectable
+        onSelectSlot={handleSelectSlot}
       />
       {showMeetingModal ? (
         <>

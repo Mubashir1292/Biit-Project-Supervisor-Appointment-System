@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import biitlogo from "../../../assets/extra/biitSAS.png";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import { ArrowDownWideNarrow, ArrowUpWideNarrow } from "lucide-react";
 import Calendar from "react-calendar";
 import "../../../assets/css/style.css";
 import "react-calendar/dist/Calendar.css";
 function TeacherDashboard() {
-  const [sentRequest, setSentRequest] = useState([]);
+  const [helpRequests, setHelpRequests] = useState([]);
   const [isUser, setIsUser] = useState(null);
   const [value, setValue] = useState(new Date());
   const navigate = useNavigate();
+
   const [allgroupRequests, setAllGroupRequests] = useState([
     {
       group_Id: "8",
@@ -77,20 +78,20 @@ function TeacherDashboard() {
   ]);
   const [allMeetings, setAllMeetings] = useState([]);
 
-  const handleGetRequests = async (user) => {
+  //! fetch all notifications of help requests
+  const fetchAllHelpRequests = async (user) => {
     try {
-      setIsUser(user);
       const response = await fetch(
-        `http://localhost/officialPSAS/api/psas/getAllRequests?Id=${user.uid}`
+        `http://localhost/OfficialPSAS/api/psas_Supervisor_Expert/GetAllHelpRequests?teacher_id=${user.tid}`
       );
-      const data = await response.json();
-      if (data.length) {
-        setSentRequest(data);
+      const result = await response.json();
+      if (Array.isArray(result)) {
+        setHelpRequests(result);
       } else {
-        console.log(response.status);
+        alert(result);
       }
     } catch (error) {
-      console.log("Error:", error);
+      console.log(error);
     }
   };
 
@@ -102,7 +103,7 @@ function TeacherDashboard() {
     } else {
       navigate("/");
     }
-    handleGetRequests(user);
+    fetchAllHelpRequests(user);
   }, []);
 
   const handleSelectDate = (date) => {
@@ -136,9 +137,11 @@ function TeacherDashboard() {
             </Card.Header>
             <Card.Body>
               <Card.Title className="flex justify-center items-center">
-                <span className="text-4xl">{allgroupRequests.length}</span>
+                <span className="text-4xl">
+                  {helpRequests.length && helpRequests.length}
+                </span>
                 <span>
-                  {allSentRequests.length > 0 ? (
+                  {helpRequests && helpRequests.length > 0 ? (
                     <ArrowUpWideNarrow className="text-2xl" />
                   ) : (
                     <ArrowDownWideNarrow className="text-2xl" />

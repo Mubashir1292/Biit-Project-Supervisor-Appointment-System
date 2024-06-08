@@ -8,29 +8,29 @@ function NotificationModel() {
   const [hoveredType, setHoveredType] = useState(null);
 
   const [menu, setMenu] = useState(false);
-  const [allNotifications, setAllNotifications] = useState([]);
+  //const [allNotifications, setAllNotifications] = useState([]);
 
   //  Fetch all notifications
-  const handleNotifications = async () => {
-    try {
-      const response = await fetch(
-        `http://192.168.1.10/OfficialPSAS/api/PSAS/getAllNotificationsForStudent?regNo=${user.uid}`
-      );
-      const result = await response.json();
-      if (result) {
-        setAllNotifications(result);
-      } else {
-        console.log("No Notifications Founded");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const handleNotifications = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `http://192.168.1.10/OfficialPSAS/api/PSAS/getAllNotificationsForStudent?regNo=${user.uid}`
+  //     );
+  //     const result = await response.json();
+  //     if (result) {
+  //       setAllNotifications(result);
+  //     } else {
+  //       console.log("No Notifications Founded");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     if (user) {
       if (user.role === "student") {
-        handleNotifications();
+        // handleNotifications();
       } else if (user.role === "teacher") {
       } else if (user.role === "Technical Expert") {
       } else if (user.role === "Project Commetiee") {
@@ -148,12 +148,12 @@ function NotificationModel() {
                 <h6 className="text-sm text-center">Notifications</h6>
               </Col>
             </Row>
-            {allNotifications &&
+            {/* {allNotifications &&
               Object.keys(allNotifications).map((key) =>
                 allNotifications[key].map((item, index) => (
                   <Row key={index}>{renderNotificationItem(key, item)}</Row>
                 ))
-              )}
+              )} */}
           </div>
         </DropdownMenu>
       </Dropdown>

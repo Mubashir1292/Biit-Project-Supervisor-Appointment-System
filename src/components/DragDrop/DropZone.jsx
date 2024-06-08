@@ -15,8 +15,15 @@ const DropzoneComponent = ({ onSubmit }) => {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept:
-      "image/*,text/plain,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    accept: [
+      "image/*",
+      "text/plain",
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ],
     multiple: true,
   });
 

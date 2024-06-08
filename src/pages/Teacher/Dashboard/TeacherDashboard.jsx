@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import biitlogo from "../../../assets/extra/biitSAS.png";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import { ArrowDownWideNarrow, ArrowUpWideNarrow } from "lucide-react";
 import Calendar from "react-calendar";
@@ -17,14 +17,14 @@ function TeacherDashboard() {
   const navigate = useNavigate();
 
   const [allSupervisorMeetings, setAllSupervisorMeetings] = useState([
-    // {
-    //   meetId: "3",
-    //   meetTitle: "Weekly Meeting",
-    //   meetDesc: "Please Come in my office",
-    //   meetDate: "2024-05-01",
-    //   meetTime: "12:30pm",
-    //   teacher: "Sir Zahid",
-    // },
+    {
+      meetId: "3",
+      meetTitle: "Weekly Meeting",
+      meetDesc: "Please Come in my office",
+      meetDate: "06-06-2024",
+      meetTime: "12:30pm",
+      teacher: "Sir Zahid",
+    },
   ]);
   const [allTechnicalExpertMeetings, setAllTechnicalExpertMeetings] = useState([
     // {
@@ -36,7 +36,7 @@ function TeacherDashboard() {
     //   teacher: "Sir Zahid",
     // },
   ]);
-  const [allMeetings, setAllMeetings] = useState([]);
+  const [allMeetings, setAllMeetings] = useState(allSupervisorMeetings);
   const [projectCommetieeApprovals, setProjectCommettieeAprovals] = useState(
     []
   );
@@ -88,7 +88,7 @@ function TeacherDashboard() {
       );
       const data = await response.json();
       if (data) {
-        setAllMeetings(data);
+        // setAllMeetings(data);
         console.log(data);
       }
     } catch (error) {

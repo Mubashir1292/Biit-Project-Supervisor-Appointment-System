@@ -13,7 +13,7 @@ function GroupCreation() {
   //* this condition is checked when the student login successfull
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
-  const [selection, setSelection] = useState(null);
+  const [selection, setSelection] = useState();
   const [selectedTechnology, setSelectedTechnology] = useState(null);
   const [options, setOptions] = useState([]);
   const [res, setRes] = useState([]);
@@ -43,7 +43,6 @@ function GroupCreation() {
 
   const handleTechnologySelect = (option) => {
     setSelectedTechnology(option);
-    console.log(option);
   };
   const handleGetOptions = async () => {
     try {
@@ -112,8 +111,7 @@ function GroupCreation() {
       `http://localhost/OfficialPSAS/api/psas/getAllRequests?Id=${user.uid}`
     );
     let result = await response.json();
-    setRes(result);
-    setRes([...result, MySelf]);
+    setRes([...result, MySelf]); // Update the state based on the previous state
     if (typeof result === "object") {
       setGroup(result);
       if (result.length === 5) {
@@ -121,43 +119,54 @@ function GroupCreation() {
       }
     }
   };
+
   useEffect(() => {
     GetGroupStatus();
   }, []);
 
   const handleSelect = (option) => {
     setSelection(option);
-    console.log(option);
   };
   const handleSubmit = async () => {
-    const response = await fetch(
-      `http://localhost/OfficialPSAS/api/psas/CreateNewGroup?regNo=${user.uid}&title=${title}&desc=${desc}&creatorTechnology=${selection.value}`,
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-        },
+    try {
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/psas/CreateNewGroup?regNo=${user.uid}&title=${title}&desc=${desc}&creatorTechnology=${selectedTechnology.value}`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      if (data.includes("Created")) {
+        setIsGroupCreated(true);
       }
-    );
-    const data = await response.json();
-    if (data.includes("Created")) {
-      setIsGroupCreated(true);
+      alert(data);
+    } catch (error) {
+      console.log(error);
     }
-    console.log(data);
   };
-  //* Searching for a student
-  const handleSearch = async () => {
+  useEffect(() => {
     if (aridNumber.length === 4 && aridYear.length === 4) {
       let completeArid = aridYear + "-Arid-" + aridNumber;
       setCompleteAridNumber(completeArid);
-      console.log(completeAridNumber);
     }
+  }, [aridNumber, aridYear]);
+
+  useEffect(() => {
+    if (completeAridNumber) {
+      handleSearch(completeAridNumber);
+    }
+  }, [completeAridNumber]);
+
+  //* Searching for a student
+  const handleSearch = async (complete) => {
     try {
       const response = await fetch(
         `http://localhost/OfficialPSAS/api/psas/CheckingStudentGroupStatus?regNo=${completeAridNumber}`
       );
       const data = await response.json();
-      console.log(data);
       if (data.includes("0")) {
         let name = data.split(":")[1];
         setNameOfMember(name);
@@ -186,7 +195,8 @@ function GroupCreation() {
         }
       );
       const data = await response.json();
-      console.log(data);
+      GetGroupStatus();
+      alert(data);
     } catch (error) {
       console.log(error);
     }
@@ -196,21 +206,21 @@ function GroupCreation() {
       {isGroupCreated ? (
         <>
           <div className=" flex flex-col space-x-0">
-            <div className="w-full">
+            <div className="w-full flex justify-center ">
               <img
                 src={BiitSAS}
                 alt="BiitSAS"
-                className="w-3/12 flex self-start"
+                className="w-3/12 min-[320px]:w-5/6 "
               />
             </div>
-            <h1 className="text-gray-600 font-bold mt-2 text-center">
+            <h1 className="text-gray-600 font-semibold text-sm mt-2 text-center">
               You haven't created any group
             </h1>
             <form
               className="mt-6 w-80"
               onSubmit={(e) => {
                 e.preventDefault();
-                handleSubmit();
+                handleSubmit(selection);
               }}
             >
               <div className="flex flex-col mb-4">
@@ -288,6 +298,7 @@ function GroupCreation() {
                 action="#"
                 onSubmit={(e) => {
                   e.preventDefault();
+                  handleSearch(completeAridNumber);
                 }}
               >
                 <div className="w-5/6 flex flex-col justify-center items-center">
@@ -322,7 +333,6 @@ function GroupCreation() {
                     type="submit"
                     value="Search"
                     className="bg-green-600 text-white px-2 rounded-md hover:bg-white hover:text-green-700 transition-all ease-in-out cursor-pointer border hover:border-green-700"
-                    onClick={handleSearch}
                   />
                 </div>
               </form>

@@ -119,7 +119,7 @@ function HelpRequest() {
           }
         );
         const data = await response.json();
-        console.log(data);
+        alert(data);
       } else {
         console.log("fields cannot be empty");
       }

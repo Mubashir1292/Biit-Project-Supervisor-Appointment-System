@@ -1,19 +1,40 @@
 import React, { useState, useEffect } from "react";
 import biitSAS from "../../../assets/extra/biitSAS.png";
 import Dropdown from "../../../components/dropdown/Dropdown";
-import Table from "react-bootstrap/Table";
-// import GroupDetails from "../../../components/Modals/CreateGroupModal/CreateGroupModal";
+import { FloatingLabel, Form, Table } from "react-bootstrap";
 function ProjectRequesting() {
   const [showProjectPage, setShowProjectPage] = useState(false);
   const [choosedProject, setChoosedProject] = useState("");
   const [choosedProjectDesc, setChoosedProjectDesc] = useState("");
   const [selectedProjects, setSelectedProjects] = useState([]);
   const [selection, setSelection] = useState(null);
-  const [options, setOptions] = useState([]);
+  const [titleSearching, setTitleSearching] = useState("");
+  //  const [options, setOptions] = useState([]);
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
   const [currentGroupCgpa, setCurrentGroupCgpa] = useState(0);
   const [myGroupDetails, setMyGroupDetails] = useState([]);
+
+  const handleProjectSearching = async (value) => {
+    try {
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/psas/SearchProjectByKeyword?value=${value}&regno=${user.uid}`
+      );
+      const data = await response.json();
+      if (data) {
+        setSelectedProjects(data.allProjects);
+        console.log(selectedProjects);
+      } else {
+        alert(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleProjectSearching(titleSearching.trim());
+  }, [titleSearching]);
   const GetGroupCgpa = async () => {
     try {
       const response = await fetch(
@@ -27,21 +48,21 @@ function ProjectRequesting() {
     }
   };
 
-  const handleGetOptions = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost/OfficialPSAS/api/psas/AllDomains"
-      );
-      const data = await response.json();
-      if (data) {
-        setOptions(data);
-      } else {
-        console.log(response.status);
-      }
-    } catch (error) {
-      console.log("Error:", error);
-    }
-  };
+  // const handleGetOptions = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       "http://localhost/OfficialPSAS/api/psas/AllDomains"
+  //     );
+  //     const data = await response.json();
+  //     if (data) {
+  //       setOptions(data);
+  //     } else {
+  //       console.log(response.status);
+  //     }
+  //   } catch (error) {
+  //     console.log("Error:", error);
+  //   }
+  // };
 
   // getting myGroup
   const GettingCompleteGroup = async (pid) => {
@@ -57,19 +78,26 @@ function ProjectRequesting() {
     }
   };
   useEffect(() => {
-    handleGetOptions();
+    //  handleGetOptions();
     GetGroupCgpa();
   }, []);
 
   const handleSelect = async (option) => {
     setSelection(option);
-
-    // fetching the Projects on the base on domain and cgpa
-    const response = await fetch(
-      `http://localhost/OfficialPSAS/api/psas/ProjectsByDomain?Domain=${option.value}&regNo=${user.uid}`
-    );
-    const data = await response.json();
-    setSelectedProjects(data);
+    try {
+      // fetching the Projects on the base on domain and cgpa
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/psas/ProjectsByDomain?Domain=${option.value}&regNo=${user.uid}`
+      );
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        setSelectedProjects(data);
+      } else {
+        alert(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleProjectTitle = (option) => {
     setChoosedProject(option);
@@ -120,22 +148,71 @@ function ProjectRequesting() {
                   {currentGroupCgpa || 0}
                 </span>
               </p>
-              <div className="flex flex-row w-full h-full justify-center  space-x-1 items-center">
-                <label className="text-sm">Select Domain :</label>
-                <Dropdown
+              <div className=" w-full h-full">
+                <span>Enter Domain or Title to Search:</span>
+                <FloatingLabel
+                  controlId="floatingInput"
+                  label="Search Now"
+                  className="mb-1"
+                >
+                  <Form.Control
+                    type="input"
+                    placeholder="Domain Name"
+                    value={titleSearching}
+                    onChange={(e) => {
+                      setTitleSearching(e.target.value);
+                    }}
+                    className="mt-2"
+                    style={{ height: "40px" }}
+                  />
+                </FloatingLabel>
+                {/* <Dropdown
                   options={options}
                   value={selection}
                   OnSelect={handleSelect}
                   className="relative w-6/12 text-[10px]"
-                />
+                /> */}
               </div>
               <div className="flex flex-col w-full h-full justify-center items-center">
-                <label className="text-lg">Offered Projects</label>
+                <label className="text-lg">offered Projects</label>
                 <div className="w-full flex justify-center items-center">
                   <Table
+                    responsive
+                    bordered
+                    hover
+                    className="min-[320px]:w-[320px]"
+                  >
+                    <thead>
+                      <tr className="bg-green-600 text-white">
+                        <th className="px-2 py-1 text-center text-xs font-semibold">
+                          Title
+                        </th>
+                        <th className="px-2 py-1 text-center text-xs font-semibold">
+                          Supervisors
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedProjects &&
+                        selectedProjects.map((project, index) => {
+                          return (
+                            <tr
+                              key={index}
+                              onClick={() => {
+                                handleProjectTitle(project);
+                              }}
+                            >
+                              <td>{project.title || ""}</td>
+                              <td>{project.username || ""}</td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </Table>
+                  {/* <Table
                     data={selectedProjects}
                     handleSelect={handleProjectTitle}
-                  />
+                />*/}
                 </div>
               </div>
               <div className="flex flex-col w-full h-full justify-center items-center mt-2">
@@ -178,7 +255,7 @@ function ProjectRequesting() {
               <div className="flex flex-row space-x-4 justify-center">
                 <label className="text-xs ">Supervisor:</label>
                 <b className="text-center text-xs font-semibold">
-                  {choosedProject.username}
+                  {choosedProject.username ? choosedProject?.username : ""}
                 </b>
               </div>
               <div className="overflow-x mt-2 w-full">
@@ -197,13 +274,19 @@ function ProjectRequesting() {
                     </tr>
                   </thead>
                   <tbody>
-                    {myGroupDetails?.map((item, index) => (
-                      <tr className="bg-gray-300 hover:bg-gray-400" key={index}>
-                        <td className="px-6 py-4 text-xs">{item.name}</td>
-                        <td className="px-6 py-4 text-xs">{item.regNo}</td>
-                        <td className="px-6 py-4 text-xs">{item.technology}</td>
-                      </tr>
-                    ))}
+                    {myGroupDetails &&
+                      myGroupDetails?.map((item, index) => (
+                        <tr
+                          className="bg-gray-300 hover:bg-gray-400"
+                          key={index}
+                        >
+                          <td className="px-6 py-4 text-xs">{item.name}</td>
+                          <td className="px-6 py-4 text-xs">{item.regNo}</td>
+                          <td className="px-6 py-4 text-xs">
+                            {item.technology}
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </Table>
               </div>
