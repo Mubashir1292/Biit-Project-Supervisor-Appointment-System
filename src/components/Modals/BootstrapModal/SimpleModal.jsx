@@ -4,7 +4,13 @@ import Container from "react-bootstrap/Container";
 import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import "./style.css";
 function GroupDetailsModal(props) {
+  console.log(props);
+  const getPlaceholder = (title) => {
+    return title ? title.charAt(0).toUpperCase() : "N/A";
+  };
+
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
       <Modal.Header closeButton>
@@ -19,8 +25,8 @@ function GroupDetailsModal(props) {
               <span className="text-sm">Project-Title:</span>
             </Col>
             <Col>
-              <span className="text-xs font-bold font-mono">
-                {props.group.title}
+              <span className="text-xs font-semibold">
+                {props.group.group.project.projectTite}
               </span>
             </Col>
           </Row>
@@ -29,7 +35,9 @@ function GroupDetailsModal(props) {
               <span className="text-sm">Project Description:</span>
             </Col>
             <Col>
-              <span className="text-xs">{props.group.description}</span>
+              <span className="text-xs truncate-text">
+                {props.group.group.project.projectDesc}
+              </span>
             </Col>
           </Row>
           <Row>
@@ -37,7 +45,7 @@ function GroupDetailsModal(props) {
               <span className="text-sm">Group CGPA:</span>
             </Col>
             <Col>
-              <span className="text-xs">{props.group.CGPA}</span>
+              <span className="text-xs">{props.group.group.avgCgpa}</span>
             </Col>
           </Row>
           <div className="flex flex-col mt-2">
@@ -47,8 +55,18 @@ function GroupDetailsModal(props) {
                   className="flex justify-around items-center hover:bg-gray-100 cursor-default space-x-2"
                   key={index}
                 >
-                  <img src={member.image} alt={`${member.name}`} className="" />
-                  <span className="text-xs">{member.id}</span>
+                  {member.path ? (
+                    <img
+                      src={`http://localhost/OfficialPSAS/Content/Images/${member.path}`}
+                      alt={`${member.name}`}
+                      className="w-6 h-6 rounded-full"
+                    />
+                  ) : (
+                    <span className="text-2xl font-bold">
+                      {getPlaceholder(member.name)}
+                    </span>
+                  )}
+                  <span className="text-xs">{member.st_id}</span>
                   <span className="text-xs">{member.name}</span>
                 </div>
               ))}

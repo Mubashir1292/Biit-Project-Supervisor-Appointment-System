@@ -29,6 +29,7 @@
     "react-loading-skeleton": "^3.4.0",
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.22.3",
+    "react-schedule-meeting": "^4.2.3",
     "react-scripts": "5.0.1",
     "react-tailwindcss-datepicker": "^1.6.6",
     "reactstrap": "^9.2.2",

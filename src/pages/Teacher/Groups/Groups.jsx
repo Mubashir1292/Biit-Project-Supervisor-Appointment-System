@@ -42,6 +42,7 @@ function Groups() {
       );
       const data = await response.json();
       if (data) {
+        console.log(data);
         setGroups(data);
       }
     } catch (error) {
@@ -50,42 +51,41 @@ function Groups() {
   };
 
   useEffect(() => {
-    const groupsAll = [
-      {
-        title: "AI Health Engine",
-        description: "Health Care of Patients",
-        CGPA: 2.3,
-        groupMembers: [
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-          {
-            image: man2,
-            id: "2020-Arid-3675",
-            name: "Mubashir Liaqat",
-          },
-        ],
-      },
-    ];
+    // const groupsAll = [
+    //   {
+    //     title: "AI Health Engine",
+    //     description: "Health Care of Patients",
+    //     CGPA: 2.3,
+    //     groupMembers: [
+    //       {
+    //         image: man2,
+    //         id: "2020-Arid-3675",
+    //         name: "Mubashir Liaqat",
+    //       },
+    //       {
+    //         image: man2,
+    //         id: "2020-Arid-3675",
+    //         name: "Mubashir Liaqat",
+    //       },
+    //       {
+    //         image: man2,
+    //         id: "2020-Arid-3675",
+    //         name: "Mubashir Liaqat",
+    //       },
+    //       {
+    //         image: man2,
+    //         id: "2020-Arid-3675",
+    //         name: "Mubashir Liaqat",
+    //       },
+    //       {
+    //         image: man2,
+    //         id: "2020-Arid-3675",
+    //         name: "Mubashir Liaqat",
+    //       },
+    //     ],
+    //   },
+    // ];
     FetchAllGroups();
-    setGroups(groupsAll);
   }, []);
 
   const handleToggle = () => {
@@ -146,29 +146,40 @@ function Groups() {
                       onClick={handleToggle}
                     >
                       <span className="text-2xl font-bold">
-                        {getPlaceholder(item.title)}
+                        {getPlaceholder(item.group.project.projectTite)}
                       </span>
                     </div>
                   </div>
                   <div className="flex flex-col border-r border-gray-300 border-l justify-center items-center cursor-pointer">
-                    <h6>{item.title}</h6>
-                    <span className="text-sm">{item.description}</span>
+                    <h6>{item.group.project.projectTite}</h6>
                   </div>
                   <div className="flex flex-col justify-center items-center">
                     <h6>Students</h6>
                     <div className="grid grid-cols-3">
-                      {item.groupMembers.map((member, index) => (
-                        <img
-                          key={index}
-                          src={member.image}
-                          alt={`${member.name}`}
-                          className="cursor-pointer border-2 hover:border-gray-500 rounded-full"
-                          onClick={() => {
-                            setSelectedProfile(member);
-                            setStudentModal(!studentModal);
-                          }}
-                        />
-                      ))}
+                      {item.groupMembers.map((member, index) =>
+                        member.path ? (
+                          <img
+                            key={index}
+                            src={`http://localhost/OfficialPSAS/Content/Images/${member.path}`}
+                            alt={`${member.name}`}
+                            className="cursor-pointer border w-12 h-10 hover:border-gray-500 rounded-full"
+                            onClick={() => {
+                              setSelectedProfile(member);
+                              setStudentModal(!studentModal);
+                            }}
+                          />
+                        ) : (
+                          <div
+                            key={index}
+                            className="flex justify-center items-center w-full h-8 bg-gray-200 rounded-full m-3"
+                            onClick={handleToggle}
+                          >
+                            <span className="text-sm font-semibold">
+                              {getPlaceholder(member.name)}
+                            </span>
+                          </div>
+                        )
+                      )}
                     </div>
                   </div>
                 </div>

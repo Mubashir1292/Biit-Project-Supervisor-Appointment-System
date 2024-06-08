@@ -14,14 +14,15 @@ function ProfileModal(props) {
         <Container>
           <div className="flex justify-center items-center">
             <img
-              src={props.student.image}
+              src={`http://localhost/OfficialPSAS/Content/Images/${props.student.path}`}
               alt={`${props.student.name}`}
-              className="w-25"
+              className="w-28 h-28 rounded-full"
             />
           </div>
-          <div className="flex flex-col justify-center items-center space-y-3">
-            <h6>{props.student.id}</h6>
+          <div className="flex flex-col mt-3 justify-center items-center space-y-2">
+            <h6>{props.student.st_id}</h6>
             <h6>{props.student.name}</h6>
+            <h6>{props.student.technology}</h6>
           </div>
         </Container>
       </Modal.Body>
