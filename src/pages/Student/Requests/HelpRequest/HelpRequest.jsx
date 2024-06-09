@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from "react";
 import BiitSAS from "../../../../assets/extra/biitSAS.png";
 import Dropdown from "../../../../components/dropdown/Dropdown";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
+
 function HelpRequest() {
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
 
-  // const options = [
-  //   { label: "Sir Zahid", value: "Sir Zahid" },
-  //   { label: "Sir Umar", value: "Sir Umar" },
-  // ];
-  const [Dayselection, setDaySelection] = useState("Monday");
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectionExpert, setSelectionExpert] = useState(null);
   const [Timeselection, setTimeSelection] = useState(null);
   const [myTechnology, setMyTechnology] = useState("");
   const [expertList, setExpertList] = useState([]);
-  const [weekDays, setWeekDays] = useState([]);
   const [freeTimeSlots, setFreeTimeSlots] = useState([]);
   const [message, setMessage] = useState("");
+  const [selectedDay, setSelectedDay] = useState("");
+
   //* getting the Technology
   const gettingTechnology = async () => {
     try {
@@ -54,34 +55,14 @@ function HelpRequest() {
       console.log(error);
     }
   };
-  //* getting all days
-  const getAllWorkingDays = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost/OfficialPSAS/api/psas/GetAllDays`
-      );
-      const data = await response.json();
-      if (data !== null) {
-        const alldays = data?.map((day) => ({
-          label: day,
-          value: day,
-        }));
-        setWeekDays(alldays);
-      } else {
-        setWeekDays([]);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   //* getting the TimeSlots available on to the respective day
-  const getTimeSlots = async () => {
+  const getTimeSlots = async (day) => {
     try {
       const response = await fetch(
-        `http://localhost/OfficialPSAS/api/psas/GetTheTimeSlots?day=${
-          Dayselection || weekDays[0].label
-        }&teacher_id=${selectionExpert.label || expertList[0].label}`
+        `http://localhost/OfficialPSAS/api/psas/GetTheTimeSlots?day=${day}&teacher_id=${
+          selectionExpert.label || expertList[0].label
+        }`
       );
       const data = await response.json();
       if (data.length > 0) {
@@ -101,10 +82,17 @@ function HelpRequest() {
       console.log(error);
     }
   };
+
   //! posting the final help Request
   const postingHelpRequest = async () => {
     try {
-      if (selectionExpert.label && user.uid && Timeselection.label && message) {
+      if (
+        selectionExpert.label &&
+        user.uid &&
+        Timeselection.label &&
+        message &&
+        selectedDate
+      ) {
         const response = await fetch(
           `http://localhost/OfficialPSAS/api/psas/PostingHelpRequest?teacher_id=${
             selectionExpert.label || expertList[0].label
@@ -121,7 +109,7 @@ function HelpRequest() {
         const data = await response.json();
         alert(data);
       } else {
-        console.log("fields cannot be empty");
+        alert("fields cannot be empty");
       }
     } catch (error) {
       console.log(error);
@@ -131,32 +119,24 @@ function HelpRequest() {
   useEffect(() => {
     gettingTechnology();
     gettingExpertsUsingTechnology();
-    getAllWorkingDays();
   }, []);
 
   const handleSelect = (option) => {
-    setSelectionExpert((prev) => {
-      return option;
-    });
-    console.log(expertList[0].label);
-  };
-
-  const handleDaySelect = (option) => {
-    setDaySelection((prev) => {
-      return option.value;
-    });
+    setSelectionExpert(option);
   };
 
   useEffect(() => {
-    if (Dayselection !== null && Dayselection !== undefined) {
-      getTimeSlots();
+    if (selectedDate) {
+      const day = format(selectedDate, "EEEE"); // Get the full day name
+      setSelectedDay(day);
+      getTimeSlots(day);
     }
-  }, [Dayselection]);
+  }, [selectedDate]);
 
   const handleTimeSelect = (option) => {
     setTimeSelection(option);
-    console.log(Timeselection);
   };
+
   return (
     <>
       <div className="flex flex-col w-full space-y-2">
@@ -171,7 +151,7 @@ function HelpRequest() {
           <b className="text-sm font-semibold">{myTechnology}</b>
         </div>
         <form action="#">
-          <div className="flex flex-row  w-full justify-center items-center ">
+          <div className="flex flex-row w-full justify-center items-center">
             <label
               htmlFor="Available Teachers"
               className="line-height-normal text-xs"
@@ -185,23 +165,30 @@ function HelpRequest() {
               className="relative w-6/12 text-sm"
             />
           </div>
-          <div className="flex flex-row  w-full justify-center items-center space-x-1">
-            <label
-              htmlFor="Available Teachers"
-              className="line-height-normal text-xs"
-            >
-              Select Day:
+          <div className="flex flex-row w-full justify-center items-center space-x-1">
+            <label htmlFor="Select Date" className="line-height-normal text-xs">
+              Select Date:
             </label>
-            <Dropdown
-              options={weekDays}
-              value={Dayselection}
-              OnSelect={handleDaySelect}
-              className="relative w-6/12 text-sm"
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
+              className="relative w-full text-sm bg-gray-200"
             />
           </div>
-          <div className="flex flex-row  w-full justify-center items-center space-x-1">
+          {selectedDay && (
+            <div className="flex flex-row w-full justify-center items-center space-x-1">
+              <label
+                htmlFor="Selected Day"
+                className="line-height-normal text-xs"
+              >
+                Day:
+              </label>
+              <span>{selectedDay}</span>
+            </div>
+          )}
+          <div className="flex flex-row w-full justify-center items-center space-x-1">
             <label
-              htmlFor="Available Teachers"
+              htmlFor="Available Slots"
               className="line-height-normal text-sm"
             >
               Available Slots:

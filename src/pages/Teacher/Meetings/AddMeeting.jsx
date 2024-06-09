@@ -1,107 +1,120 @@
-import React, { useState } from "react";
-import Container from "react-bootstrap/Container";
-import Modal from "react-bootstrap/Modal";
-import InputGroup from "react-bootstrap/InputGroup";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import FloatingLabel from "react-bootstrap/FloatingLabel";
+import React, { useState, useEffect } from "react";
+import { Modal, Button, Form } from "react-bootstrap";
 
-import Dropdown from "../../../components/dropdown/Dropdown";
+function AddMeeting({ show, onHide, slot, groups, user }) {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [group, setGroup] = useState("");
+  const [selectedGroups, setSelectedGroup] = useState([]);
+  const [isRecurring, setIsRecurring] = useState(false);
+  const [allGroups, setAllGroups] = useState([]);
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/psas/AddMeeting`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title,
+            description,
+            group,
+            isRecurring,
+            date: isRecurring ? null : slot,
+          }),
+        }
+      );
+      const data = await response.json();
+      alert(data.message);
+      onHide();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-function AddMeeting(props) {
-  const [selection, setSelection] = useState(null);
-  const [groups, setGroups] = useState([
-    {
-      label: 1,
-      value: "AI Health Engine",
-    },
-    {
-      label: 2,
-      value: "BIIT Project Supervisor Appointment System",
-    },
-  ]);
-  const handleSelect = (option) => {
-    setSelection(option);
+  const fetchAllocatedGroups = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/AllocatedGroups?teacher_id=${user.uid}`
+      );
+      const result = await response.json();
+      if (Array.isArray(result)) {
+        setAllGroups(result);
+      } else {
+        alert(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
-  // Extracting day and time from the slot
-  const start = props.slot.start;
-  const end = props.slot.end;
-  const options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  options.timeZone = "UTC";
-  options.timeZoneName = "short";
-  const day = start.toLocaleDateString("en-us", options);
-  const Day = day.split(",")[0];
-  console.log(Day);
-  const date = start.toLocaleDateString(); // Format: MM/DD/YYYY
-  const startTime = start.toLocaleTimeString(); // Format: HH:MM:SS
-  const endTime = end.toLocaleTimeString(); // Format: HH:MM:SS
+  useEffect(() => {
+    fetchAllocatedGroups();
+  }, []);
 
   return (
-    <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
+    <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Add Meeting Details
-        </Modal.Title>
+        <Modal.Title>Add Meeting</Modal.Title>
       </Modal.Header>
-      <Modal.Body className="grid-example">
-        <Container>
-          <div className="flex justify-center items-center">
-            <h5>Date: {date}</h5>
-          </div>
-          <div className="flex justify-center items-center">
-            <h5>Day: {Day}</h5>
-          </div>
-          <FloatingLabel
-            controlId="floatingInput"
-            label="Meeting Title"
-            className="mb-3"
-          >
-            <Form.Control type="input" placeholder="Meeting Title" />
-          </FloatingLabel>
-
-          <div className="flex justify-evenly items-center">
-            <InputGroup className="mb-3">
-              <Form.Control
-                value={`Start Time: ${startTime}`}
-                readOnly
-                aria-label="Start Time"
-              />
-            </InputGroup>
-            <InputGroup className="mb-3">
-              <Form.Control
-                value={`End Time: ${endTime}`}
-                readOnly
-                aria-label="End Time"
-              />
-            </InputGroup>
-          </div>
-          <div className="flex justify-around items-center ">
-            <label htmlFor="">Select Group:</label>
-            <Dropdown
-              options={groups}
-              value={selection}
-              OnSelect={handleSelect}
-              className="relative w-4/6"
-            />
-          </div>
-          <FloatingLabel controlId="floatingTextarea2" label="Message">
+      <Modal.Body>
+        <Form>
+          <Form.Select aria-label="Default select example">
+            {allGroups.map((group, index) => (
+              <option
+                key={index}
+                value={group.value}
+                onChange={(e) => {
+                  setGroup(e.target.value);
+                }}
+              >
+                {group.value}
+              </option>
+            ))}
+          </Form.Select>
+          <Form.Group controlId="formTitle">
+            <Form.Label>Title</Form.Label>
             <Form.Control
-              as="textarea"
-              placeholder="Meeting Message"
-              className="mt-3"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
-          </FloatingLabel>
-          <div className="grid xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 xs:grid-cols-1 mt-3">
-            <Button variant="secondary">Cancel</Button>
-            <Button variant="success">Add Meeting</Button>
-          </div>
-        </Container>
+          </Form.Group>
+          <Form.Group controlId="formDescription">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="formGroup">
+            <Form.Label>Group</Form.Label>
+            <Form.Control
+              type="text"
+              value={group}
+              onChange={(e) => setGroup(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="formIsRecurring">
+            <Form.Check
+              type="checkbox"
+              label="Recurring"
+              checked={isRecurring}
+              onChange={(e) => setIsRecurring(e.target.checked)}
+            />
+          </Form.Group>
+        </Form>
       </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={onHide}>
+          Close
+        </Button>
+        <Button variant="primary" onClick={handleSubmit}>
+          Save Changes
+        </Button>
+      </Modal.Footer>
     </Modal>
   );
 }

@@ -1,224 +1,186 @@
-import React, { useState } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
-
-const times = [
-  "08:30 AM",
-  "09:30 AM",
-  "10:30 AM",
-  "11:30 AM",
-  "12:30 PM",
-  "01:30 PM",
-  "02:00 PM",
-  "03:00 PM",
-  "04:00 PM",
-  "05:00 PM",
-  "06:00 PM",
-];
+import React, { useEffect, useState } from "react";
+import { Badge, Button, Form } from "react-bootstrap";
+import BiitSAS from "../../../assets/extra/biitSAS.png";
 
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
-const defaultEvents = [
-  {
-    day: "Mon",
-    time: "08:30 AM",
-    title: "Class",
-    description: "Algebra and Geometry",
-  },
-  {
-    day: "Tue",
-    time: "10:30 AM",
-    title: "Class",
-    description: "Physics and Chemistry",
-  },
-  {
-    day: "Wed",
-    time: "01:30 PM",
-    title: "Class",
-    description: "World History",
-  },
-  {
-    day: "Thu",
-    time: "03:00 PM",
-    title: "Class",
-    description: "Literature and Grammar",
-  },
-  {
-    day: "Fri",
-    time: "05:00 PM",
-    title: "Class",
-    description: "Drawing and Painting",
-  },
-  {
-    day: "Fri",
-    time: "03:00 PM",
-    title: "Meeting With Group..",
-    description: "Drawing and Painting",
-  },
-  {
-    day: "Fri",
-    time: "02:00 PM",
-    title: "Meeting With Group..",
-    description: "Drawing and Painting",
-  },
-];
-
-const participants = [
-  { regNo: "2020-Arid-3675", name: "Mubashir Liaqat" },
-  { regNo: "2020-Arid-4224", name: "Touseef Sajjad" },
-  { regNo: "2020-Arid-3677", name: "Usama Ijaz" },
-];
-
 function WeeklySchedule() {
-  const [schedule, setSchedule] = useState(
-    days.reduce((acc, day) => {
-      acc[day] = times.map((time) => {
-        const event = defaultEvents.find(
-          (event) => event.day === day && event.time === time
-        );
-        return { time, event: event || null };
-      });
-      return acc;
-    }, {})
-  );
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : null;
+  const [timeSlots, setTimeSlots] = useState([]);
+  const [weeklySchedule, setWeeklySchedule] = useState([]);
+  const [schedule, setSchedule] = useState([]);
+  const [selectedSlots, setSelectedSlots] = useState([]);
 
-  const [showModal, setShowModal] = useState(false);
-  const [currentSlot, setCurrentSlot] = useState(null);
-  const [modalData, setModalData] = useState({
-    title: "",
-    description: "",
-    participant: "",
-  });
-
-  const handleSlotClick = (day, time, event) => {
-    setCurrentSlot({ day, time, event });
-    setModalData({
-      title: event?.title || "",
-      description: event?.description || "",
-      participant: event?.participant || "",
-    });
-    setShowModal(true);
+  const fetchAllTimeSlots = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/FetchAllTimeSlots`
+      );
+      const result = await response.json();
+      if (Array.isArray(result)) {
+        setTimeSlots(result);
+        console.log(result);
+      } else {
+        alert(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleSave = () => {
-    const updatedSchedule = { ...schedule };
-    const slot = updatedSchedule[currentSlot.day].find(
-      (slot) => slot.time === currentSlot.time
+  const fetchSchedule = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/FetchingAllSchedule?teacher_id=${user.tid}`
+      );
+      const result = await response.json();
+      if (Array.isArray(result)) {
+        setWeeklySchedule(result);
+        console.log(result);
+        const initialSchedule = days.reduce((acc, day) => {
+          acc[day] = result.map((slot) => ({
+            time:
+              timeSlots.find((time) => time.id === slot.id)?.start_time || "",
+            status: slot[day],
+          }));
+          return acc;
+        }, {});
+        setSchedule(initialSchedule);
+      } else {
+        alert(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllTimeSlots();
+    fetchSchedule();
+  }, []);
+
+  const handleSlotChange = (day, slotId, status) => {
+    setSchedule((prevSchedule) => ({
+      ...prevSchedule,
+      [day]: prevSchedule[day].map((slot) =>
+        slot.time === timeSlots[slotId - 1].start_time
+          ? { ...slot, status }
+          : slot
+      ),
+    }));
+  };
+
+  const handleSaveSchedule = async () => {
+    try {
+      console.log(selectedSlots);
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/UpdatingWorkingHours?teacher_id=${user.tid}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(selectedSlots),
+        }
+      );
+      const result = await response.json();
+      if (response.ok) {
+        alert("Schedule updated successfully!");
+        setSelectedSlots([]);
+      } else {
+        alert("Error updating schedule: " + result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSelectSlot = (day, slot) => {
+    const isSelected = selectedSlots.some(
+      (selected) => selected.day === day && selected.slot === slot
     );
-    slot.event = {
-      title: modalData.title,
-      description: modalData.description,
-      participant: modalData.participant,
-    };
-    setSchedule(updatedSchedule);
-    setShowModal(false);
+    if (isSelected) {
+      setSelectedSlots(
+        selectedSlots.filter(
+          (selected) => !(selected.day === day && selected.slot === slot)
+        )
+      );
+    } else {
+      setSelectedSlots([...selectedSlots, { day, slot }]);
+    }
   };
+
+  // const handleBulkUpdate = (status) => {
+  //   selectedSlots.forEach(({ day, slot }) => {
+  //     handleSlotChange(day, slot, status);
+  //   });
+  //   setSelectedSlots([]);
+  // };
 
   return (
-    <div className="container mx-auto my-4">
-      <div className="grid grid-cols-6 gap-4">
-        <div></div>
-        {days.map((day) => (
-          <div key={day} className="text-center font-bold">
-            {day}
-          </div>
-        ))}
+    <>
+      <div className="max-w-full p-2">
+        <img src={BiitSAS} alt="BiitSAS" className="max-w-full" />
       </div>
-      {times.map((time) => (
-        <div key={time} className="grid grid-cols-6 gap-4">
-          <div className="text-right font-semibold text-xs">{time}</div>
-          {days.map((day) => (
-            <div
-              key={day}
-              className={`border border-gray-300 my-1 cursor-pointer text-left text-[8px] ${
-                schedule[day].find((slot) => slot.time === time).event
-                  ? "bg-blue-100"
-                  : "bg-white"
-              }`}
-              onClick={() =>
-                handleSlotClick(
-                  day,
-                  time,
-                  schedule[day].find((slot) => slot.time === time).event
-                )
-              }
-            >
-              {schedule[day].find((slot) => slot.time === time).event?.title ||
-                ""}
-            </div>
-          ))}
-        </div>
-      ))}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {currentSlot?.event ? "Event Details" : "Add Event"}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group>
-              <Form.Label>Date & Time</Form.Label>
-              <Form.Control
-                type="text"
-                readOnly
-                value={`${currentSlot?.day} ${currentSlot?.time}`}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Title</Form.Label>
-              <Form.Control
-                type="text"
-                value={modalData.title}
-                onChange={(e) =>
-                  setModalData({ ...modalData, title: e.target.value })
-                }
-                readOnly={currentSlot?.event}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Description</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={modalData.description}
-                onChange={(e) =>
-                  setModalData({ ...modalData, description: e.target.value })
-                }
-                readOnly={currentSlot?.event}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Select Participant</Form.Label>
-              <Form.Control
-                as="select"
-                value={modalData.participant}
-                onChange={(e) =>
-                  setModalData({ ...modalData, participant: e.target.value })
-                }
-                disabled={currentSlot?.event}
-              >
-                <option value="">Select a participant</option>
-                {participants.map((participant) => (
-                  <option key={participant.regNo} value={participant.regNo}>
-                    {participant.regNo} - {participant.name}
-                  </option>
+      <div className="schedule-container p-2">
+        <div className="table-responsive">
+          <table className="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th className="font-semibold">Time</th>
+                {days.map((day) => (
+                  <th key={day} className="font-semibold">
+                    {day}
+                  </th>
                 ))}
-              </Form.Control>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        {!currentSlot?.event && (
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowModal(false)}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={handleSave}>
-              Save Changes
-            </Button>
-          </Modal.Footer>
-        )}
-      </Modal>
-    </div>
+              </tr>
+            </thead>
+            <tbody>
+              {timeSlots.map((slot) => (
+                <tr key={slot.id}>
+                  <td className="text-[11px]">{slot.start_time}</td>
+                  {days.map((day) => (
+                    <td key={day}>
+                      {schedule[day] &&
+                      schedule[day][slot.id - 1]?.status === 1 ? (
+                        <Badge bg="secondary" disabled className="text-[8px]">
+                          Class
+                        </Badge>
+                      ) : schedule[day] &&
+                        schedule[day][slot.id - 1]?.status === 2 ? (
+                        <Badge
+                          bg="success"
+                          className="text-[8px]"
+                          onClick={() => handleSlotChange(day, slot.id, 0)}
+                        >
+                          Meeting
+                        </Badge>
+                      ) : (
+                        <Form.Check
+                          type="checkbox"
+                          checked={selectedSlots.some(
+                            (selected) =>
+                              selected.day === day && selected.slot === slot.id
+                          )}
+                          className="text-[20px] flex self-center mx-auto"
+                          onChange={() => handleSelectSlot(day, slot.id)}
+                        />
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex justify-center items-center mt-3">
+          <Button variant="primary" onClick={handleSaveSchedule}>
+            Save
+          </Button>
+        </div>
+      </div>
+    </>
   );
 }
 

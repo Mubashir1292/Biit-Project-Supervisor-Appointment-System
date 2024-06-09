@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Button, Form, Modal } from "react-bootstrap";
+import { Badge, Button, Form } from "react-bootstrap";
 import BiitSAS from "../../../assets/extra/biitSAS.png";
 
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
@@ -11,11 +11,6 @@ function WeeklySchedule() {
   const [weeklySchedule, setWeeklySchedule] = useState([]);
   const [schedule, setSchedule] = useState([]);
   const [selectedSlots, setSelectedSlots] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [meetingTitle, setMeetingTitle] = useState("");
-  const [meetingDescription, setMeetingDescription] = useState("");
-  const [participants, setParticipants] = useState([]);
-  const [groups, setGroups] = useState([]);
 
   const fetchAllTimeSlots = async () => {
     try {
@@ -60,23 +55,6 @@ function WeeklySchedule() {
     }
   };
 
-  const fetchGroups = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/AllocatedGroups?teacher_id=${user.uid}`
-      );
-      const result = await response.json();
-      if (Array.isArray(result)) {
-        setParticipants(result);
-        console.log(result);
-      } else {
-        alert(result);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     fetchAllTimeSlots();
     fetchSchedule();
@@ -95,21 +73,23 @@ function WeeklySchedule() {
 
   const handleSaveSchedule = async () => {
     try {
+      console.log(selectedSlots);
       const response = await fetch(
-        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/UpdateSchedule?teacher_id=${user.uid}`,
+        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/UpdatingWorkingHours?teacher_id=${user.uid}`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(weeklySchedule),
+          body: JSON.stringify(selectedSlots),
         }
       );
       const result = await response.json();
-      if (result.success) {
+      if (response.ok) {
         alert("Schedule updated successfully!");
+        setSelectedSlots([]);
       } else {
-        alert("Error updating schedule");
+        alert("Error updating schedule: " + result);
       }
     } catch (error) {
       console.log(error);
@@ -131,40 +111,12 @@ function WeeklySchedule() {
     }
   };
 
-  const handleBulkUpdate = (status) => {
-    selectedSlots.forEach(({ day, slot }) => {
-      handleSlotChange(day, slot, status);
-    });
-    setSelectedSlots([]);
-  };
-
-  const handleSetMeeting = (slots) => {
-    if (slots.length > 0) {
-      console.log(slots);
-      fetchGroups();
-      setShowModal(true);
-    } else {
-      alert("Select Atleast one Slot");
-    }
-  };
-
-  //! post the meeting with a group
-  const PostingANewMeeting = async () => {
-    try {
-      const response = await fetch(``);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleSaveMeeting = (groups) => {
-    setShowModal(false);
-    if (groups.length > 0) {
-    } else {
-      alert("please select a group");
-    }
-    // Add logic to save the meeting
-  };
+  // const handleBulkUpdate = (status) => {
+  //   selectedSlots.forEach(({ day, slot }) => {
+  //     handleSlotChange(day, slot, status);
+  //   });
+  //   setSelectedSlots([]);
+  // };
 
   return (
     <>
@@ -211,9 +163,8 @@ function WeeklySchedule() {
                             (selected) =>
                               selected.day === day && selected.slot === slot.id
                           )}
-                          className="text-[12px]"
+                          className="text-[20px] flex self-center mx-auto"
                           onChange={() => handleSelectSlot(day, slot.id)}
-                          label="Free"
                         />
                       )}
                     </td>
@@ -223,83 +174,12 @@ function WeeklySchedule() {
             </tbody>
           </table>
         </div>
-        <div className="grid grid-cols-2 gap-2 mt-3">
-          <Button variant="primary" onClick={() => handleBulkUpdate(0)}>
-            Selected to Free
-          </Button>
-          <Button variant="secondary" onClick={() => handleBulkUpdate(1)}>
-            Selected to Class
-          </Button>
-          <Button
-            variant="success"
-            onClick={() => {
-              handleSetMeeting(selectedSlots);
-            }}
-            className="mt-2"
-          >
-            Selected to Meeting
+        <div className="flex justify-center items-center mt-3">
+          <Button variant="primary" onClick={handleSaveSchedule}>
+            Save
           </Button>
         </div>
       </div>
-
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Set Meeting</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="meetingTitle">
-              <Form.Label>Title</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter meeting title"
-                value={meetingTitle}
-                onChange={(e) => setMeetingTitle(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="meetingDescription" className="mt-3">
-              <Form.Label>Description</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                placeholder="Enter meeting description"
-                value={meetingDescription}
-                onChange={(e) => setMeetingDescription(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="participants" className="mt-3">
-              <Form.Label>Participants</Form.Label>
-              <Form.Control
-                as="select"
-                multiple
-                value={groups.map((group) => group.value)}
-                onChange={(e) =>
-                  setGroups(
-                    [...e.target.selectedOptions].map((option) => ({
-                      label: option.text,
-                      value: option.value,
-                    }))
-                  )
-                }
-              >
-                {participants.map((group) => (
-                  <option key={group?.label} value={group?.value}>
-                    {group?.value}
-                  </option>
-                ))}
-              </Form.Control>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSaveMeeting}>
-            Save Meeting
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </>
   );
 }
