@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Badge, Button, Form } from "react-bootstrap";
 import BiitSAS from "../../../assets/extra/biitSAS.png";
 
-const days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
 function WeeklySchedule() {
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
   const [timeSlots, setTimeSlots] = useState([]);
-  const [weeklySchedule, setWeeklySchedule] = useState([]);
-  const [schedule, setSchedule] = useState([]);
+  const [weeklySchedule, setWeeklySchedule] = useState({});
   const [selectedSlots, setSelectedSlots] = useState([]);
 
   const fetchAllTimeSlots = async () => {
@@ -20,7 +19,6 @@ function WeeklySchedule() {
       const result = await response.json();
       if (Array.isArray(result)) {
         setTimeSlots(result);
-        console.log(result);
       } else {
         alert(result);
       }
@@ -36,17 +34,11 @@ function WeeklySchedule() {
       );
       const result = await response.json();
       if (Array.isArray(result)) {
-        setWeeklySchedule(result);
-        console.log(result);
-        const initialSchedule = days.reduce((acc, day) => {
-          acc[day] = result.map((slot) => ({
-            time:
-              timeSlots.find((time) => time.id === slot.id)?.start_time || "",
-            status: slot[day],
-          }));
+        const schedule = days.reduce((acc, day) => {
+          acc[day] = result.filter((slot) => slot.Day === day);
           return acc;
         }, {});
-        setSchedule(initialSchedule);
+        setWeeklySchedule(schedule);
       } else {
         alert(result);
       }
@@ -60,20 +52,27 @@ function WeeklySchedule() {
     fetchSchedule();
   }, []);
 
-  const handleSlotChange = (day, slotId, status) => {
-    setSchedule((prevSchedule) => ({
-      ...prevSchedule,
-      [day]: prevSchedule[day].map((slot) =>
-        slot.time === timeSlots[slotId - 1].start_time
-          ? { ...slot, status }
-          : slot
-      ),
-    }));
+  const handleSelectSlot = (day, slotId) => {
+    const isSelected = selectedSlots.some(
+      (selected) => selected.day === day && selected.slot === slotId
+    );
+
+    if (isSelected) {
+      setSelectedSlots((prevSelected) =>
+        prevSelected.filter(
+          (selected) => !(selected.day === day && selected.slot === slotId)
+        )
+      );
+    } else {
+      setSelectedSlots((prevSelected) => [
+        ...prevSelected,
+        { day, slot: slotId },
+      ]);
+    }
   };
 
   const handleSaveSchedule = async () => {
     try {
-      console.log(selectedSlots);
       const response = await fetch(
         `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/UpdatingWorkingHours?teacher_id=${user.uid}`,
         {
@@ -86,8 +85,8 @@ function WeeklySchedule() {
       );
       const result = await response.json();
       if (response.ok) {
-        alert("Schedule updated successfully!");
-        setSelectedSlots([]);
+        fetchSchedule();
+        alert(result);
       } else {
         alert("Error updating schedule: " + result);
       }
@@ -95,28 +94,6 @@ function WeeklySchedule() {
       console.log(error);
     }
   };
-
-  const handleSelectSlot = (day, slot) => {
-    const isSelected = selectedSlots.some(
-      (selected) => selected.day === day && selected.slot === slot
-    );
-    if (isSelected) {
-      setSelectedSlots(
-        selectedSlots.filter(
-          (selected) => !(selected.day === day && selected.slot === slot)
-        )
-      );
-    } else {
-      setSelectedSlots([...selectedSlots, { day, slot }]);
-    }
-  };
-
-  // const handleBulkUpdate = (status) => {
-  //   selectedSlots.forEach(({ day, slot }) => {
-  //     handleSlotChange(day, slot, status);
-  //   });
-  //   setSelectedSlots([]);
-  // };
 
   return (
     <>
@@ -142,19 +119,31 @@ function WeeklySchedule() {
                   <td className="text-[11px]">{slot.start_time}</td>
                   {days.map((day) => (
                     <td key={day}>
-                      {schedule[day] &&
-                      schedule[day][slot.id - 1]?.status === 1 ? (
+                      {weeklySchedule[day] &&
+                      weeklySchedule[day].find((s) => s.id === slot.id)
+                        ?.status === 1 ? (
                         <Badge bg="secondary" disabled className="text-[8px]">
                           Class
                         </Badge>
-                      ) : schedule[day] &&
-                        schedule[day][slot.id - 1]?.status === 2 ? (
+                      ) : weeklySchedule[day] &&
+                        weeklySchedule[day].find((s) => s.id === slot.id)
+                          ?.status === 2 ? (
                         <Badge
                           bg="success"
                           className="text-[8px]"
-                          onClick={() => handleSlotChange(day, slot.id, 0)}
+                          onClick={() => handleSelectSlot(day, slot.id)}
                         >
                           Meeting
+                        </Badge>
+                      ) : weeklySchedule[day] &&
+                        weeklySchedule[day].find((s) => s.id === slot.id)
+                          ?.status === 3 ? (
+                        <Badge
+                          bg="info"
+                          className="text-[8px]"
+                          onClick={() => handleSelectSlot(day, slot.id)}
+                        >
+                          Working hour
                         </Badge>
                       ) : (
                         <Form.Check

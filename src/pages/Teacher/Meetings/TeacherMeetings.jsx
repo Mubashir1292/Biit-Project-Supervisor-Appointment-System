@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Button } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import AddMeeting from "./AddMeeting";
+
 function TeacherMeetings() {
   const [showMeetingModal, setShowMeetingModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
@@ -11,6 +12,7 @@ function TeacherMeetings() {
   const [groups, setGroups] = useState([]);
   const UserString = localStorage.getItem("user");
   const user = UserString ? JSON.parse(UserString) : null;
+  const [timeSlots, setTimeSlots] = useState([]);
 
   //! fetching Allocated groups
   const fetchAllocatedGroups = async () => {
@@ -28,17 +30,21 @@ function TeacherMeetings() {
       console.log(error);
     }
   };
-  const fetchMeetings = async () => {
+
+  //! fetchMeetings
+  const fetchMeetings = async (date) => {
     try {
       const response = await fetch(
-        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/MeetingOnDate?date=${selectedDate.toISOString()}&teacher_id=${
+        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/MeetingOnDate?date=${date.toISOString()}&teacher_id=${
           user.uid
         }`
       );
       const data = await response.json();
       if (Array.isArray(data)) {
         setMeetings(data);
+        console.log(data);
       } else {
+        setMeetings([]);
         alert(data);
       }
     } catch (error) {
@@ -49,9 +55,9 @@ function TeacherMeetings() {
   useEffect(() => {
     fetchAllocatedGroups();
   }, []);
-  //! fetchMeetings
+
   useEffect(() => {
-    fetchMeetings();
+    fetchMeetings(selectedDate);
   }, [selectedDate]);
 
   const handleSelectSlot = () => {
@@ -73,18 +79,29 @@ function TeacherMeetings() {
         </Button>
       </div>
       <div>
-        <h3>Meetings on {selectedDate.toDateString()}</h3>
-        <ul>
+        <h6 className="text-center">
+          Meetings on {selectedDate.toDateString()}
+        </h6>
+        <div>
           {meetings &&
-            meetings.map((meeting) => (
-              <li key={meeting.mid}>
-                <h4>{meeting.title}</h4>
-                <p>{meeting.description}</p>
-                <p>{meeting.isRecurring ? "Recurring" : "One-time"}</p>
-                <p>Participants: {meeting.participant_Id}</p>
-              </li>
+            meetings.map((meeting, index) => (
+              <Card key={index} className="mb-3">
+                <Card.Header className="d-flex justify-content-between">
+                  <div>{meeting.title}</div>
+                  <div>{new Date(meeting.Date).toLocaleDateString()}</div>
+                </Card.Header>
+                <Card.Body>
+                  <Card.Title>{meeting.title}</Card.Title>
+                  <Card.Text>{meeting.description}</Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                  <small className="text-muted">
+                    Participants: {meeting.username}
+                  </small>
+                </Card.Footer>
+              </Card>
             ))}
-        </ul>
+        </div>
       </div>
       {showMeetingModal && (
         <AddMeeting
@@ -92,6 +109,8 @@ function TeacherMeetings() {
           onHide={() => setShowMeetingModal(false)}
           slot={selectedSlot}
           user={user}
+          date={selectedDate}
+          allTimeSlots={timeSlots}
         />
       )}
     </div>
