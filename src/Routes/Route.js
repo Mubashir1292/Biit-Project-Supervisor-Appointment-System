@@ -30,6 +30,7 @@ import GroupProgress from "../pages/Teacher/GroupProgress/GroupProgress";
 import Task from "../pages/Teacher/Task/Task";
 import CheckingTask from "../pages/Teacher/Task/CheckingTask";
 import ReceivedGroupRequest from "../pages/Student/Requests/ReceivedGroupJoiningRequest/ReceivedGroupRequest";
+import AutoScheduleMeetings from "../pages/Teacher/AutoScheduleMeetings/AutoScheduleMeetings";
 //? === inserting all Routes for all users
 export const studentsRoutes = [
   { path: "/student/dashboard", element: <StudentDashboard /> },
@@ -72,6 +73,8 @@ export const Teacher = [
   { path: "/teacher/meetings", element: <TeacherMeetings /> },
   { path: "/teacher/allgroupProgress", element: <GroupProgress /> },
   { path: "/teacher/request", element: <Requests /> },
+  { path: "/teacher/recurringMeetings", element: <AutoScheduleMeetings /> },
+
   { path: "/teacher/schedule", element: <Schedule /> },
   { path: "/teacher/notification", element: <SingleNotification /> },
   { path: "/teacher/AssigingTask", element: <Task /> },

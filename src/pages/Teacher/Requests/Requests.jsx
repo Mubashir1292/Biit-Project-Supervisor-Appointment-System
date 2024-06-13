@@ -75,7 +75,7 @@ function Requests() {
           <h3 className="text-green-500">Project Requests</h3>
         </div>
         {!loading ? (
-          groupDetail && groupDetail.length > 1 ? (
+          groupDetail && groupDetail.length > 0 ? (
             <Accordion defaultActiveKey={0}>
               {groupDetail.map((group, index) => (
                 <Accordion.Item

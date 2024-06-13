@@ -4,156 +4,177 @@ import Dropdown from "../../../components/dropdown/Dropdown";
 import Table from "react-bootstrap/Table";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import InputGroup from "react-bootstrap/InputGroup";
-import Form from "react-bootstrap/Form";
-import { Button } from "react-bootstrap";
+import { Button, Form, InputGroup } from "react-bootstrap";
 
 function CheckingTask() {
   const [semester, setSemester] = useState(7);
-  const [selection, setSelection] = useState(null);
-  const [taskSelection, setTaskSelection] = useState(null);
-  const [tasks, setTasks] = useState([]);
-  const [membersInfo, setMembersInfo] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const [selectionGroup, setSelectionGroup] = useState();
+  const [selectedMeeting, setSelectedMeeting] = useState(null);
+  const [allgroups, setAllGroups] = useState([]);
+  const [allMeetings, setAllMeetings] = useState([]);
+  const [allGroupMembers, setAllGroupsMembers] = useState([]);
+  const [attendance, setAttendance] = useState({});
+  const [comments, setComments] = useState({});
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : null;
+
+  //! fetching all groups
+  const getAllGroupsOnSemester = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/Psas_Supervisor_Expert/getAllGroups?semester=${semester}&teacher_id=${user.uid}`
+      );
+      const result = await response.json();
+      if (Array.isArray(result)) {
+        setAllGroups(result);
+      } else {
+        alert(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const FetchMeetingsOnGroupTitle = async (option) => {
+    try {
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/FetchMeetingsOnGroupTitle?teacher_id=${
+          user.uid
+        }&group_id=${option && option.label}`
+      );
+      const result = await response.json();
+      if (Array.isArray(result)) {
+        setAllMeetings(result);
+      } else {
+        alert(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const FetchingGroupMembersDetails = async (option) => {
+    try {
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/FetchingGroupMembersDetails?meeting_id=${option.label}`
+      );
+      const result = await response.json();
+      if (Array.isArray(result)) {
+        setAllGroupsMembers(result);
+        // Initialize attendance and comments states
+        const initialAttendance = {};
+        const initialComments = {};
+        result.forEach((member) => {
+          initialAttendance[member.st_id] = 0;
+          initialComments[member.st_id] = "";
+        });
+        setAttendance(initialAttendance);
+        setComments(initialComments);
+      } else {
+        alert(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    const allgroups = [
-      {
-        label: 1,
-        semester: 7,
-        value: "AI Health Engine",
-        groupsMembers: [
-          { id: "2020-Arid-3675", name: "Mubashir Liaqat" },
-          { id: "2020-Arid-4224", name: "Touseef Sajjad" },
-          { id: "2020-Arid-4225", name: "Faheem Abbas" },
-        ],
-      },
-      {
-        label: 2,
-        semester: 7,
-        value: "BIIT Career Counsling",
-        groupsMembers: [
-          { id: "2020-Arid-3675", name: "Mubashir Liaqat" },
-          { id: "2020-Arid-4224", name: "Touseef Sajjad" },
-          { id: "2020-Arid-4225", name: "Faheem Abbas" },
-        ],
-      },
-      {
-        label: 5,
-        semester: 8,
-        value: "BIIT Project Supervisor Appointment System",
-        groupsMembers: [
-          { id: "2020-Arid-3675", name: "Mubashir Liaqat" },
-          { id: "2020-Arid-4224", name: "Touseef Sajjad" },
-          { id: "2020-Arid-4225", name: "Faheem Abbas" },
-        ],
-      },
-      {
-        label: 6,
-        semester: 8,
-        value: "BIIT Meeting Management System",
-        groupsMembers: [
-          { id: "2020-Arid-3675", name: "Mubashir Liaqat" },
-          { id: "2020-Arid-4224", name: "Touseef Sajjad" },
-          { id: "2020-Arid-4225", name: "Faheem Abbas" },
-        ],
-      },
-    ];
-
-    const filteredGroups = allgroups.filter(
-      (item) => item.semester === semester
-    );
-    setGroups(filteredGroups);
+    getAllGroupsOnSemester();
   }, [semester]);
 
   const handleSelect = (option) => {
-    setSelection(option);
-    const tasksList = [
-      {
-        label: 1,
-        group: "BIIT Meeting Management System",
-        value: "ERD Completion",
-        dueDate: "2024-05-06",
-      },
-      {
-        label: 2,
-        group: "BIIT Meeting Management System",
-        value: "ERD Completion",
-        dueDate: "2024-05-06",
-      },
-      {
-        label: 3,
-        group: "BIIT Project Supervisor Appointment System",
-        value: "ERD Completion",
-        dueDate: "2024-05-06",
-      },
-      {
-        label: 4,
-        group: "BIIT Career Counsling",
-        value: "ERD Completion",
-        dueDate: "2024-05-06",
-      },
-      {
-        label: 5,
-        group: "BIIT Career Counsling",
-        value: "ERD Completion",
-        dueDate: "2024-05-06",
-      },
-    ];
-    const filterTaskGroup = tasksList.filter(
-      (item) => item.group === option.value
-    );
-    setTasks(filterTaskGroup);
-
-    const initialMembersInfo = option.groupsMembers.map((member) => ({
-      id: member.id,
-      name: member.name,
-      status: false,
-      comments: "",
-    }));
-    setMembersInfo(initialMembersInfo);
+    setSelectionGroup(option);
+    FetchMeetingsOnGroupTitle(option);
   };
 
-  const handleSelectTask = (option) => {
-    setTaskSelection(option);
+  const handleMeetingSelect = (option) => {
+    setSelectedMeeting(option);
+    FetchingGroupMembersDetails(option);
   };
 
   const handleSemesterChange = (newSemester) => {
     setSemester(newSemester);
-    setSelection(null);
-    setTaskSelection(null);
-    setTasks([]);
-    setMembersInfo([]);
+    setSelectionGroup(null);
+    setSelectedMeeting(null);
   };
 
-  const handleStatusChange = (id) => {
-    setMembersInfo((prevMembersInfo) =>
-      prevMembersInfo.map((member) =>
-        member.id === id ? { ...member, status: !member.status } : member
-      )
+  const handleAttendanceChange = (st_id) => {
+    setAttendance((prevAttendance) => ({
+      ...prevAttendance,
+      [st_id]: prevAttendance[st_id] === 1 ? 0 : 1,
+    }));
+  };
+
+  const handleCommentsChange = (st_id, comments) => {
+    setComments((prevComments) => ({
+      ...prevComments,
+      [st_id]: comments,
+    }));
+  };
+
+  const updateMeetingProgress = async (group, meeting, MeetingProgressList) => {
+    try {
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/updateMeetingProgress?group_id=${group}&meeting_id=${meeting}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ MeetingProgress: MeetingProgressList }),
+        }
+      );
+      const result = await response.json();
+      if (result) {
+        alert(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!selectionGroup) {
+      alert("Select the group");
+      return;
+    }
+    if (!selectedMeeting) {
+      alert("Select the meeting");
+      return;
+    }
+
+    const dataToSend = Object.keys(attendance).map((member) => ({
+      regNo: member,
+      attendance: attendance[member],
+      comment: comments[member],
+    }));
+
+    console.log(selectionGroup);
+    console.log(selectedMeeting);
+    console.log(dataToSend);
+
+    await updateMeetingProgress(
+      selectionGroup.label,
+      selectedMeeting.label,
+      dataToSend
     );
   };
 
-  const handleCommentsChange = (id, comments) => {
-    setMembersInfo((prevMembersInfo) =>
-      prevMembersInfo.map((member) =>
-        member.id === id ? { ...member, comments } : member
-      )
-    );
-  };
-
-  const handleSubmit = () => {
-    console.log(membersInfo);
-  };
   const handleCancel = () => {
-    setMembersInfo((prevMembersInfo) =>
-      prevMembersInfo.map((member) => ({
-        ...member,
-        status: false,
-        comments: "",
-      }))
+    setAttendance((prevAttendance) =>
+      Object.keys(prevAttendance).reduce((acc, st_id) => {
+        acc[st_id] = 0;
+        return acc;
+      }, {})
+    );
+    setComments((prevComments) =>
+      Object.keys(prevComments).reduce((acc, st_id) => {
+        acc[st_id] = "";
+        return acc;
+      }, {})
     );
   };
+
   return (
     <React.Fragment>
       <div className="flex flex-col max-[320px]:w-[320px]">
@@ -163,7 +184,7 @@ function CheckingTask() {
           className="max-[320px]:w-8/12 flex self-center"
         />
         <h3 className="text-center font-normal text-green-500">
-          Update Progress
+          Update Meetings
         </h3>
         <div className="flex justify-center">
           <h6
@@ -187,26 +208,26 @@ function CheckingTask() {
             Fyp-02
           </h6>
         </div>
-        <div className="flex justify-center max-[320px]:space-x-0 space-x-5 items-center">
+        <div className="flex justify-center max-[320px]:space-x-3 space-x-5 items-center">
           <span className="max-[320px]:text-xs text-sm">Select Group:</span>
           <Dropdown
-            options={groups}
-            value={selection}
+            options={allgroups}
+            value={selectionGroup}
             OnSelect={handleSelect}
-            className="relative  max-[320px]:w-3/6 w-2/12 cursor-default max-[320px]:text-xs text-sm"
+            className="relative  max-[320px]:w-3/6 w-2/12 cursor-default max-[320px]:text-[10px] text-sm"
           />
         </div>
         <div className="border-2 border-green-500 mt-3 max-[320px]:w-full w-4/12 flex flex-col self-center p-2 rounded-md">
           <div className="flex justify-center items-center max-[320px]:space-x-0 space-x-5">
-            <span className="max-[320px]:text-xs text-sm">Select Task:</span>
+            <span className="max-[320px]:text-xs text-sm">Select Meeting:</span>
             <Dropdown
-              options={tasks}
-              value={taskSelection}
-              OnSelect={handleSelectTask}
+              options={allMeetings}
+              value={selectedMeeting}
+              OnSelect={handleMeetingSelect}
               className="relative max-[320px]:w-8/12 w-5/12 cursor-default"
             />
           </div>
-          {!taskSelection ? (
+          {!selectedMeeting ? (
             <div className="w-2/6 mt-3 mx-auto">
               <SkeletonTheme highlightColor="#05B05B">
                 <Skeleton count={4} />
@@ -214,47 +235,53 @@ function CheckingTask() {
             </div>
           ) : (
             <>
-              <span className="text-end text-[10px] mt-2">
-                Due Date : {taskSelection.dueDate}
-              </span>
               <Table bordered hover className="mt-2">
                 <thead>
                   <tr>
-                    <th className="text-sm">Name</th>
-                    <th className="text-sm">Task Status</th>
-                    <th className="text-sm text-center">Comments</th>
+                    <th className="text-xs font-semibold text-center">Name</th>
+                    <th className="text-xs font-semibold text-center">
+                      Attendance
+                    </th>
+                    <th className="text-xs text-center font-semibold">
+                      Comments
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {membersInfo.map((member) => (
-                    <tr key={member.id}>
-                      <td className="text-[10px]">{member.name}</td>
-                      <td className="text-center">
-                        <div className="w-full flex justify-center items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            checked={member.status}
-                            onChange={() => handleStatusChange(member.id)}
-                          />
-                          <span className="text-[8px]">Completed</span>
-                        </div>
-                      </td>
-                      <td>
-                        <InputGroup size="sm">
-                          <Form.Control
-                            aria-label="Small"
-                            aria-describedby="inputGroup-sizing-sm"
-                            placeholder="Comments..."
-                            className="text-[10px]"
-                            value={member.comments}
-                            onChange={(e) =>
-                              handleCommentsChange(member.id, e.target.value)
-                            }
-                          />
-                        </InputGroup>
-                      </td>
-                    </tr>
-                  ))}
+                  {allGroupMembers &&
+                    allGroupMembers.map((member, index) => (
+                      <tr key={index}>
+                        <td className="text-[10px]">{member?.st_id}</td>
+                        <td className="text-center">
+                          <div className="w-full flex justify-center items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              checked={attendance[member?.st_id] === 1}
+                              onChange={() =>
+                                handleAttendanceChange(member?.st_id)
+                              }
+                            />
+                          </div>
+                        </td>
+                        <td>
+                          <InputGroup size="sm">
+                            <Form.Control
+                              aria-label="Small"
+                              aria-describedby="inputGroup-sizing-sm"
+                              placeholder="Comments..."
+                              className="text-[10px]"
+                              value={comments[member.st_id]}
+                              onChange={(e) =>
+                                handleCommentsChange(
+                                  member.st_id,
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </InputGroup>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </Table>
             </>

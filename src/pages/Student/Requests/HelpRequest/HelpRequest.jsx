@@ -57,26 +57,23 @@ function HelpRequest() {
   };
 
   //* getting the TimeSlots available on to the respective day
-  const getTimeSlots = async (day) => {
+  const getTimeSlots = async (date) => {
     try {
+      const formattedDate = format(date, "yyyy-MM-dd");
       const response = await fetch(
-        `http://localhost/OfficialPSAS/api/psas/GetTheTimeSlots?day=${day}&teacher_id=${
-          selectionExpert.label || expertList[0].label
-        }`
+        `http://localhost/OfficialPSAS/api/PSAS/GetTheTimeSlots?date=${formattedDate}&teacher_id=${selectionExpert.label}`
       );
       const data = await response.json();
-      if (data.length > 0) {
-        const TimeSlots = data.map((item) => ({
+      if (Array.isArray(data)) {
+        const TimeSlots = data?.map((item, index) => ({
           label: item.Sch_id,
           value: item.start_time.slice(0, 5) + "-" + item.end_time.slice(0, 5),
         }));
         if (TimeSlots.length !== 0) {
           setFreeTimeSlots(TimeSlots);
-        } else {
-          setFreeTimeSlots(data);
         }
       } else {
-        setFreeTimeSlots([]);
+        console.log(data);
       }
     } catch (error) {
       console.log(error);
@@ -123,13 +120,14 @@ function HelpRequest() {
 
   const handleSelect = (option) => {
     setSelectionExpert(option);
+    console.log(option);
   };
 
   useEffect(() => {
     if (selectedDate) {
       const day = format(selectedDate, "EEEE"); // Get the full day name
       setSelectedDay(day);
-      getTimeSlots(day);
+      getTimeSlots(selectedDate);
     }
   }, [selectedDate]);
 
@@ -165,14 +163,14 @@ function HelpRequest() {
               className="relative w-6/12 text-sm"
             />
           </div>
-          <div className="flex flex-row w-full justify-center items-center space-x-1">
+          <div className="flex flex-row w-full justify-center items-center space-x-1 my-2">
             <label htmlFor="Select Date" className="line-height-normal text-xs">
               Select Date:
             </label>
             <DatePicker
               selected={selectedDate}
               onChange={(date) => setSelectedDate(date)}
-              className="relative w-full text-sm bg-gray-200"
+              className="relative w-full text-sm bg-gray-200 mx-auto"
             />
           </div>
           {selectedDay && (

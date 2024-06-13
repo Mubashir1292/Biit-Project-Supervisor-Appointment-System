@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import BiitSAS from "../../../assets/extra/biitSAS.png";
 import man from "../../../assets/extra/man.png";
-import { Badge, Card, Col, Container, Row } from "react-bootstrap";
+import { Card, Col, Container, Row } from "react-bootstrap";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import PersonalProgress from "../../../components/Modals/BootstrapModal/PersonalProgress";
 import Dropdown from "../../../components/dropdown/Dropdown";
@@ -16,7 +16,6 @@ function GroupProgress() {
   const [todoTasks, setTodoTasks] = useState([]);
   const [doingTasks, setDoingTasks] = useState([]);
   const [doneTasks, setDoneTasks] = useState([]);
-  const [membersInfo, setMembersInfo] = useState([]);
   const [groups, setGroups] = useState([]);
 
   const userString = localStorage.getItem("user");

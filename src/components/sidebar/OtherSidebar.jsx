@@ -14,7 +14,7 @@ import { VscRequestChanges } from "react-icons/vsc";
 import { AiFillSchedule, AiTwotoneSchedule } from "react-icons/ai";
 import { SiGotomeeting, SiProgress } from "react-icons/si";
 import { FaUserGraduate, FaUserTie } from "react-icons/fa";
-import { GrTask } from "react-icons/gr";
+import { GrSchedule, GrTask } from "react-icons/gr";
 import { FaDiagramProject, FaUsersLine } from "react-icons/fa6";
 import { HiClipboardDocumentList } from "react-icons/hi2";
 import { RiCalendarEventFill } from "react-icons/ri";
@@ -117,12 +117,7 @@ function OtherSidebar({ expanded, setExpanded }) {
       icon: <UsersRound size={20} />,
     },
     {
-      label: "Tasks List",
-      path: "/student/TaskList",
-      icon: <GoTasklist size={20} />,
-    },
-    {
-      label: "Progress",
+      label: "Meetings",
       path: "/student/progress",
       icon: <CircleDotDashed size={20} />,
     },
@@ -172,10 +167,16 @@ function OtherSidebar({ expanded, setExpanded }) {
       icon: <HiClipboardDocumentList />,
     },
     {
-      label: "Group Progress",
-      path: "/teacher/allgroupProgress",
-      icon: <GiProgression />,
+      label: "Manage Recurring Meetings",
+      path: "/teacher/recurringMeetings",
+      icon: <GrSchedule />,
     },
+
+    // {
+    //   label: "Group Progress",
+    //   path: "/teacher/allgroupProgress",
+    //   icon: <GiProgression />,
+    // },
     {
       label: "Meetings",
       path: "/teacher/meetings",
@@ -187,12 +188,7 @@ function OtherSidebar({ expanded, setExpanded }) {
       icon: <RiCalendarEventFill />,
     },
     {
-      label: "Assign New Task",
-      path: "/teacher/AssigingTask",
-      icon: <GrTask />,
-    },
-    {
-      label: "Update Progress",
+      label: "Update Meetings Progress",
       path: "/teacher/CheckingTask",
       icon: <SiProgress />,
     },

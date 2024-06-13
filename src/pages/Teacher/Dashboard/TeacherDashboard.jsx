@@ -10,6 +10,7 @@ function TeacherDashboard() {
   const userString = localStorage.getItem("user");
   const userFounded = userString ? JSON.parse(userString) : null;
   const [isUser, setIsUser] = useState(userFounded);
+  console.log(isUser);
   const [allNewAssignedTasks, setAllNewAssignedTasks] = useState([]);
   //! Group Requests
   const [allgroupRequests, setAllGroupRequests] = useState([]);
