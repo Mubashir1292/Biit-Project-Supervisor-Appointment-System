@@ -1,14 +1,36 @@
 import React, { useEffect, useState } from "react";
 import BiitSAS from "../../../assets/extra/biitSAS.png";
-import { Form } from "react-bootstrap";
+import { Button, Form, InputGroup } from "react-bootstrap";
 import Dropdown from "../../../components/dropdown/Dropdown";
 function ScheduleMeetings() {
   const [group, setGroup] = useState("");
-  const [frequency, setFrequency] = useState(1);
+  const [frequency, setFrequency] = useState();
   const [allGroups, setAllGroups] = useState([]);
   const UserString = localStorage.getItem("user");
   const user = UserString ? JSON.parse(UserString) : null;
 
+  const allOptions = [
+    {
+      label: 1,
+      value: 1,
+    },
+    {
+      label: 2,
+      value: 2,
+    },
+    {
+      label: 3,
+      value: 3,
+    },
+    {
+      label: 4,
+      value: 4,
+    },
+  ];
+
+  const handleFrequencySelect = (option) => {
+    setFrequency(option);
+  };
   const handleSubmit = async () => {
     try {
     } catch (error) {
@@ -48,27 +70,32 @@ function ScheduleMeetings() {
         </div>
       </div>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="flex justify-center items-center space-x-2">
           <Form.Label>Select Group:</Form.Label>
           <Dropdown
             options={allGroups}
             OnSelect={handleGroupSelect}
-            className="relative w-5/6l0"
+            className="relative w-4/6"
             value={group}
           />
         </div>
-        <div>
-          <label>Frequency per week:</label>
-          <input
-            type="number"
+        <div className="flex  justify-center items-center space-x-1">
+          <Form.Label>Frequency per week:</Form.Label>
+          <Dropdown
+            options={allOptions}
+            className="relative w-2/6"
             value={frequency}
-            onChange={(e) => setFrequency(e.target.value)}
-            required
-            min="1"
-            max="7"
+            OnSelect={handleFrequencySelect}
           />
         </div>
-        <button type="submit">Schedule Meetings</button>
+        <div className="flex justify-around items-center mt-3">
+          <Button variant="success" type="submit">
+            Schedule Meetings
+          </Button>
+          <Button variant="secondary" type="submit">
+            Cancel
+          </Button>
+        </div>
       </form>
     </>
   );
