@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import BiitSAS from "../../../../assets/extra/biitSAS.png";
 import Dropdown from "../../../../components/dropdown/Dropdown";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 function HelpRequest() {
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
-
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectionExpert, setSelectionExpert] = useState(null);
   const [Timeselection, setTimeSelection] = useState(null);
@@ -27,6 +27,8 @@ function HelpRequest() {
       const data = await response.json();
       if (data !== null) {
         setMyTechnology(data.name);
+      } else {
+        //alert(data);
       }
     } catch (error) {
       console.log(error);
@@ -49,7 +51,6 @@ function HelpRequest() {
         setExpertList(expertListData);
       } else {
         setExpertList([]);
-        console.log(expertList);
       }
     } catch (error) {
       console.log(error);
@@ -61,7 +62,9 @@ function HelpRequest() {
     try {
       const formattedDate = format(date, "yyyy-MM-dd");
       const response = await fetch(
-        `http://localhost/OfficialPSAS/api/PSAS/GetTheTimeSlots?date=${formattedDate}&teacher_id=${selectionExpert.label}`
+        `http://localhost/OfficialPSAS/api/PSAS/GetTheTimeSlots?date=${formattedDate}&teacher_id=${
+          (selectionExpert && selectionExpert.label) || expertList[0].label
+        }`
       );
       const data = await response.json();
       if (Array.isArray(data)) {
@@ -73,7 +76,7 @@ function HelpRequest() {
           setFreeTimeSlots(TimeSlots);
         }
       } else {
-        console.log(data);
+        // alert(data);
       }
     } catch (error) {
       console.log(error);
@@ -95,7 +98,7 @@ function HelpRequest() {
             selectionExpert.label || expertList[0].label
           }&regno=${user.uid}&sch_id=${
             Timeselection.label || freeTimeSlots[0].label
-          }&message=${message}`,
+          }&message=${message}&date=${selectedDate}`,
           {
             method: "POST",
             headers: {
@@ -104,7 +107,12 @@ function HelpRequest() {
           }
         );
         const data = await response.json();
-        alert(data);
+        if (data === "Requested for the Appointment") {
+          setMessage("");
+          navigate("/student/dashboard");
+        } else {
+          // alert(data);
+        }
       } else {
         alert("fields cannot be empty");
       }
@@ -134,6 +142,15 @@ function HelpRequest() {
   const handleTimeSelect = (option) => {
     setTimeSelection(option);
   };
+
+  function getToday() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+    const day = String(today.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
 
   return (
     <>
@@ -167,10 +184,12 @@ function HelpRequest() {
             <label htmlFor="Select Date" className="line-height-normal text-xs">
               Select Date:
             </label>
-            <DatePicker
-              selected={selectedDate}
-              onChange={(date) => setSelectedDate(date)}
-              className="relative w-full text-sm bg-gray-200 mx-auto"
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              min={getToday()}
+              className="relative w-3/6 text-sm bg-gray-200"
             />
           </div>
           {selectedDay && (

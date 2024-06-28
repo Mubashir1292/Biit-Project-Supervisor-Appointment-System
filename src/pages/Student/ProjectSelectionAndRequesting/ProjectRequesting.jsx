@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import biitSAS from "../../../assets/extra/biitSAS.png";
-import Dropdown from "../../../components/dropdown/Dropdown";
 import { FloatingLabel, Form, Table } from "react-bootstrap";
 function ProjectRequesting() {
   const [showProjectPage, setShowProjectPage] = useState(false);
@@ -14,14 +13,14 @@ function ProjectRequesting() {
   const user = userString ? JSON.parse(userString) : null;
   const [currentGroupCgpa, setCurrentGroupCgpa] = useState(0);
   const [myGroupDetails, setMyGroupDetails] = useState([]);
-
+  const [supervisorRanks, setSupervisorRanks] = useState([]);
   const handleProjectSearching = async (value) => {
     try {
       const response = await fetch(
         `http://localhost/OfficialPSAS/api/psas/SearchProjectByKeyword?value=${value}&regno=${user.uid}`
       );
       const data = await response.json();
-      if (data) {
+      if (typeof data === "object" || Array.isArray(data)) {
         setSelectedProjects(data.allProjects);
         console.log(selectedProjects);
       } else {
@@ -48,6 +47,26 @@ function ProjectRequesting() {
     }
   };
 
+  const GetAverageOfRate = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/OfficialPSAS/api/psas/GetAverageOfRate`
+      );
+      const result = await response.json();
+      console.log(result);
+      if (Array.isArray(result) || typeof result === "object") {
+        setSupervisorRanks(result);
+      } else {
+        alert(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    GetAverageOfRate();
+  }, []);
+
   // const handleGetOptions = async () => {
   //   try {
   //     const response = await fetch(
@@ -71,8 +90,11 @@ function ProjectRequesting() {
         `http://localhost/OfficialPSAS/api/psas/DetailsProjectSupervisorGroup?projectId=${choosedProject.pid}&regNo=${user.uid}`
       );
       const data = await response.json();
-      console.log(data.singleGroupDetails);
-      setMyGroupDetails(data.singleGroupDetails);
+      if (typeof data === "object" || Array.isArray(data)) {
+        setMyGroupDetails(data.singleGroupDetails);
+      } else {
+        alert(data);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -148,6 +170,26 @@ function ProjectRequesting() {
                   {currentGroupCgpa || 0}
                 </span>
               </p>
+              <div className="flex justify-center items-center">
+                <Table responsive hover bordered>
+                  <thead>
+                    <tr>
+                      <th>Supervisor</th>
+                      <th>Rank</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {supervisorRanks &&
+                      supervisorRanks?.map((item, index) => (
+                        <tr key={index}>
+                          <td>{item.username}</td>
+                          <td>{index + 1}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </Table>
+              </div>
+
               <div className=" w-full h-full">
                 <span>Enter Domain or Title to Search:</span>
                 <FloatingLabel
@@ -174,7 +216,7 @@ function ProjectRequesting() {
                 /> */}
               </div>
               <div className="flex flex-col w-full h-full justify-center items-center">
-                <label className="text-lg">offered Projects</label>
+                <label className="text-lg">Offered Projects</label>
                 <div className="w-full flex justify-center items-center">
                   <Table
                     responsive
@@ -221,7 +263,7 @@ function ProjectRequesting() {
                   name="projectDetails"
                   id="projectDetails"
                   readOnly
-                  className="border border-gray-500 rounded xl:w-2/12 xl:h-20 md:w-5/6 lg:w-5/12 lg:h-32 p-3"
+                  className="border border-gray-500 rounded xl:w-2/12 xl:h-20  min-[320px]:w-[300px] p-3"
                   value={choosedProjectDesc}
                 ></textarea>
               </div>
@@ -255,7 +297,9 @@ function ProjectRequesting() {
               <div className="flex flex-row space-x-4 justify-center">
                 <label className="text-xs ">Supervisor:</label>
                 <b className="text-center text-xs font-semibold">
-                  {choosedProject.username ? choosedProject?.username : ""}
+                  {choosedProject.username
+                    ? choosedProject?.username
+                    : "Generic Project"}
                 </b>
               </div>
               <div className="overflow-x mt-2 w-full">

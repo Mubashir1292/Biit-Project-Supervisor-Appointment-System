@@ -70,9 +70,7 @@ function AddMeeting({ show, onHide, user, date }) {
   const fetchGetTimeSlots = async (date) => {
     try {
       const response = await fetch(
-        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/FetchTimeSlots?date=${date.toISOString()}&teacher_id=${
-          user.uid
-        }`
+        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/FetchTimeSlots?date=${date}&teacher_id=${user.uid}`
       );
       const result = await response.json();
       if (Array.isArray(result)) {

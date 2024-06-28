@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import BiitSAS from "../../../assets/extra/biitSAS.png";
 import Card from "react-bootstrap/Card";
 import Table from "react-bootstrap/Table";
-import Accordion from "react-bootstrap/Accordion";
 import { Button } from "react-bootstrap";
 
 function Requests() {
@@ -19,10 +18,11 @@ function Requests() {
     "Section",
     "Grade",
   ]);
-  const handleSubmit = async (id) => {
+
+  const handleSubmit = async (id, option) => {
     try {
       const response = await fetch(
-        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/RespondingToRequest?req_id=${id}&status=1`,
+        `http://localhost/OfficialPSAS/api/PSAS_Supervisor_Expert/RespondingToRequest?req_id=${id}&status=${option}`,
         {
           method: "POST",
           headers: {
@@ -30,8 +30,20 @@ function Requests() {
           },
         }
       );
-      const result = await response.json();
-      if (result) {
+      const result = await response.text();
+      if (
+        result.includes("Project Request Rejected") ||
+        result.includes("Project Request Forwarded") ||
+        result.includes("Project Allocated to group")
+      ) {
+        alert(result);
+        setGroupDetail((prev) => {
+          prev.filter(
+            (group) =>
+              !group.requestDetails.some((request) => request.req_id === id)
+          );
+        });
+      } else {
         alert(result);
       }
     } catch (error) {
@@ -47,9 +59,16 @@ function Requests() {
         )}`
       );
       const result = await response.json();
-      if (result) {
+      if (
+        (Array.isArray(result) && result.length > 0) ||
+        typeof result === "object"
+      ) {
         console.log(result);
         setGroupDetail(result);
+        setLoading(false);
+      } else {
+        setGroupDetail([]);
+        console.log(result);
         setLoading(false);
       }
     } catch (error) {
@@ -74,87 +93,78 @@ function Requests() {
           />
           <h3 className="text-green-500">Project Requests</h3>
         </div>
-        {!loading ? (
-          groupDetail && groupDetail.length > 0 ? (
-            <Accordion defaultActiveKey={0}>
-              {groupDetail.map((group, index) => (
-                <Accordion.Item
-                  eventKey={index}
-                  key={index}
-                  className="min-[320px]:w-[320px]"
-                >
-                  <Accordion.Header>
-                    {group.projectDetails[index].title}
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    <Card className="w-full">
-                      <Card.Body>
-                        <Card.Title className="text-center text-sm">
-                          {group.projectDetails[index].title}
-                        </Card.Title>
-                        <Card.Text className="text-center text-xs">
-                          {group.projectDetails[index].description}
-                        </Card.Text>
-                        <Card.Subtitle className="flex justify-center items-center space-x-2">
-                          <span className="text-sm">Group CGPA :</span>
-                          <span className="text-sm">
-                            {group.groupDetails[index].avgCgpa.toFixed(2)}
-                          </span>
-                        </Card.Subtitle>
-                        <Table responsive bordered hover className="w-3/6">
-                          <thead>
-                            <tr>
-                              <th>#</th>
-                              {tableHeadings.map((item, index) => (
-                                <th key={index}>{item}</th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {group.groupMembers[index].map(
-                              (member, memberIndex) => (
-                                <tr
-                                  key={memberIndex}
-                                  className="cursor-default"
-                                >
-                                  <td>{memberIndex + 1}</td>
-                                  <td>{member.st_id}</td>
-                                  <td>{member.name}</td>
-                                  <td>{member.technology}</td>
-                                  <td>{member.cgpa}</td>
-                                  <td>{member.semester}</td>
-                                  <td>{member.section}</td>
-                                  <td>{member.grade}</td>
-                                </tr>
-                              )
-                            )}
-                          </tbody>
-                        </Table>
-                      </Card.Body>
-                      <div className="flex justify-center items-center space-x-3 mt-0 mb-2">
-                        <Button
-                          variant="success"
-                          onClick={() => {
-                            handleSubmit(group.requestDetails[index].req_id);
-                          }}
-                        >
-                          Accept
-                        </Button>
-                        <Button variant="secondary">Reject</Button>
-                      </div>
-                    </Card>
-                  </Accordion.Body>
-                </Accordion.Item>
-              ))}
-            </Accordion>
+        <>
+          {groupDetail && groupDetail?.length > 0 ? (
+            groupDetail?.map((group, index) => (
+              <Card className="w-full" key={index}>
+                <Card.Body>
+                  <Card.Title className="text-center text-sm">
+                    {group.projectDetails[index]?.title}
+                  </Card.Title>
+                  <Card.Text className="text-center text-xs">
+                    {group.projectDetails[index]?.description}
+                  </Card.Text>
+                  <Card.Subtitle className="flex justify-center items-center space-x-2">
+                    <span className="text-sm">Group CGPA :</span>
+                    <span className="text-sm">
+                      {group.groupDetails[index]?.avgCgpa.toFixed(2)}
+                    </span>
+                  </Card.Subtitle>
+                  <Table responsive bordered hover className="w-3/6">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        {tableHeadings?.map((item, index) => (
+                          <th key={index}>{item}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {group?.groupMembers[index]?.map(
+                        (member, memberIndex) => (
+                          <tr key={memberIndex} className="cursor-default">
+                            <td>{memberIndex + 1}</td>
+                            <td>{member?.st_id}</td>
+                            <td>{member?.name}</td>
+                            <td>{member?.technology}</td>
+                            <td>{member?.cgpa}</td>
+                            <td>{member?.semester}</td>
+                            <td>{member?.section}</td>
+                            <td>{member?.grade}</td>
+                          </tr>
+                        )
+                      )}
+                    </tbody>
+                  </Table>
+                </Card.Body>
+                <div className="flex justify-center items-center space-x-3 mt-0 mb-2">
+                  <Button
+                    variant="success"
+                    onClick={() => {
+                      handleSubmit(group?.requestDetails[index]?.req_id, 1);
+                    }}
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      handleSubmit(group?.requestDetails[index]?.req_id, 0);
+                    }}
+                  >
+                    Reject
+                  </Button>
+                </div>
+              </Card>
+            ))
           ) : (
-            <span>No Requests Founded</span>
-          )
-        ) : (
-          <>
-            <span>No Projects Founded</span>
-          </>
-        )}
+            <div className="flex justify-center items-center h-64">
+              <span className="text-lg text-gray-500">
+                No Project Requests Found
+              </span>
+            </div>
+          )}
+        </>
       </div>
     </React.Fragment>
   );

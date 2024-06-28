@@ -5,106 +5,150 @@ import Card from "react-bootstrap/Card";
 import { ArrowDownWideNarrow, ArrowUpWideNarrow } from "lucide-react";
 import Calendar from "react-calendar";
 import "../../../assets/css/style.css";
+import "react-calendar/dist/Calendar.css";
+import { Button } from "react-bootstrap";
 
 function StudentDashboard() {
-  const [sentRequest, setSentRequest] = useState([]);
-  const [isUser, setIsUser] = useState(null);
+  const userString = localStorage.getItem("user");
+  const user = userString ? JSON.parse(userString) : null;
   const [value, setValue] = useState(new Date());
   const navigate = useNavigate();
-  const [allgroupRequests, setAllGroupRequests] = useState([]);
+  const [allgroupCreationRequests, setAllGroupCreationRequests] = useState([]);
   const [allSentRequests, setAllSentRequest] = useState([]);
-  const [allSupervisorMeetings, setAllSupervisorMeetings] = useState([
-    {
-      meetId: "1",
-      meetTitle: "Weekly Meeting",
-      meetDesc: "Please Come in my office",
-      meetDate: "2024-05-01",
-      meetTime: "12:30pm",
-      teacher: "Sir Zahid",
-    },
-    {
-      meetId: "2",
-      meetTitle: "Weekly Meeting",
-      meetDesc: "Please Come in my office",
-      meetDate: "2024-05-01",
-      meetTime: "12:30pm",
-      teacher: "Sir Zahid",
-    },
-    {
-      meetId: "3",
-      meetTitle: "Weekly Meeting",
-      meetDesc: "Please Come in my office",
-      meetDate: "2024-05-01",
-      meetTime: "12:30pm",
-      teacher: "Sir Zahid",
-    },
-  ]);
-  const [allTechnicalExpertMeetings, setAllTechnicalExpertMeetings] = useState([
-    {
-      meetId: "1",
-      meetTitle: "Weekly Meeting",
-      meetDesc: "Please Come in my office",
-      meetDate: "2024-05-01",
-      meetTime: "12:30pm",
-      teacher: "Sir Zahid",
-    },
-    {
-      meetId: "1",
-      meetTitle: "Weekly Meeting",
-      meetDesc: "Please Come in my office",
-      meetDate: "2024-05-02",
-      meetTime: "12:30pm",
-      teacher: "Sir Zahid",
-    },
-  ]);
+  const [allPendingAssistanceRequests, setAllPendingAssistanceRequests] =
+    useState([]);
+  const [allSupervisorMeetings, setAllSupervisorMeetings] = useState([]);
+  const [allAppointmentMeetings, setAllAppointmentMeetings] = useState([]);
   const [allMeetings, setAllMeetings] = useState([]);
-
-  const handleGetRequests = async (user) => {
+  const [groupCreated, setGroupCreated] = useState(false);
+  // Fetch all group creation requests
+  const getAllGroupCreationRequests = async () => {
     try {
-      setIsUser(user);
       const response = await fetch(
-        `http://localhost/officialPSAS/api/psas/getAllRequests?Id=${user.uid}`
+        `http://localhost/officialpsas/api/psas/getAllGroupCreationRequests?regNo=${user.uid}`
       );
-      const data = await response.json();
-      if (data.length !== 0) {
-        setSentRequest(data);
-        console.log(data);
+      const result = await response.json();
+      if (Array.isArray(result)) {
+        setAllGroupCreationRequests(result);
       } else {
-        console.log(response.status);
+        console.log(result);
       }
     } catch (error) {
-      console.log("Error:", error);
+      console.log(error);
+    }
+  };
+
+  // Fetch all sent group joining requests
+  const getAllSendGroupJoiningRequests = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/officialpsas/api/psas/getAllGroupCreationRequests?regNo=${user.uid}`
+      );
+      const result = await response.json();
+      if (Array.isArray(result)) {
+        setAllSentRequest(result);
+      } else {
+        console.log(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Fetch all pending assistance requests
+  const GettingAllAssistanceRequestsPending = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/officialpsas/api/psas/GettingAllAssistanceRequestsPending?regNo=${user.uid}`
+      );
+      const result = await response.json();
+      if (Array.isArray(result)) {
+        setAllPendingAssistanceRequests(result);
+      } else {
+        console.log(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Fetch all supervisor and appointment meetings
+  const gettingAllMeetingsAndAppointments = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/officialpsas/api/psas/gettingAllMeetingsAndAppointments?regNo=${user.uid}`
+      );
+      const result = await response.json();
+      if (result && typeof result === "object") {
+        setAllSupervisorMeetings(result.allMeetings || []);
+        setAllAppointmentMeetings(result.AllAppointmentRequests || []);
+        // Merge supervisor and appointment meetings into one array
+        setAllMeetings([
+          ...(result.allMeetings || []),
+          ...(result.AllAppointmentRequests || []),
+        ]);
+      } else {
+        console.log(result);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   useEffect(() => {
-    const userString = localStorage.getItem("user");
-    const user = userString ? JSON.parse(userString) : null;
-    if (user) {
-      console.log(user);
-      handleGetRequests(user);
-    } else {
-      navigate("/");
-    }
+    getAllGroupCreationRequests();
+    getAllSendGroupJoiningRequests();
+    GettingAllAssistanceRequestsPending();
+    gettingAllMeetingsAndAppointments();
   }, []);
 
+  // Update meetings when the selected date changes
+  useEffect(() => {
+    const selectedDate = new Date(value);
+    const supervisorMeetingsOnDate = allSupervisorMeetings.filter((meeting) =>
+      meeting.date
+        ? new Date(meeting.date).toDateString() === selectedDate.toDateString()
+        : meeting.Day ===
+          selectedDate.toLocaleString("en-US", { weekday: "long" })
+    );
+    const appointmentMeetingsOnDate = allAppointmentMeetings.filter((meeting) =>
+      meeting.date
+        ? new Date(meeting.date).toDateString() === selectedDate.toDateString()
+        : meeting.Day ===
+          selectedDate.toLocaleString("en-US", { weekday: "long" })
+    );
+    // Set meetings for the selected date
+    setAllMeetings([...supervisorMeetingsOnDate, ...appointmentMeetingsOnDate]);
+    console.log(allMeetings);
+  }, [allSupervisorMeetings, allAppointmentMeetings, value]);
+
+  // Handle calendar date select
   const handleSelectDate = (date) => {
-    const selectedDate = new Date(date);
-    const supervisorMeetingsOnDate = allSupervisorMeetings.filter(
-      (meeting) =>
-        new Date(meeting.meetDate).toDateString() ===
-        selectedDate.toDateString()
-    );
-    const ExpertMeetings = allTechnicalExpertMeetings.filter(
-      (meeting) =>
-        new Date(meeting.meetDate).toDateString() ===
-        selectedDate.toDateString()
-    );
-    setAllMeetings([...supervisorMeetingsOnDate, ...ExpertMeetings]);
-    setValue(selectedDate);
-    console.log(selectedDate);
-    console.log(allMeetings.length);
+    setValue(date);
   };
+
+  const handleFeedback = () => {
+    navigate("/student/feedback");
+  };
+
+  const GettingGroupInfo = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/officialpsas/api/psas/GettingGroupInfo?regNo=${user.uid}`
+      );
+      const result = await response.text();
+      console.log(result);
+      if (result.includes(1)) {
+        setGroupCreated((curr) => !curr);
+        console.log(groupCreated);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    GettingGroupInfo();
+  }, []);
 
   return (
     <div className="w-full h-full p-1 bg-gray-50">
@@ -123,7 +167,9 @@ function StudentDashboard() {
             </Card.Header>
             <Card.Body>
               <Card.Title className="flex justify-center items-center">
-                <span className="text-xl">{allgroupRequests.length}</span>
+                <span className="text-xl">
+                  {allgroupCreationRequests && allgroupCreationRequests.length}
+                </span>
                 <span>
                   {allSentRequests.length > 0 ? (
                     <ArrowUpWideNarrow className="w-[16px]" />
@@ -140,7 +186,9 @@ function StudentDashboard() {
             </Card.Header>
             <Card.Body>
               <Card.Title className="flex justify-center items-center">
-                <span className="text-xl">{allSentRequests.length}</span>
+                <span className="text-xl">
+                  {allSentRequests && allSentRequests.length}
+                </span>
                 <span>
                   {allSentRequests.length > 0 ? (
                     <ArrowUpWideNarrow className="w-[16px]" />
@@ -157,26 +205,13 @@ function StudentDashboard() {
             </Card.Header>
             <Card.Body>
               <Card.Title className="flex justify-center items-center">
-                <span className="text-xl">{allSentRequests.length}</span>
-                <span>
-                  {allSentRequests.length > 0 ? (
-                    <ArrowUpWideNarrow className="w-[16px]" />
-                  ) : (
-                    <ArrowDownWideNarrow className="w-[16px]" />
-                  )}
+                <span className="text-xl">
+                  {allPendingAssistanceRequests &&
+                    allPendingAssistanceRequests?.length}
                 </span>
-              </Card.Title>
-            </Card.Body>
-          </Card>
-          <Card className="w-full">
-            <Card.Header className="font-semibold text-xs text-center">
-              Group Messages
-            </Card.Header>
-            <Card.Body>
-              <Card.Title className="flex justify-center items-center">
-                <span className="text-xl">{allSentRequests.length}</span>
                 <span>
-                  {allSentRequests.length > 0 ? (
+                  {allPendingAssistanceRequests &&
+                  allPendingAssistanceRequests?.length > 0 ? (
                     <ArrowUpWideNarrow className="w-[16px]" />
                   ) : (
                     <ArrowDownWideNarrow className="w-[16px]" />
@@ -187,36 +222,62 @@ function StudentDashboard() {
           </Card>
         </div>
       </div>
+      <div className="flex flex-col">
+        {groupCreated ? (
+          <Button
+            variant="primary"
+            onClick={() => {
+              handleFeedback();
+            }}
+          >
+            Feedback
+          </Button>
+        ) : (
+          <></>
+        )}
+      </div>
       <div className="container mt-4">
         <h3 className="text-center text-xl">Meetings</h3>
-        <div className="grid md:grid-cols-2 sm:grid-cols-1 -ml-1">
+        <div className="grid md:grid-cols-2 sm:grid-cols-1">
+          {/* Calendar component */}
           <div>
             <Calendar
               value={value}
-              onChange={setValue}
+              onChange={handleSelectDate}
               className="w-full"
-              onClickDay={handleSelectDate}
-              tileContent={({ date, view }) => {
+              tileContent={({ date }) => {
                 const supervisorMeetingsOnDate = allSupervisorMeetings.filter(
                   (meeting) =>
-                    new Date(meeting.meetDate).toDateString() ===
-                    date.toDateString()
+                    meeting.date
+                      ? new Date(meeting.date).toDateString() ===
+                        date.toDateString()
+                      : meeting.Day ===
+                        date.toLocaleString("en-US", { weekday: "long" })
                 );
-                const expertMeetingsOnDate = allTechnicalExpertMeetings.filter(
+                const appointmentMeetingsOnDate = allAppointmentMeetings.filter(
                   (meeting) =>
-                    new Date(meeting.meetDate).toDateString() ===
-                    date.toDateString()
+                    meeting.date
+                      ? new Date(meeting.date).toDateString() ===
+                        date.toDateString()
+                      : meeting.Day ===
+                        date.toLocaleString("en-US", { weekday: "long" })
                 );
                 const totalMeetings = [
                   ...supervisorMeetingsOnDate,
-                  ...expertMeetingsOnDate,
+                  ...appointmentMeetingsOnDate,
                 ];
                 return totalMeetings.length > 0 ? (
                   <div className="flex justify-center items-center">
-                    {[...Array(totalMeetings.length)].map((_, index) => (
+                    {supervisorMeetingsOnDate.length > 0 && (
+                      <div className="dot bg-green-400 ml-1 w-2 h-2 rounded-full"></div>
+                    )}
+                    {appointmentMeetingsOnDate.length > 0 && (
+                      <div className="dot bg-blue-400 ml-1 w-2 h-2 rounded-full"></div>
+                    )}
+                    {[...Array(totalMeetings.length - 1)].map((_, index) => (
                       <div
                         key={index}
-                        className="dot bg-green-400 ml-1 w-2 h-2 rounded-full"
+                        className="dot bg-gray-400 ml-1 w-2 h-2 rounded-full"
                       ></div>
                     ))}
                   </div>
@@ -224,24 +285,34 @@ function StudentDashboard() {
               }}
             />
           </div>
+          {/* Display meetings for selected date */}
           <div className="h-full bg-gray-200 overflow-auto p-3">
-            {allMeetings.map((item, index) => (
-              <Card key={index} className="w-full mb-2">
-                <Card.Header className="text-center">
-                  {item.meetTitle}
-                </Card.Header>
-                <Card.Body>
-                  <Card.Title className="text-center">
-                    {item.teacher}
-                  </Card.Title>
-                  <Card.Subtitle className="flex justify-evenly items-center space-x-2">
-                    <span>{item.meetDate}</span>
-                    <span>{item.meetTime}</span>
-                  </Card.Subtitle>
-                  <Card.Text className="text-center">{item.meetDesc}</Card.Text>
-                </Card.Body>
-              </Card>
-            ))}
+            {allMeetings &&
+              allMeetings.map((item, index) => (
+                <Card key={index} className="w-full mb-2">
+                  <Card.Header className="text-center">
+                    {item.title}
+                  </Card.Header>
+                  <Card.Body>
+                    <Card.Title className="text-center">
+                      Sir {item.username}
+                    </Card.Title>
+                    <Card.Subtitle className="flex justify-evenly items-center space-x-2">
+                      <span>
+                        {item.date
+                          ? new Date(item.date).toLocaleDateString()
+                          : item.Day}
+                      </span>
+                      <span>{`${item.start_time || ""} - ${
+                        item.end_time || ""
+                      }`}</span>
+                    </Card.Subtitle>
+                    <Card.Text className="text-center">
+                      {item.description}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              ))}
           </div>
         </div>
       </div>

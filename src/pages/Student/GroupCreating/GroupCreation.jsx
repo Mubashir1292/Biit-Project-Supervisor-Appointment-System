@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 //import biitSAS from "../../../assets/extra/biitSAS.png";
 import BiitSAS from "../../../assets/extra/biitSAS.png";
-import Button from "../../../components/button/Button";
+import { Button } from "react-bootstrap";
 import Dropdown from "../../../components/dropdown/Dropdown";
-import { Table } from "react-bootstrap";
+import { Modal, Table } from "react-bootstrap";
 
 function GroupCreation() {
   const [isGroupCreated, setIsGroupCreated] = useState(false);
@@ -17,6 +17,7 @@ function GroupCreation() {
   const [selectedTechnology, setSelectedTechnology] = useState(null);
   const [options, setOptions] = useState([]);
   const [res, setRes] = useState([]);
+  const [personalData, setPersonalData] = useState();
   const userString = localStorage.getItem("user");
   const user = userString ? JSON.parse(userString) : null;
   //* setting the variables for the requesting for a new member
@@ -28,6 +29,8 @@ function GroupCreation() {
   const [completeAridNumber, setCompleteAridNumber] = useState("");
   const [currentGroupCgpa, setCurrentGroupCgpa] = useState(0);
   const [listOfTechnologies, setListOfTechnologies] = useState([]);
+  const [allNotifications, setAllNotifications] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   //* Getting all Technologies for group creation
   const handleGetAllTechnologies = async () => {
     try {
@@ -35,7 +38,11 @@ function GroupCreation() {
         `http://localhost/OfficialPSAS/api/psas/FillingDropDown`
       );
       const data = await response.json();
-      setListOfTechnologies(data);
+      if (Array.isArray(data)) {
+        setListOfTechnologies(data);
+      } else {
+        alert(data);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -50,10 +57,14 @@ function GroupCreation() {
         `http://localhost/OfficialPSAS/api/psas/GettingTechnolgiesOtherThenCreatorTechnology?regNo=${user.uid}`
       );
       const data = await response.json();
-      if (data) {
+      if (Array.isArray(data)) {
         setOptions(data);
       } else {
-        console.log(response.status);
+        if (data === "Not Found Any Technology") {
+          setGroup((curr) => !curr);
+        } else {
+          alert(data);
+        }
       }
     } catch (error) {
       console.log("Error:", error);
@@ -89,21 +100,46 @@ function GroupCreation() {
   };
   useEffect(() => {
     handleGetOptions();
-    checkingGroupExistance();
     GetGroupCgpa();
+    GetGroupStatus();
+  }, [isGroupCreated]);
+
+  useEffect(() => {
+    checkingGroupExistance();
     handleGetAllTechnologies();
   }, []);
+
+  // getting personal details
+  const GetPersonalDataOfAnyStudent = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/officialPSAS/api/PSAS/GetPersonalDataOfAnyStudent?regNo=${
+          user && user.uid
+        }`
+      );
+      const result = await response.json();
+      if (result) {
+        return result;
+      } else {
+        alert(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   //* Checking Student's group
   let currenteDate = new Date();
   let formattedDateTime = currenteDate.toISOString().slice(0, 19);
   const GetGroupStatus = async () => {
+    const promiseData = GetPersonalDataOfAnyStudent();
+    // console.log(await promiseData);
+    const data = await promiseData;
     const MySelf = {
-      dateTime: formattedDateTime,
-      name: user.username,
+      name: data?.technology?.name,
       receiver: {
-        uid: user.uid,
-        username: user.username,
+        uid: data?.st_id,
+        username: data?.username,
       },
       status: "Me",
     };
@@ -114,15 +150,12 @@ function GroupCreation() {
     setRes([...result, MySelf]); // Update the state based on the previous state
     if (typeof result === "object") {
       setGroup(result);
+      handleGetOptions();
       if (result.length === 5) {
         setIsDisabled(true);
       }
     }
   };
-
-  useEffect(() => {
-    GetGroupStatus();
-  }, []);
 
   const handleSelect = (option) => {
     setSelection(option);
@@ -138,11 +171,12 @@ function GroupCreation() {
           },
         }
       );
-      const data = await response.json();
-      if (data.includes("Created")) {
-        setIsGroupCreated(true);
+      const data = await response.text();
+      if (data.includes("Group Created")) {
+        setIsGroupCreated((curr) => !curr);
+      } else {
+        alert(data);
       }
-      alert(data);
     } catch (error) {
       console.log(error);
     }
@@ -171,6 +205,8 @@ function GroupCreation() {
         let name = data.split(":")[1];
         setNameOfMember(name);
         setGroupStatus(true);
+        //? here we have to call the api which will get the dropdown of technologies
+        handleGetOptions();
       } else if (data.includes("1")) {
         setGroupStatus(false);
         let name = data.split(":")[1];
@@ -181,6 +217,12 @@ function GroupCreation() {
     } catch (error) {
       console.log(error);
     }
+  };
+  const handleClear = () => {
+    setAridNumber("");
+    setAridYear("");
+    setNameOfMember("");
+    setMessage("");
   };
   //* Requesting to new Member
   const handleRequest = async () => {
@@ -194,9 +236,60 @@ function GroupCreation() {
           },
         }
       );
-      const data = await response.json();
+      const data = await response.text();
       GetGroupStatus();
-      alert(data);
+      if (data.includes("Group joining Request Sent ")) {
+        handleClear();
+        alert(data);
+      } else {
+        alert(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //! fetching if there any notification for the student from supervisor project rejection request or the student group joining request
+  const GettingAllNotificationsForStudent = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost/officialpsas/api/psas/GettingAllNotificationsForStudent?regNo=${user.uid}`
+      );
+      const result = await response.json();
+      if (Array.isArray(result).length > 0 || typeof result === "object") {
+        setAllNotifications(result);
+        setShowModal((curr) => !curr);
+        console.log(result);
+      } else {
+        console.log(result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    GettingAllNotificationsForStudent();
+  }, []);
+
+  const onHide = () => {
+    setShowModal((curr) => !curr);
+  };
+  const handleOk = async (notification) => {
+    try {
+      const response = await fetch(
+        `http://localhost/officialpsas/api/psas/UpdateNotificationStatus?notificationID=${notification.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const result = await response.text();
+      if (result === "Status Updated ") {
+        setAllNotifications((prevDetail) =>
+          prevDetail.filter((item) => item.id !== notification.id)
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -262,8 +355,7 @@ function GroupCreation() {
             </form>
             <div className="flex flex-row">
               <Button
-                primary
-                roundedMedium
+                variant="primary"
                 className="text-white p-3 mt-4 hover:bg-green-600 hover:text-white transition-all"
                 onClick={handleSubmit}
               >
@@ -378,6 +470,7 @@ function GroupCreation() {
                 <button
                   type="button"
                   className="bg-black text-white px-2 py-1 rounded hover:bg-gray-50 hover:text-black transition-all border border-black hover:font-bold text-xs"
+                  onClick={handleClear}
                 >
                   Cancel
                 </button>
@@ -430,7 +523,7 @@ function GroupCreation() {
                             <span>{item.datetime.slice(0, 10)}</span>
                           ) : (
                             <span className="text-center font-bold text-xs">
-                              ------------
+                              ----
                             </span>
                           )}
                         </td>
@@ -439,6 +532,8 @@ function GroupCreation() {
                             ? "pending"
                             : item.status === 1
                             ? "Approved"
+                            : item.status === 2
+                            ? "Rejected"
                             : "Me"}
                         </td>
                       </tr>
@@ -448,6 +543,32 @@ function GroupCreation() {
               </div>
             </div>
           </div>
+        </>
+      )}
+      {showModal && (
+        <>
+          <Modal show={showModal} onHide={onHide}>
+            {allNotifications &&
+              allNotifications?.map((notification, index) => (
+                <React.Fragment key={index}>
+                  <Modal.Body>
+                    <Modal.Title>{notification?.message}</Modal.Title>
+                    <span>{notification?.sender?.uid}</span>
+                    <span>{notification?.sender?.username}</span>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      variant="success"
+                      onClick={() => {
+                        handleOk(notification);
+                      }}
+                    >
+                      OK
+                    </Button>
+                  </Modal.Footer>
+                </React.Fragment>
+              ))}
+          </Modal>
         </>
       )}
     </>

@@ -33,6 +33,21 @@ function ScheduleMeetings() {
   };
   const handleSubmit = async () => {
     try {
+      const response = await fetch(
+        `http://localhost/officialpsas/api/PSAS_Supervisor_Expert/ManuallyAssigningTimeSlotsToGroup?teacher_id=${user.uid}&group_id=${group.label}&frequency=${frequency.label}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const result = await response.text();
+      if (result.includes("Auto Schedule Meetings Added")) {
+        alert(result);
+      } else {
+        alert(result);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -69,7 +84,11 @@ function ScheduleMeetings() {
           <h4 className="text-green-500">Auto Schedule Meetings</h4>
         </div>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
+      >
         <div className="flex justify-center items-center space-x-2">
           <Form.Label>Select Group:</Form.Label>
           <Dropdown
@@ -89,12 +108,10 @@ function ScheduleMeetings() {
           />
         </div>
         <div className="flex justify-around items-center mt-3">
-          <Button variant="success" type="submit">
+          <Button variant="success" onClick={handleSubmit}>
             Schedule Meetings
           </Button>
-          <Button variant="secondary" type="submit">
-            Cancel
-          </Button>
+          <Button variant="secondary">Cancel</Button>
         </div>
       </form>
     </>

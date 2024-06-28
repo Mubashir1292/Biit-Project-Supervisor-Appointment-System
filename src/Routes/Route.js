@@ -31,6 +31,9 @@ import Task from "../pages/Teacher/Task/Task";
 import CheckingTask from "../pages/Teacher/Task/CheckingTask";
 import ReceivedGroupRequest from "../pages/Student/Requests/ReceivedGroupJoiningRequest/ReceivedGroupRequest";
 import AutoScheduleMeetings from "../pages/Teacher/AutoScheduleMeetings/AutoScheduleMeetings";
+import FavouriteStudents from "../pages/Teacher/favouriteStudent/FavouriteStudents";
+import AddStudentGrades from "../pages/Teacher/AddGrades/AddStudentGrades";
+import Feedback from "../pages/Student/Feedback/Feedback";
 //? === inserting all Routes for all users
 export const studentsRoutes = [
   { path: "/student/dashboard", element: <StudentDashboard /> },
@@ -47,6 +50,7 @@ export const studentsRoutes = [
   { path: "/student/TaskList", element: <TaskList /> },
   { path: "/search", element: <Search /> },
   { path: "/student/ReceivedGroupRequest", element: <ReceivedGroupRequest /> },
+  { path: "/student/feedback", element: <Feedback /> },
 ];
 export const technicalExpertRoutes = [
   { path: "/TechnicalExpert/dashboard", element: <ExpertDashboard /> },
@@ -79,4 +83,6 @@ export const Teacher = [
   { path: "/teacher/notification", element: <SingleNotification /> },
   { path: "/teacher/AssigingTask", element: <Task /> },
   { path: "/teacher/CheckingTask", element: <CheckingTask /> },
+  { path: "/teacher/FavouriteStudentsAdding", element: <FavouriteStudents /> },
+  { path: "/teacher/AddStudentGrades", element: <AddStudentGrades /> },
 ];

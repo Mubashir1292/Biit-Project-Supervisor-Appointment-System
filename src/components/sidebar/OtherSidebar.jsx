@@ -53,11 +53,6 @@ function OtherSidebar({ expanded, setExpanded }) {
       path: "/TechnicalExpert/Schedule",
       icon: <AiFillSchedule size={20} />,
     },
-    {
-      label: "Meetings",
-      path: "/TechnicalExpert/Meetings",
-      icon: <SiGotomeeting size={20} />,
-    },
 
     // {
     //   label: "My Group",

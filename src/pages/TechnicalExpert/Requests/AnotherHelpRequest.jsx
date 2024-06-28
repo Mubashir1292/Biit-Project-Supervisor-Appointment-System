@@ -54,7 +54,17 @@ function AnotherHelpRequest() {
     fetchAllHelpRequests(user);
   }, []);
 
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+  function getToday() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+    const day = String(today.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState(
+    timeSlotsOptions ? timeSlotsOptions[0] : null
+  );
 
   const handleToggleDateTime = () => {
     setToggle((prevToggle) => !prevToggle);
@@ -75,20 +85,53 @@ function AnotherHelpRequest() {
     console.log(option);
   };
   const handleSubmit = async (request) => {
-    try {
-      const response = await fetch(
-        `http://localhost/OfficialPSAS/api/psas_Supervisor_Expert/ApproveTheAppointment?aid=${request.aid}&date=${currentDate}&timeSlot=${selectedTimeSlot.label}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+    if (currentDate && selectedTimeSlot) {
+      try {
+        const response = await fetch(
+          `http://localhost/OfficialPSAS/api/psas_Supervisor_Expert/ApproveTheAppointment?aid=${request.aid}&date=${currentDate}&timeSlot=${selectedTimeSlot.label}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const result = await response.json();
+        if (result === "Updated the Appointment") {
+          setHelpRequests((prevRequests) =>
+            prevRequests.filter((req) => req.aid !== request.aid)
+          );
+          alert(result);
+          navigate("/TechnicalExpert/dashboard");
+        } else {
+          alert(result);
         }
-      );
-      const result = await response.json();
-      alert(result);
-    } catch (error) {
-      console.log(error);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        const response = await fetch(
+          `http://localhost/OfficialPSAS/api/psas_Supervisor_Expert/ApproveTheAppointment?aid=${request?.aid}&date=${request?.schedule?.date}&timeSlot=${request?.TimeSlot?.id}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const result = await response.text();
+        if (result.includes("Updated the Appointment")) {
+          setHelpRequests((prevRequests) =>
+            prevRequests.filter((req) => req.aid !== request.aid)
+          );
+          navigate("/TechnicalExpert/dashboard");
+        } else {
+          alert(result);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -104,106 +147,101 @@ function AnotherHelpRequest() {
       <h1 className="text-2xl font-bold mb-4 text-green-500">Help Request</h1>
       {helpRequests && helpRequests.length > 0 ? (
         <>
-          <Accordion defaultActiveKey={0} className="min-[320px]:w-[320px]">
-            {helpRequests?.map((request, index) => (
-              <Accordion.Item eventKey={index} key={index}>
-                <Accordion.Header>
-                  {request?.student?.username}
-                </Accordion.Header>
-                <Accordion.Body>
-                  <div className="bg-gray-100 w-full max-w-2xl p-6 rounded-lg shadow-md">
-                    <table className="table-auto w-full">
-                      <tbody>
-                        <tr>
-                          <td className="font-semibold text-sm py-2">
-                            Arid Number:
-                          </td>
-                          <td>{request.student.st_id}</td>
-                        </tr>
-                        <tr>
-                          <td className="font-semibold text-sm py-2">Name:</td>
-                          <td>{request.student.username}</td>
-                        </tr>
-                        <tr>
-                          <td className="font-semibold py-2">Technology:</td>
-                          <td>{request.student.name}</td>
-                        </tr>
-                        <tr>
-                          <td className="font-semibold py-2">Date:</td>
-                          <td>
-                            {!toggle ? (
-                              <span className="font-semibold">
-                                {currentDate || request.schedule.date}
-                              </span>
-                            ) : (
-                              <input
-                                type="date"
-                                name="schedule"
-                                id="schedule"
-                                value={currentDate}
-                                onChange={handleSelectDate}
-                                className="border p-1 rounded"
-                              />
-                            )}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="font-semibold py-2">Day:</td>
-                          <td>
-                            <span className="font-normal">
-                              {day || request.schedule.Day}
-                            </span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="font-bold py-2">Time:</td>
-                          <td className="font-bold">
-                            {!toggle ? (
-                              <span>
-                                {request.TimeSlot.start_time ||
-                                  (selectedTimeSlot && selectedTimeSlot.value)}
-                              </span>
-                            ) : (
-                              <Dropdown
-                                options={timeSlotsOptions}
-                                value={selectedTimeSlot}
-                                OnSelect={handleTimeSlotSelection}
-                                className="w-full"
-                              />
-                            )}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className="font-bold py-2">Message:</td>
-                          <td>{request.message}</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <div className="flex space-x-4 mt-4">
-                      <button
-                        className="bg-green-600 text-white px-4 py-2 rounded"
-                        onClick={() => handleSubmit(request)}
-                      >
-                        Confirm
-                      </button>
-                      <button
-                        className="bg-blue-600 text-white px-4 py-2 rounded"
-                        onClick={handleToggleDateTime}
-                      >
-                        {scheduleText}
-                      </button>
-                    </div>
-                  </div>
-                </Accordion.Body>
-              </Accordion.Item>
+          {helpRequests &&
+            helpRequests?.map((request, index) => (
+              <div
+                className="bg-gray-100 w-full max-w-2xl p-6 rounded-lg shadow-md"
+                key={index}
+              >
+                <table className="table-auto w-full">
+                  <tbody>
+                    <tr>
+                      <td className="font-semibold text-sm py-2">
+                        Arid Number:
+                      </td>
+                      <td>{request.student.st_id}</td>
+                    </tr>
+                    <tr>
+                      <td className="font-semibold text-sm py-2">Name:</td>
+                      <td>{request.student.username}</td>
+                    </tr>
+                    <tr>
+                      <td className="font-semibold py-2">Technology:</td>
+                      <td>{request.student.name}</td>
+                    </tr>
+                    <tr>
+                      <td className="font-semibold py-2">Date:</td>
+                      <td>
+                        {!toggle ? (
+                          <span className="font-semibold">
+                            {currentDate || request.schedule.date}
+                          </span>
+                        ) : (
+                          <input
+                            type="date"
+                            name="schedule"
+                            id="schedule"
+                            value={currentDate}
+                            onChange={handleSelectDate}
+                            className="border p-1 rounded"
+                            min={getToday()}
+                          />
+                        )}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="font-semibold py-2">Day:</td>
+                      <td>
+                        <span className="font-normal">
+                          {day || request.schedule.Day}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="font-bold py-2">Time:</td>
+                      <td className="font-bold">
+                        {!toggle ? (
+                          <span>
+                            {request.TimeSlot.start_time ||
+                              (selectedTimeSlot && selectedTimeSlot.value)}
+                          </span>
+                        ) : (
+                          <Dropdown
+                            options={timeSlotsOptions}
+                            value={selectedTimeSlot}
+                            OnSelect={handleTimeSlotSelection}
+                            className="w-full"
+                          />
+                        )}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="font-bold py-2">Message:</td>
+                      <td>{request.message}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div className="flex space-x-4 mt-4">
+                  <button
+                    className="bg-green-600 text-white px-4 py-2 rounded"
+                    onClick={() => handleSubmit(request)}
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    className="bg-blue-600 text-white px-4 py-2 rounded"
+                    onClick={handleToggleDateTime}
+                  >
+                    {scheduleText}
+                  </button>
+                </div>
+              </div>
             ))}
-          </Accordion>
         </>
       ) : (
-        <span>No Help Request</span>
+        <span>No Help Request Founded</span>
       )}
     </div>
   );
 }
-
 export default AnotherHelpRequest;
