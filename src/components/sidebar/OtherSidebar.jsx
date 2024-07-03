@@ -12,7 +12,7 @@ import { GoProject, GoTasklist } from "react-icons/go";
 import { GiProgression } from "react-icons/gi";
 import { VscRequestChanges } from "react-icons/vsc";
 import { AiFillSchedule, AiTwotoneSchedule } from "react-icons/ai";
-import { SiGotomeeting, SiProgress } from "react-icons/si";
+import { SiChatbot, SiGotomeeting, SiProgress } from "react-icons/si";
 import { FaUserGraduate, FaUserTie } from "react-icons/fa";
 import { GrSchedule, GrTask } from "react-icons/gr";
 import { FaDiagramProject, FaUsersLine } from "react-icons/fa6";
@@ -90,6 +90,11 @@ function OtherSidebar({ expanded, setExpanded }) {
       label: "Dashboard",
       path: "/student/dashboard",
       icon: <LayoutDashboard size={20} />,
+    },
+    {
+      label: "ChatBot",
+      path: "/student/chatbot",
+      icon: <SiChatbot size={20} />,
     },
     {
       label: "My Group",

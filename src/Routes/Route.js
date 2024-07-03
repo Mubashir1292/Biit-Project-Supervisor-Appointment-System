@@ -34,6 +34,7 @@ import AutoScheduleMeetings from "../pages/Teacher/AutoScheduleMeetings/AutoSche
 import FavouriteStudents from "../pages/Teacher/favouriteStudent/FavouriteStudents";
 import AddStudentGrades from "../pages/Teacher/AddGrades/AddStudentGrades";
 import Feedback from "../pages/Student/Feedback/Feedback";
+import ChatBot from "../pages/Student/ChatBot/ChatBot";
 //? === inserting all Routes for all users
 export const studentsRoutes = [
   { path: "/student/dashboard", element: <StudentDashboard /> },
@@ -51,6 +52,7 @@ export const studentsRoutes = [
   { path: "/search", element: <Search /> },
   { path: "/student/ReceivedGroupRequest", element: <ReceivedGroupRequest /> },
   { path: "/student/feedback", element: <Feedback /> },
+  { path: "/student/chatbot", element: <ChatBot /> },
 ];
 export const technicalExpertRoutes = [
   { path: "/TechnicalExpert/dashboard", element: <ExpertDashboard /> },
